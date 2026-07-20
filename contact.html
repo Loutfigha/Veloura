@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact | Horrenspecialisten</title>
+<meta name="description" content="Persoonlijk contact, geen callcenter. Neem contact op met Horrenspecialisten voor een vrijblijvend adviesgesprek of gratis inmeetafspraak.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#f3f2f2">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="canonical" href="https://www.horrenspecialisten.nl/contact.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="styles-v2.css">
+</head>
+<body>
+
+<a href="#main" class="skip-link" style="position:absolute;top:-100px;left:1rem;background:var(--color-neutral-900);color:#fff;padding:.8rem 1.4rem;border-radius:8px;z-index:1000;">Direct naar inhoud</a>
+
+<header class="site-header-v2 scrolled" id="siteHeader">
+  <div class="container nav-v2">
+    <a href="index.html" class="nav-brand" aria-label="Horrenspecialisten — naar de homepage">Horrenspecialisten</a>
+    <nav class="nav-v2-links" id="mainNav" aria-label="Hoofdmenu">
+      <a href="producten.html" class="nav-link">Producten</a>
+      <a href="projecten.html" class="nav-link">Projecten</a>
+      <a href="werkwijze.html" class="nav-link">Werkwijze</a>
+      <a href="over-ons.html" class="nav-link">Over ons</a>
+    </nav>
+    <a href="offerte.html" class="btn btn-secondary nav-cta-v2" style="margin-left:auto;">Plan inmeetafspraak</a>
+    <button class="nav-toggle-v2" id="navToggle" aria-label="Menu openen" aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-hero-v2" style="padding-bottom: 0;">
+    <div class="container split-v2" style="align-items: start;">
+      <div class="split-v2-content">
+        <span class="eyebrow-v2">Contact</span>
+        <h1>Persoonlijk contact, geen callcenter</h1>
+        <p class="intro">Wij reageren binnen één werkdag. Liever bellen? Wij zijn op werkdagen bereikbaar van 8.30 tot 17.00 uur.</p>
+        <div class="contact-info-v2">
+          <a href="tel:+31657815202">+31 6 57 81 52 02</a>
+          <a href="mailto:info@horrenspecialisten.nl">info@horrenspecialisten.nl</a>
+          <span style="opacity:.75;">Showroom op afspraak</span>
+        </div>
+      </div>
+      <div class="split-v2-media">
+        <form id="contactForm" novalidate>
+          <div class="field">
+            <label for="cNaam">Naam</label>
+            <input class="input" type="text" id="cNaam" name="naam" placeholder="Uw volledige naam" required>
+            <div class="field-error-v2" id="errCNaam"></div>
+          </div>
+          <div class="field">
+            <label for="cTelefoon">Telefoonnummer</label>
+            <input class="input" type="tel" id="cTelefoon" name="telefoon" placeholder="06 12 34 56 78">
+          </div>
+          <div class="field">
+            <label for="cPostcode">Postcode</label>
+            <input class="input" type="text" id="cPostcode" name="postcode" placeholder="2500 AB">
+          </div>
+          <div class="field">
+            <label for="cBericht">Bericht</label>
+            <textarea class="input" id="cBericht" name="bericht" placeholder="Vertel kort over uw wensen"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Verstuur bericht</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="map-v2">
+    <div class="container">
+      <div class="img-slot"><div class="img-slot-label">Kaart — locatie showroom (statische kaartweergave)</div></div>
+    </div>
+  </section>
+
+  <section class="reassurance-line-v2">Uw gegevens worden nooit gedeeld. Geen verplichtingen, geen verkoopdruk.</section>
+
+</main>
+
+<footer class="footer-v2">
+  <div class="container">
+    <div class="footer-v2-grid">
+      <div>
+        <div class="footer-v2-brand">Horrenspecialisten</div>
+        <p style="font-size:14px;opacity:.75;max-width:32ch;">Maatwerk horren voor woningen waar precisie telt.</p>
+      </div>
+      <div>
+        <h6>Navigatie</h6>
+        <ul>
+          <li><a href="producten.html">Producten</a></li>
+          <li><a href="projecten.html">Projecten</a></li>
+          <li><a href="werkwijze.html">Werkwijze</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>Contact</h6>
+        <ul>
+          <li><a href="over-ons.html">Over ons</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="offerte.html">Offerte</a></li>
+        </ul>
+      </div>
+      <div>
+        <h6>Volg</h6>
+        <ul>
+          <li><a href="#" rel="noopener">Instagram</a></li>
+          <li><a href="#" rel="noopener">Pinterest</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-v2-bottom">
+      <span>© <span id="year"></span> Horrenspecialisten. Alle rechten voorbehouden.</span>
+      <span>Maatwerk horren sinds 2004</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  var header = document.getElementById('siteHeader');
+  function onScroll(){
+    header.classList.toggle('scrolled', (window.scrollY || window.pageYOffset) > 40);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  var navToggle = document.getElementById('navToggle');
+  var mainNav = document.getElementById('mainNav');
+  navToggle.addEventListener('click', function(){
+    var isOpen = mainNav.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  mainNav.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      mainNav.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  var form = document.getElementById('contactForm');
+  var naamEl = document.getElementById('cNaam');
+  var errNaam = document.getElementById('errCNaam');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errNaam.textContent = '';
+    if (naamEl.value.trim().length < 2) {
+      errNaam.textContent = 'Vul uw naam in.';
+      naamEl.focus();
+      return;
+    }
+    /* NOTE: client-side demo only — no backend. Wire this up to your form endpoint (email service or CRM) to receive real berichten. */
+    form.innerHTML = '<p style="font-family: var(--font-heading); font-size: 1.2rem;">Bedankt, ' + naamEl.value.trim().split(' ')[0] + '. Wij nemen binnen één werkdag contact met u op.</p>';
+  });
+})();
+</script>
+
+</body>
+</html>
