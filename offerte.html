@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Offerte Calculator | Bereken direct de prijs van uw hor op maat | Horrenspecialisten</title>
+<meta name="description" content="Bereken direct de prijs van uw horren op maat. Vul de afmetingen van uw raam of deur in en ontvang meteen een vrijblijvende offerte als PDF.">
+<meta name="keywords" content="offerte horren, horren prijs berekenen, hor op maat prijs, horrenspecialisten offerte">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#FAFAF8">
+<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
+<link rel="apple-touch-icon" href="images/favicon-192.png">
+<link rel="canonical" href="https://www.horrenspecialisten.nl/offerte.html">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:title" content="Offerte Calculator | Horrenspecialisten">
+<meta property="og:description" content="Bereken direct de prijs van uw horren op maat en ontvang een vrijblijvende offerte als PDF.">
+<meta property="og:site_name" content="Horrenspecialisten">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a href="#main" class="skip-link">Direct naar inhoud</a>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo" aria-label="Horrenspecialisten — naar de homepage">
+      <img src="images/logo-header.png" alt="Horrenspecialisten" class="logo-mark">
+    </a>
+
+    <nav class="main-nav" id="mainNav" aria-label="Hoofdmenu">
+      <ul>
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#voordelen" class="nav-link">Voordelen</a></li>
+        <li><a href="index.html#producten" class="nav-link">Producten</a></li>
+        <li><a href="offerte.html" class="nav-link active">Offerte</a></li>
+        <li><a href="index.html#werkwijze" class="nav-link">Werkwijze</a></li>
+        <li><a href="index.html#reviews" class="nav-link">Reviews</a></li>
+        <li><a href="index.html#faq" class="nav-link">Veelgestelde vragen</a></li>
+        <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="#calculator" class="btn btn-primary btn-sm">Gratis offerte</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu openen" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===================== PAGE INTRO ===================== -->
+  <section class="hero" style="padding-bottom:2rem;">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container">
+      <div class="section-head center reveal" style="max-width:720px;">
+        <p class="eyebrow" style="justify-content:center;">Offerte calculator</p>
+        <h1 style="font-size:clamp(2.2rem,3.6vw + 1rem,3.4rem);">Bereken direct de prijs van uw hor op maat</h1>
+        <p style="font-size:1.08rem;">Vul de afmetingen van uw raam of deur in en zie meteen de offerteprijs. Akkoord? Dan ontvangt u de offerte direct als PDF.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CALCULATOR ===================== -->
+  <section id="calculator" style="padding-top:1rem;">
+    <div class="container">
+      <div class="calculator-wrap">
+
+        <!-- ---------- FORM ---------- -->
+        <div class="calc-card reveal">
+          <ul class="calc-intro-checklist">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Op maat gemaakt</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vakkundig gemonteerd</li>
+          </ul>
+          <div class="wizard-progress">
+            <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizardProgressFill" style="width:25%"></div></div>
+            <span class="wizard-progress-label">Stap <strong id="wizardStepNum">1</strong> van 4 — <span id="wizardStepName">Type hor</span></span>
+          </div>
+
+          <form id="calcForm" novalidate>
+            <div class="wizard-step is-active" data-step="1">
+            <div class="calc-step-label">
+              <span class="calc-step-num">1</span>
+              <span>Type hor</span>
+            </div>
+            <div class="type-card-grid" id="typeCardGrid" style="margin-bottom:.4rem;">
+              <label class="type-card is-checked" data-type-card="raamhor">
+                <input type="radio" name="typeHor" value="raamhor" checked>
+                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 12h16M12 4v16"/></svg></span>
+                <span class="label">Raamhor</span>
+              </label>
+              <label class="type-card" data-type-card="inzethor">
+                <input type="radio" name="typeHor" value="inzethor">
+                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/></svg></span>
+                <span class="label">Inzethor</span>
+              </label>
+              <label class="type-card" data-type-card="plisse">
+                <input type="radio" name="typeHor" value="plisse">
+                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 3v18M9 3v18M12 3v18M15 3v18M18 3v18"/></svg></span>
+                <span class="label">Plissé hordeur</span>
+              </label>
+              <label class="type-card" data-type-card="rolhor">
+                <input type="radio" name="typeHor" value="rolhor">
+                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="4" rx="1"/><path d="M6 8v12M18 8v12M6 12h12M6 16h12"/></svg></span>
+                <span class="label">Rolhor</span>
+              </label>
+            </div>
+            <div class="wizard-nav">
+              <span></span>
+              <button type="button" class="btn btn-primary wizard-next" data-goto="2">Volgende</button>
+            </div>
+            </div>
+
+            <div class="wizard-step" data-step="2">
+            <div class="calc-step-label">
+              <span class="calc-step-num">2</span>
+              <span>Afmetingen</span>
+            </div>
+            <div class="dim-row" style="margin-bottom:.4rem;">
+              <div class="form-field">
+                <label for="breedte">Breedte</label>
+                <div class="dim-field">
+                  <input type="number" id="breedte" name="breedte" inputmode="decimal" min="20" max="400" step="0.5" placeholder="bijv. 80" autocomplete="off" required>
+                  <span class="unit">cm</span>
+                </div>
+                <span class="dim-hint">Min. 20 cm – Max. 400 cm</span>
+                <span class="field-error" id="errBreedte"></span>
+              </div>
+              <div class="form-field">
+                <label for="lengte">Hoogte</label>
+                <div class="dim-field">
+                  <input type="number" id="lengte" name="lengte" inputmode="decimal" min="20" max="400" step="0.5" placeholder="bijv. 120" autocomplete="off" required>
+                  <span class="unit">cm</span>
+                </div>
+                <span class="dim-hint">Min. 20 cm – Max. 400 cm</span>
+                <span class="field-error" id="errLengte"></span>
+              </div>
+            </div>
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-ghost wizard-back" data-goto="1">Vorige</button>
+              <button type="button" class="btn btn-primary wizard-next" data-goto="3" id="step2NextBtn" disabled>Volgende</button>
+            </div>
+            </div>
+
+            <div class="wizard-step" data-step="3">
+            <div class="calc-step-label">
+              <span class="calc-step-num">3</span>
+              <span>Extra opties</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem;">
+              <label class="option-toggle" id="optAntipollenWrap">
+                <input type="checkbox" id="optAntipollen">
+                <span class="option-toggle-text">
+                  <strong>Anti-pollen gaas</strong>
+                  <span>Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt</span>
+                </span>
+                <span class="option-toggle-price">+ € 30,00</span>
+              </label>
+
+              <label class="option-toggle" id="optHuisdierWrap">
+                <input type="checkbox" id="optHuisdier">
+                <span class="option-toggle-text">
+                  <strong>Huisdierengaas</strong>
+                  <span>Extra sterk, krasbestendig gaas tegen nagels van hond of kat</span>
+                </span>
+                <span class="option-toggle-price">+ € 45,00</span>
+              </label>
+
+              <label class="option-toggle" id="optFijnWrap">
+                <input type="checkbox" id="optFijn">
+                <span class="option-toggle-text">
+                  <strong>Extra fijn gaas</strong>
+                  <span>Nog fijnmaziger weefsel voor maximale weringskracht</span>
+                </span>
+                <span class="option-toggle-price">+ € 30,00</span>
+              </label>
+
+              <label class="option-toggle" id="optRalWrap">
+                <input type="checkbox" id="optRal">
+                <span class="option-toggle-text">
+                  <strong>RAL kleur naar keuze</strong>
+                  <span>Profiel gespoten in een RAL-kleur naar wens</span>
+                </span>
+                <span class="option-toggle-price">+ € 10,00</span>
+              </label>
+              <div id="ralCodeWrap" style="display:none;">
+                <span class="field-label-inline">Systeemkleur</span>
+                <div class="ral-swatch-grid" id="ralSwatchGrid">
+                  <label class="ral-swatch is-checked" data-name="Wit">
+                    <input type="radio" name="ralSwatch" value="RAL 9010" checked>
+                    <span class="ral-swatch-color" style="background:#F1ECE4;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Wit<br>RAL 9010</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Crème">
+                    <input type="radio" name="ralSwatch" value="RAL 9001">
+                    <span class="ral-swatch-color" style="background:#E9E0CB;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Crème<br>RAL 9001</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Antraciet">
+                    <input type="radio" name="ralSwatch" value="RAL 7016">
+                    <span class="ral-swatch-color" style="background:#383E42;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Antraciet<br>RAL 7016</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Aluminium">
+                    <input type="radio" name="ralSwatch" value="RAL 9006">
+                    <span class="ral-swatch-color" style="background:#A5A8A6;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Aluminium<br>RAL 9006</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Verkeerswit">
+                    <input type="radio" name="ralSwatch" value="RAL 9016">
+                    <span class="ral-swatch-color" style="background:#F6F6F6;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Verkeerswit<br>RAL 9016</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Bruin">
+                    <input type="radio" name="ralSwatch" value="RAL 8014">
+                    <span class="ral-swatch-color" style="background:#4A2E22;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Bruin<br>RAL 8014</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Lichtgrijs">
+                    <input type="radio" name="ralSwatch" value="RAL 7035">
+                    <span class="ral-swatch-color" style="background:#D7D7D7;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Lichtgrijs<br>RAL 7035</span>
+                  </label>
+                  <label class="ral-swatch" data-name="Zwart">
+                    <input type="radio" name="ralSwatch" value="RAL 9005">
+                    <span class="ral-swatch-color" style="background:#0A0A0A;" aria-hidden="true"></span>
+                    <span class="ral-swatch-text">Zwart<br>RAL 9005</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="calc-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="7" rx="1"/><rect x="14" y="15" width="7" height="7" rx="1"/></svg>
+                <span>Horren nodig voor meerdere ramen of deuren? <a href="index.html#contact">Vraag een gecombineerde offerte aan</a> — dan stemmen wij alles in één keer op elkaar af.</span>
+              </div>
+            </div>
+
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-ghost wizard-back" data-goto="2">Vorige</button>
+              <button type="button" class="btn btn-primary wizard-next" data-goto="4">Volgende</button>
+            </div>
+            </div>
+
+            <div class="wizard-step" data-step="4">
+            <div class="calc-step-label">
+              <span class="calc-step-num">4</span>
+              <span>Uw gegevens</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-field full">
+                <label for="naam">Naam</label>
+                <input type="text" id="naam" name="naam" autocomplete="name" required>
+                <span class="field-error" id="errNaam"></span>
+              </div>
+              <div class="form-field">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+                <span class="field-error" id="errEmail"></span>
+              </div>
+              <div class="form-field">
+                <label for="telefoon">Telefoon <span style="font-weight:400;color:var(--text-muted);">(optioneel)</span></label>
+                <input type="tel" id="telefoon" name="telefoon" autocomplete="tel">
+              </div>
+            </div>
+            <div class="wizard-nav">
+              <button type="button" class="btn btn-ghost wizard-back" data-goto="3">Vorige</button>
+            </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- ---------- SUMMARY / RESULT ---------- -->
+        <aside class="calc-summary reveal" aria-live="polite">
+          <div class="calc-summary-inner">
+
+            <div id="calcResult">
+              <p class="eyebrow">Uw offerte</p>
+              <div class="calc-rating-row">
+                <span class="stars" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                </span>
+                <span>4,9 · 500+ tevreden klanten</span>
+              </div>
+              <div class="calc-price-row">
+                <span class="calc-price-label">Offerteprijs</span>
+                <span class="calc-price is-empty" id="calcPrice">Vul de afmetingen in</span>
+              </div>
+              <p class="calc-summary-note">Inclusief materiaal, op maat productie en montage.</p>
+
+              <ul class="calc-summary-list" id="calcSpecs">
+                <li><span>Type hor</span><span id="specType">—</span></li>
+                <li><span>Afmetingen</span><span id="specDim">—</span></li>
+                <li><span>Oppervlakte</span><span id="specArea">—</span></li>
+                <li id="specAntipollenRow" style="display:none;"><span>Anti-pollen gaas</span><span>+ € 30,00</span></li>
+                <li id="specHuisdierRow" style="display:none;"><span>Huisdierengaas</span><span>+ € 45,00</span></li>
+                <li id="specFijnRow" style="display:none;"><span>Extra fijn gaas</span><span>+ € 30,00</span></li>
+                <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>—</span></li>
+              </ul>
+
+              <div class="calc-delivery">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                <span>Verwachte levering: <strong id="deliveryWindow">—</strong></span>
+              </div>
+
+              <button type="button" class="btn btn-gold" id="akkoordBtn" disabled>Akkoord, genereer mijn offerte</button>
+
+              <ul class="calc-trust">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vrijblijvend, geen verplichtingen</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>PDF direct gedownload</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Offerte 30 dagen geldig</li>
+              </ul>
+
+              <div class="calc-whatsapp-help">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.94 9.94 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.65 0-3.19-.47-4.5-1.28l-.32-.19-3 .79.8-2.93-.21-.3A7.95 7.95 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8zm4.4-5.6c-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41-.14-.01-.3-.01-.46-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28z"/></svg>
+                <a href="https://wa.me/31657815202?text=Hallo%2C%20ik%20heb%20hulp%20nodig%20bij%20het%20inmeten%20van%20mijn%20hor." target="_blank" rel="noopener">Hulp nodig bij het inmeten?<span>Stuur ons uw situatie via WhatsApp</span></a>
+              </div>
+            </div>
+
+            <div class="calc-success" id="calcSuccess">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+              <h3>Uw offerte is gedownload</h3>
+              <p>De PDF staat in uw downloads-map. We e-mailen offertes op dit moment nog niet automatisch — stuur 'm gerust zelf door, of neem contact met ons op.</p>
+              <button type="button" class="btn btn-ghost" id="resetBtn" style="border-color:rgba(255,255,255,0.3);color:#fff;">Nieuwe berekening starten</button>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== UITLEG ===================== -->
+  <section class="bg-alt">
+    <div class="container">
+      <div class="section-head center reveal">
+        <p class="eyebrow" style="justify-content:center;">Zo werkt het</p>
+        <h2>Van maat tot offerte in drie stappen</h2>
+      </div>
+      <div class="usp-grid reveal-stagger reveal">
+        <article class="usp-card">
+          <div class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-10 4 10M4.5 13.5h5M13 17l3-8 3 8M15 13.5h2.5"/></svg>
+          </div>
+          <h3>Vul uw afmetingen in</h3>
+          <p>Meet de lengte en breedte van uw raam- of deurkozijn op en vul deze in centimeters in.</p>
+        </article>
+        <article class="usp-card">
+          <div class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <h3>Bekijk direct de prijs</h3>
+          <p>De offerteprijs wordt automatisch berekend en meteen naast het formulier getoond.</p>
+        </article>
+        <article class="usp-card">
+          <div class="usp-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+          </div>
+          <h3>Ontvang uw PDF-offerte</h3>
+          <p>Gaat u akkoord met de prijs? Dan wordt uw persoonlijke offerte direct als PDF gedownload.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img src="images/logo-icon.png" alt="" class="footer-logo-icon" aria-hidden="true">
+          <span class="logo-text">Horren<em>specialisten</em></span>
+        </div>
+        <p>Horren op maat voor ramen en deuren, ontworpen en gemonteerd met oog voor comfort en vakmanschap. Actief door heel Nederland.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigatie</h4>
+        <ul>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#voordelen">Voordelen</a></li>
+          <li><a href="index.html#producten">Producten</a></li>
+          <li><a href="index.html#werkwijze">Werkwijze</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Producten</h4>
+        <ul>
+          <li><a href="index.html#producten">Raamhorren</a></li>
+          <li><a href="index.html#producten">Inzethorren</a></li>
+          <li><a href="index.html#producten">Plissé hordeuren</a></li>
+          <li><a href="index.html#producten">Rolhorren</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:+31657815202">+31 6 57 81 52 02</a></li>
+          <li><a href="mailto:info@horrenspecialisten.nl">info@horrenspecialisten.nl</a></li>
+          <li><a href="index.html#faq">Veelgestelde vragen</a></li>
+          <li><a href="offerte.html">Gratis offerte</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Horrenspecialisten. Alle rechten voorbehouden.</span>
+      <span>Horren op maat door heel Nederland</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== MOBILE STICKY CTA ===================== -->
+<div class="mobile-cta" id="mobileCta">
+  <a href="#calculator" class="btn">Gratis offerte aanvragen</a>
+</div>
+
+<!-- jsPDF: client-side PDF generation (no backend available for this static site) -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" defer></script>
+<script src="main.js" defer></script>
+<script>
+(function(){
+  "use strict";
+
+  var PRICE_PER_M2 = 165;
+  var HIDDEN_SURCHARGE = 35; /* verzendkosten: bewust niet los getoond aan de klant, wel verrekend in de totaalprijs */
+  var PRICE_ANTIPOLLEN = 30; /* eenmalig */
+  var PRICE_HUISDIER = 45; /* eenmalig */
+  var PRICE_FIJN = 30; /* eenmalig */
+  var PRICE_RAL = 10; /* per hor */
+
+  var TYPE_LABELS = {
+    raamhor: 'Raamhor',
+    inzethor: 'Inzethor',
+    plisse: 'Plissé hordeur',
+    rolhor: 'Rolhor'
+  };
+
+  var form = document.getElementById('calcForm');
+  var typeCards = document.querySelectorAll('.type-card');
+  var lengteEl = document.getElementById('lengte');
+  var breedteEl = document.getElementById('breedte');
+  var naamEl = document.getElementById('naam');
+  var emailEl = document.getElementById('email');
+  var telefoonEl = document.getElementById('telefoon');
+
+  var optAntipollenEl = document.getElementById('optAntipollen');
+  var optAntipollenWrap = document.getElementById('optAntipollenWrap');
+  var optHuisdierEl = document.getElementById('optHuisdier');
+  var optHuisdierWrap = document.getElementById('optHuisdierWrap');
+  var optFijnEl = document.getElementById('optFijn');
+  var optFijnWrap = document.getElementById('optFijnWrap');
+  var optRalEl = document.getElementById('optRal');
+  var optRalWrap = document.getElementById('optRalWrap');
+  var ralCodeWrap = document.getElementById('ralCodeWrap');
+  var ralSwatches = document.querySelectorAll('.ral-swatch');
+  var specAntipollenRow = document.getElementById('specAntipollenRow');
+  var specHuisdierRow = document.getElementById('specHuisdierRow');
+  var specFijnRow = document.getElementById('specFijnRow');
+  var specRalRow = document.getElementById('specRalRow');
+  var deliveryWindowEl = document.getElementById('deliveryWindow');
+  var step2NextBtn = document.getElementById('step2NextBtn');
+
+  var errLengte = document.getElementById('errLengte');
+  var errBreedte = document.getElementById('errBreedte');
+  var errNaam = document.getElementById('errNaam');
+  var errEmail = document.getElementById('errEmail');
+
+  var calcPriceEl = document.getElementById('calcPrice');
+  var specType = document.getElementById('specType');
+  var specDim = document.getElementById('specDim');
+  var specArea = document.getElementById('specArea');
+  var akkoordBtn = document.getElementById('akkoordBtn');
+
+  var calcResult = document.getElementById('calcResult');
+  var calcSuccess = document.getElementById('calcSuccess');
+  var resetBtn = document.getElementById('resetBtn');
+
+  var MIN_DIM = 20, MAX_DIM = 400;
+  var currentTotal = null;
+  var currentArea = null;
+
+  function getSelectedType(){
+    var checked = form.querySelector('input[name="typeHor"]:checked');
+    return checked ? checked.value : 'raamhor';
+  }
+
+  function getSelectedRal(){
+    var checked = form.querySelector('input[name="ralSwatch"]:checked');
+    if(!checked) return null;
+    var name = checked.closest('.ral-swatch').dataset.name;
+    return {code: checked.value, name: name, label: name + ' (' + checked.value + ')'};
+  }
+
+  /* Pre-select type from ?type= query param (links from the productoverzicht) */
+  var params = new URLSearchParams(location.search);
+  var typeParam = params.get('type');
+  if(typeParam && TYPE_LABELS[typeParam]){
+    typeCards.forEach(function(card){
+      var input = card.querySelector('input');
+      var isMatch = input.value === typeParam;
+      input.checked = isMatch;
+      card.classList.toggle('is-checked', isMatch);
+    });
+  }
+
+  typeCards.forEach(function(card){
+    card.addEventListener('click', function(){
+      typeCards.forEach(function(c){ c.classList.remove('is-checked'); });
+      card.classList.add('is-checked');
+      if(currentStep === 1){
+        setTimeout(function(){ goToStep(2); }, 250);
+      }
+    });
+  });
+
+  /* ---------- Wizard step navigation ---------- */
+  var wizardSteps = document.querySelectorAll('.wizard-step');
+  var wizardProgressFill = document.getElementById('wizardProgressFill');
+  var wizardStepNumEl = document.getElementById('wizardStepNum');
+  var wizardStepNameEl = document.getElementById('wizardStepName');
+  var WIZARD_STEP_NAMES = {1:'Type hor', 2:'Afmetingen', 3:'Extra opties', 4:'Uw gegevens'};
+  var currentStep = 1;
+
+  function goToStep(n){
+    n = Math.max(1, Math.min(wizardSteps.length, n));
+    currentStep = n;
+    wizardSteps.forEach(function(step){
+      step.classList.toggle('is-active', parseInt(step.dataset.step, 10) === n);
+    });
+    wizardProgressFill.style.width = (n / wizardSteps.length * 100) + '%';
+    wizardStepNumEl.textContent = n;
+    wizardStepNameEl.textContent = WIZARD_STEP_NAMES[n] || '';
+    var activeLabel = document.querySelector('.wizard-step[data-step="' + n + '"] .calc-step-label');
+    if(activeLabel){
+      activeLabel.setAttribute('tabindex', '-1');
+      activeLabel.focus({preventScroll: true});
+    }
+  }
+
+  document.querySelectorAll('.wizard-next').forEach(function(btn){
+    btn.addEventListener('click', function(){ goToStep(currentStep + 1); });
+  });
+  document.querySelectorAll('.wizard-back').forEach(function(btn){
+    btn.addEventListener('click', function(){ goToStep(currentStep - 1); });
+  });
+
+  function computeDeliveryWindow(){
+    var start = new Date();
+    start.setDate(start.getDate() + 14);
+    var end = new Date();
+    end.setDate(end.getDate() + 21);
+    var fmt = {day:'numeric', month:'long'};
+    deliveryWindowEl.textContent = start.toLocaleDateString('nl-NL', fmt) + ' – ' + end.toLocaleDateString('nl-NL', fmt);
+  }
+  computeDeliveryWindow();
+
+  function formatEUR(n){
+    return n.toLocaleString('nl-NL', {style:'currency', currency:'EUR'});
+  }
+
+  function validDimension(value){
+    return !isNaN(value) && value >= MIN_DIM && value <= MAX_DIM;
+  }
+
+  function updateCalculation(){
+    var lengte = parseFloat(lengteEl.value);
+    var breedte = parseFloat(breedteEl.value);
+
+    errLengte.textContent = (lengteEl.value && !validDimension(lengte)) ? ('Vul een waarde tussen ' + MIN_DIM + ' en ' + MAX_DIM + ' cm in') : '';
+    errBreedte.textContent = (breedteEl.value && !validDimension(breedte)) ? ('Vul een waarde tussen ' + MIN_DIM + ' en ' + MAX_DIM + ' cm in') : '';
+
+    var dimsValid = validDimension(lengte) && validDimension(breedte);
+    step2NextBtn.disabled = !dimsValid;
+
+    specAntipollenRow.style.display = optAntipollenEl.checked ? 'flex' : 'none';
+    specHuisdierRow.style.display = optHuisdierEl.checked ? 'flex' : 'none';
+    specFijnRow.style.display = optFijnEl.checked ? 'flex' : 'none';
+    specRalRow.style.display = optRalEl.checked ? 'flex' : 'none';
+    if(optRalEl.checked){
+      var ral = getSelectedRal();
+      specRalRow.querySelector('span:last-child').textContent = ral ? ral.name : '—';
+    }
+
+    if(dimsValid){
+      var areaM2 = (lengte / 100) * (breedte / 100);
+      var subtotal = areaM2 * PRICE_PER_M2;
+      var extrasTotal = (optAntipollenEl.checked ? PRICE_ANTIPOLLEN : 0) + (optHuisdierEl.checked ? PRICE_HUISDIER : 0) + (optFijnEl.checked ? PRICE_FIJN : 0) + (optRalEl.checked ? PRICE_RAL : 0);
+      var total = subtotal + HIDDEN_SURCHARGE + extrasTotal;
+
+      currentTotal = total;
+      currentArea = areaM2;
+
+      calcPriceEl.textContent = formatEUR(total);
+      calcPriceEl.classList.remove('is-empty');
+      specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
+      specDim.textContent = breedte.toLocaleString('nl-NL') + ' × ' + lengte.toLocaleString('nl-NL') + ' cm';
+      specArea.textContent = areaM2.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m²';
+    } else {
+      currentTotal = null;
+      currentArea = null;
+      calcPriceEl.textContent = 'Vul de afmetingen in';
+      calcPriceEl.classList.add('is-empty');
+      specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
+      specDim.textContent = '—';
+      specArea.textContent = '—';
+    }
+
+    updateAkkoordState();
+  }
+
+  function isValidEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function updateAkkoordState(){
+    var naamValid = naamEl.value.trim().length > 1;
+    var emailValid = isValidEmail(emailEl.value.trim());
+    errNaam.textContent = '';
+    errEmail.textContent = '';
+    akkoordBtn.disabled = !(currentTotal !== null && naamValid && emailValid);
+  }
+
+  [lengteEl, breedteEl].forEach(function(el){
+    el.addEventListener('input', updateCalculation);
+    el.addEventListener('change', updateCalculation);
+  });
+  typeCards.forEach(function(card){
+    card.querySelector('input').addEventListener('change', updateCalculation);
+  });
+  [naamEl, emailEl].forEach(function(el){
+    el.addEventListener('input', updateAkkoordState);
+  });
+
+  optAntipollenEl.addEventListener('change', function(){
+    optAntipollenWrap.classList.toggle('is-checked', optAntipollenEl.checked);
+    updateCalculation();
+  });
+  optHuisdierEl.addEventListener('change', function(){
+    optHuisdierWrap.classList.toggle('is-checked', optHuisdierEl.checked);
+    updateCalculation();
+  });
+  optFijnEl.addEventListener('change', function(){
+    optFijnWrap.classList.toggle('is-checked', optFijnEl.checked);
+    updateCalculation();
+  });
+  optRalEl.addEventListener('change', function(){
+    optRalWrap.classList.toggle('is-checked', optRalEl.checked);
+    ralCodeWrap.style.display = optRalEl.checked ? 'block' : 'none';
+    updateCalculation();
+  });
+  ralSwatches.forEach(function(swatch){
+    swatch.querySelector('input').addEventListener('change', function(){
+      ralSwatches.forEach(function(s){ s.classList.remove('is-checked'); });
+      swatch.classList.add('is-checked');
+      updateCalculation();
+    });
+  });
+
+  function genereerOfferteNummer(){
+    var d = new Date();
+    var datum = d.getFullYear().toString() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+    var reeks = String(Math.floor(Math.random()*9000)+1000);
+    return 'HS-' + datum + '-' + reeks;
+  }
+
+  function formatDatumNL(date){
+    return date.toLocaleDateString('nl-NL', {day:'numeric', month:'long', year:'numeric'});
+  }
+
+  function genereerPDF(){
+    if(!window.jspdf || !window.jspdf.jsPDF){
+      alert('De PDF-module wordt nog geladen. Probeer het over een moment opnieuw.');
+      return;
+    }
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({unit:'mm', format:'a4'});
+
+    var offerteNummer = genereerOfferteNummer();
+    var vandaag = new Date();
+    var geldigTot = new Date(vandaag.getTime() + 30*24*60*60*1000);
+
+    var anthracite = [34,34,34];
+    var gold = [184,155,94];
+    var muted = [110,109,102];
+    var pageW = 210;
+
+    /* Kopband */
+    doc.setFillColor(anthracite[0], anthracite[1], anthracite[2]);
+    doc.rect(0, 0, pageW, 34, 'F');
+    doc.setTextColor(255,255,255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.text('Horrenspecialisten', 15, 16);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(gold[0], gold[1], gold[2]);
+    doc.text('Horren op maat, professioneel gemonteerd', 15, 23);
+
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(9);
+    doc.text('www.horrenspecialisten.nl', pageW - 15, 15, {align:'right'});
+    doc.text('info@horrenspecialisten.nl', pageW - 15, 20.5, {align:'right'});
+    doc.text('+31 6 57 81 52 02', pageW - 15, 26, {align:'right'});
+
+    /* Titel + meta */
+    doc.setTextColor(anthracite[0], anthracite[1], anthracite[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text('Offerte', 15, 50);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(muted[0], muted[1], muted[2]);
+    doc.text('Offertenummer: ' + offerteNummer, 15, 58);
+    doc.text('Datum: ' + formatDatumNL(vandaag), 15, 63.5);
+    doc.text('Geldig tot: ' + formatDatumNL(geldigTot), 15, 69);
+
+    /* Klantgegevens */
+    doc.setDrawColor(225,222,212);
+    doc.line(15, 77, pageW - 15, 77);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(anthracite[0], anthracite[1], anthracite[2]);
+    doc.text('Klantgegevens', 15, 87);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(60,60,60);
+    var naamWaarde = naamEl.value.trim();
+    var emailWaarde = emailEl.value.trim();
+    var telWaarde = telefoonEl.value.trim();
+    var yKlant = 94;
+    doc.text('Naam: ' + naamWaarde, 15, yKlant);
+    yKlant += 5.5;
+    doc.text('E-mail: ' + emailWaarde, 15, yKlant);
+    if(telWaarde){
+      yKlant += 5.5;
+      doc.text('Telefoon: ' + telWaarde, 15, yKlant);
+    }
+
+    /* Specificatie */
+    var ySpec = yKlant + 14;
+    doc.setDrawColor(225,222,212);
+    doc.line(15, ySpec - 8, pageW - 15, ySpec - 8);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(anthracite[0], anthracite[1], anthracite[2]);
+    doc.text('Specificatie', 15, ySpec);
+
+    doc.setFillColor(242,239,232);
+    doc.rect(15, ySpec + 6, pageW - 30, 10, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(anthracite[0], anthracite[1], anthracite[2]);
+    doc.text('Omschrijving', 19, ySpec + 12.5);
+    doc.text('Afmetingen', 110, ySpec + 12.5);
+    doc.text('Oppervlakte', 155, ySpec + 12.5);
+
+    var lengteWaarde = parseFloat(lengteEl.value);
+    var breedteWaarde = parseFloat(breedteEl.value);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(60,60,60);
+    doc.text((TYPE_LABELS[getSelectedType()] || 'Hor') + ' op maat', 19, ySpec + 22);
+    doc.text(breedteWaarde.toLocaleString('nl-NL') + ' × ' + lengteWaarde.toLocaleString('nl-NL') + ' cm', 110, ySpec + 22);
+    doc.text(currentArea.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m²', 155, ySpec + 22);
+
+    doc.setDrawColor(225,222,212);
+    doc.line(15, ySpec + 28, pageW - 15, ySpec + 28);
+
+    /* Extra opties (transparant getoond met eigen prijs) */
+    var extras = [];
+    if(optAntipollenEl.checked){
+      extras.push({label: 'Anti-pollen gaas', price: PRICE_ANTIPOLLEN});
+    }
+    if(optHuisdierEl.checked){
+      extras.push({label: 'Huisdierengaas', price: PRICE_HUISDIER});
+    }
+    if(optFijnEl.checked){
+      extras.push({label: 'Extra fijn gaas', price: PRICE_FIJN});
+    }
+    if(optRalEl.checked){
+      var ral = getSelectedRal();
+      extras.push({label: 'RAL kleur' + (ral ? ' — ' + ral.label : ''), price: PRICE_RAL});
+    }
+
+    var yCursor = ySpec + 28;
+    if(extras.length){
+      yCursor += 10;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9.5);
+      doc.setTextColor(anthracite[0], anthracite[1], anthracite[2]);
+      doc.text('Extra opties', 15, yCursor);
+      yCursor += 6.5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      doc.setTextColor(60,60,60);
+      extras.forEach(function(extra){
+        doc.text(extra.label, 19, yCursor);
+        doc.text(formatEUR(extra.price), pageW - 19, yCursor, {align:'right'});
+        yCursor += 6;
+      });
+      yCursor += 4;
+      doc.setDrawColor(225,222,212);
+      doc.line(15, yCursor - 3, pageW - 15, yCursor - 3);
+    }
+
+    /* Totaal */
+    var yTotaal = yCursor + 14;
+    doc.setFillColor(anthracite[0], anthracite[1], anthracite[2]);
+    doc.rect(15, yTotaal - 10, pageW - 30, 18, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(255,255,255);
+    doc.text('Totaalprijs', 19, yTotaal + 1);
+    doc.setFontSize(15);
+    doc.setTextColor(gold[0], gold[1], gold[2]);
+    doc.text(formatEUR(currentTotal), pageW - 19, yTotaal + 1.5, {align:'right'});
+
+    /* Voorwaarden */
+    var yVoorw = yTotaal + 22;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.3);
+    doc.setTextColor(muted[0], muted[1], muted[2]);
+    var voorwaarden = [
+      'Deze offerte is ' + formatDatumNL(geldigTot) + ' geldig (30 dagen vanaf offertedatum).',
+      'De prijs is gebaseerd op de door u opgegeven afmetingen en wordt definitief bevestigd na een gratis inmeetafspraak op locatie.',
+      'Inclusief standaard materiaal en professionele montage. Eventueel meerwerk wordt vooraf met u besproken.'
+    ];
+    voorwaarden.forEach(function(line, i){
+      doc.text(doc.splitTextToSize(line, pageW - 30), 15, yVoorw + i*9);
+    });
+
+    /* Footer */
+    doc.setDrawColor(225,222,212);
+    doc.line(15, 280, pageW - 15, 280);
+    doc.setFontSize(8);
+    doc.setTextColor(muted[0], muted[1], muted[2]);
+    doc.text('Horrenspecialisten — Horren op maat door heel Nederland', 15, 286);
+    doc.text(offerteNummer, pageW - 15, 286, {align:'right'});
+
+    doc.save('Offerte-Horrenspecialisten-' + offerteNummer + '.pdf');
+  }
+
+  akkoordBtn.addEventListener('click', function(){
+    if(akkoordBtn.disabled || currentTotal === null) return;
+    genereerPDF();
+    calcResult.style.display = 'none';
+    calcSuccess.style.display = 'block';
+  });
+
+  resetBtn.addEventListener('click', function(){
+    form.reset();
+    optAntipollenWrap.classList.remove('is-checked');
+    optHuisdierWrap.classList.remove('is-checked');
+    optFijnWrap.classList.remove('is-checked');
+    optRalWrap.classList.remove('is-checked');
+    ralCodeWrap.style.display = 'none';
+    typeCards.forEach(function(card){
+      card.classList.toggle('is-checked', card.querySelector('input').checked);
+    });
+    ralSwatches.forEach(function(swatch){
+      swatch.classList.toggle('is-checked', swatch.querySelector('input').checked);
+    });
+    updateCalculation();
+    calcSuccess.style.display = 'none';
+    calcResult.style.display = 'block';
+    goToStep(1);
+  });
+
+  updateCalculation();
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//private/tmp/claude-502/**)",
+      "Read(//private/tmp/**)",
+      "Read(//Users/loutfi.ghattas/Downloads/**)",
+      "Bash(sips --version)",
+      "Bash(sips -g pixelWidth -g pixelHeight \"/Users/loutfi.ghattas/Downloads/g1.jpg\" \"/Users/loutfi.ghattas/Downloads/g2.png\" \"/Users/loutfi.ghattas/Downloads/g3.png\" \"/Users/loutfi.ghattas/Downloads/G4.png\")",
+      "Bash(mkdir -p \"/Users/loutfi.ghattas/New HS Site/images\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1800 \"/Users/loutfi.ghattas/Downloads/g3.png\" --out \"hero-raamhor-lichte-kamer.jpg\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1400 \"/Users/loutfi.ghattas/Downloads/g2.png\" --out \"raamhor-close-up-avond.jpg\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1400 \"/Users/loutfi.ghattas/Downloads/g1.jpg\" --out \"plisse-hordeur-schuifpui-dag.jpg\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1600 \"/Users/loutfi.ghattas/Downloads/G4.png\" --out \"schuifpui-hordeur-avondsfeer.jpg\")",
+      "WebFetch(domain:cdn.jsdelivr.net)",
+      "Bash(python3 -)",
+      "Bash(grep -n \"^<script>$\\\\|^}\\)\\(\\);$\\\\|^</script>$\" \"/Users/loutfi.ghattas/New HS Site/index.html\")",
+      "Bash(rm \"/Users/loutfi.ghattas/Downloads/Offerte-Horrenspecialisten-HS-20260717-7466.pdf\")",
+      "Bash(curl -s \"http://localhost:8642/styles.css\")",
+      "Bash(curl -s \"http://localhost:8642/main.js\")",
+      "Bash(curl -sv \"http://localhost:8642/main.js\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1400 \"/Users/loutfi.ghattas/Downloads/G7.png\" --out \"rolhor-close-up-raam.jpg\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1400 \"/Users/loutfi.ghattas/Downloads/g5.png\" --out \"plisse-hordeur-dubbele-deur-dag.jpg\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1600 \"/Users/loutfi.ghattas/Downloads/G6.png\" --out \"plisse-hordeur-open-lichte-kamer.jpg\")",
+      "Bash(sips -s format jpeg -s formatOptions 82 -Z 1600 \"/Users/loutfi.ghattas/Downloads/G8.png\" --out \"hordeur-detail-tuindeur.jpg\")",
+      "Bash(sips -g pixelWidth -g pixelHeight plisse-hordeur-dubbele-deur-dag.jpg rolhor-close-up-raam.jpg plisse-hordeur-open-lichte-kamer.jpg hordeur-detail-tuindeur.jpg)",
+      "Bash(curl -s \"http://localhost:8642/index.html\")",
+      "Bash(python3 -c ' *)",
+      "Bash(node --check /tmp/offerte_inline.js)",
+      "Bash(sips -g hasAlpha -g pixelWidth -g pixelHeight \"/Users/loutfi.ghattas/Downloads/Def Logo.png\")",
+      "Bash(python3 -c \"import PIL; print\\(PIL.__version__\\)\")",
+      "Bash(python3 -m pip install --quiet --user Pillow)",
+      "Bash(python3 -c \"from PIL import Image; print\\('ok'\\)\")",
+      "Bash(python3)",
+      "Bash(python3 -m pip install --quiet --user numpy)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(npx --yes vercel login loutfi.gha@gmail.com)",
+      "Bash(python3 -c \"print\\(round\\(0.36*165+35,2\\)\\)\")",
+      "Bash(xargs -n1 basename)",
+      "Bash(sips -g pixelWidth -g pixelHeight schuifpui-hordeur-avondsfeer.jpg hero-raamhor-lichte-kamer.jpg hordeur-detail-tuindeur.jpg plisse-hordeur-open-lichte-kamer.jpg)",
+      "Bash(sips -g pixelWidth -g pixelHeight \"/Users/loutfi.ghattas/Downloads/G4.png\")"
+    ]
+  }
+}
