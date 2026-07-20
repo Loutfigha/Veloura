@@ -270,8 +270,9 @@
                 <span class="field-error" id="errEmail"></span>
               </div>
               <div class="form-field">
-                <label for="telefoon">Telefoon <span style="font-weight:400;color:var(--text-muted);">(optioneel)</span></label>
-                <input type="tel" id="telefoon" name="telefoon" autocomplete="tel">
+                <label for="telefoon">Telefoon</label>
+                <input type="tel" id="telefoon" name="telefoon" autocomplete="tel" required>
+                <span class="field-error" id="errTelefoon"></span>
               </div>
             </div>
             <div class="wizard-nav">
@@ -482,6 +483,7 @@
   var errBreedte = document.getElementById('errBreedte');
   var errNaam = document.getElementById('errNaam');
   var errEmail = document.getElementById('errEmail');
+  var errTelefoon = document.getElementById('errTelefoon');
 
   var calcPriceEl = document.getElementById('calcPrice');
   var specType = document.getElementById('specType');
@@ -630,12 +632,18 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   }
 
+  function isValidPhone(value){
+    return (value.match(/[0-9]/g) || []).length >= 6;
+  }
+
   function updateAkkoordState(){
     var naamValid = naamEl.value.trim().length > 1;
     var emailValid = isValidEmail(emailEl.value.trim());
+    var telefoonValid = isValidPhone(telefoonEl.value.trim());
     errNaam.textContent = '';
     errEmail.textContent = '';
-    akkoordBtn.disabled = !(currentTotal !== null && naamValid && emailValid);
+    errTelefoon.textContent = '';
+    akkoordBtn.disabled = !(currentTotal !== null && naamValid && emailValid && telefoonValid);
   }
 
   [lengteEl, breedteEl].forEach(function(el){
@@ -645,7 +653,7 @@
   typeCards.forEach(function(card){
     card.querySelector('input').addEventListener('change', updateCalculation);
   });
-  [naamEl, emailEl].forEach(function(el){
+  [naamEl, emailEl, telefoonEl].forEach(function(el){
     el.addEventListener('input', updateAkkoordState);
   });
 
@@ -886,7 +894,7 @@
       '',
       'Naam: ' + naam,
       'E-mail: ' + emailEl.value.trim(),
-      'Telefoon: ' + (telefoonEl.value.trim() || '(niet ingevuld)')
+      'Telefoon: ' + telefoonEl.value.trim()
     ].join('\n');
 
     /* Geen backend beschikbaar: opent de eigen mailapp van de bezoeker
