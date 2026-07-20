@@ -67,7 +67,6 @@ em{font-style:italic;color:var(--gold-dark);}
   color:var(--gold-dark);
   margin-bottom:1.1rem;
 }
-.eyebrow::before{content:'';width:26px;height:1px;background:var(--gold);display:inline-block;}
 
 .section-head{max-width:640px;margin-bottom:3.4rem;}
 .section-head.center{margin-left:auto;margin-right:auto;text-align:center;}
@@ -553,7 +552,6 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 }
 .calc-summary-inner{position:relative;z-index:1;}
 .calc-summary .eyebrow{color:var(--gold-light);}
-.calc-summary .eyebrow::before{background:var(--gold-light);}
 .calc-price-row{display:flex;align-items:baseline;justify-content:space-between;margin:1.6rem 0 .3rem;}
 .calc-price-label{font-size:.92rem;color:rgba(255,255,255,0.65);}
 .calc-price{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,3.2vw,3rem);font-weight:600;color:#fff;}
@@ -858,7 +856,6 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 
 .hero-dark-inner{position:relative;z-index:2;max-width:760px;}
 .hero-dark .eyebrow{color:var(--gold-light);}
-.hero-dark .eyebrow::before{background:var(--gold-light);}
 .hero-dark h1{color:#fff;margin-bottom:1.5rem;}
 .hero-dark h1 em{color:var(--gold-light);}
 .hero-dark-lead{font-size:1.2rem;color:rgba(255,255,255,0.72);max-width:560px;margin-bottom:2.6rem;}
