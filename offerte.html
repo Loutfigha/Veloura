@@ -68,7 +68,7 @@
       <div class="section-head center reveal" style="max-width:720px;">
         <p class="eyebrow" style="justify-content:center;">Offerte calculator</p>
         <h1 style="font-size:clamp(2.2rem,3.6vw + 1rem,3.4rem);">Bereken direct de prijs van uw hor op maat</h1>
-        <p style="font-size:1.08rem;">Vul de afmetingen van uw raam of deur in en zie meteen de offerteprijs. Akkoord? Dan ontvangt u de offerte direct als PDF.</p>
+        <p style="font-size:1.08rem;">Vul de afmetingen van uw raam of deur in en zie meteen een prijsindicatie. Akkoord? Dan ontvangt u deze direct als PDF. De definitieve prijs stellen wij vast na een gratis meting aan huis.</p>
       </div>
     </div>
   </section>
@@ -298,10 +298,10 @@
                 <span>4,9 · 500+ tevreden klanten</span>
               </div>
               <div class="calc-price-row">
-                <span class="calc-price-label">Offerteprijs</span>
+                <span class="calc-price-label">Indicatieve offerteprijs</span>
                 <span class="calc-price is-empty" id="calcPrice">Vul de afmetingen in</span>
               </div>
-              <p class="calc-summary-note">Inclusief materiaal, op maat productie en montage.</p>
+              <p class="calc-summary-note">Inclusief materiaal, op maat productie en montage. Dit is een prijsindicatie: de definitieve prijs kan afwijken en wordt vastgesteld na een gratis meting aan huis.</p>
 
               <ul class="calc-summary-list" id="calcSpecs">
                 <li><span>Type hor</span><span id="specType">—</span></li>
@@ -323,7 +323,7 @@
               <ul class="calc-trust">
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vrijblijvend, geen verplichtingen</li>
                 <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>PDF direct gedownload</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Offerte 30 dagen geldig</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Offerte max. 10 dagen geldig</li>
               </ul>
 
               <div class="calc-whatsapp-help">
@@ -695,7 +695,7 @@
 
     var offerteNummer = genereerOfferteNummer();
     var vandaag = new Date();
-    var geldigTot = new Date(vandaag.getTime() + 30*24*60*60*1000);
+    var geldigTot = new Date(vandaag.getTime() + 10*24*60*60*1000);
 
     var anthracite = [34,34,34];
     var gold = [184,155,94];
@@ -833,7 +833,7 @@
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.setTextColor(255,255,255);
-    doc.text('Totaalprijs', 19, yTotaal + 1);
+    doc.text('Indicatieve totaalprijs', 19, yTotaal + 1);
     doc.setFontSize(15);
     doc.setTextColor(gold[0], gold[1], gold[2]);
     doc.text(formatEUR(currentTotal), pageW - 19, yTotaal + 1.5, {align:'right'});
@@ -844,8 +844,8 @@
     doc.setFontSize(8.3);
     doc.setTextColor(muted[0], muted[1], muted[2]);
     var voorwaarden = [
-      'Deze offerte is ' + formatDatumNL(geldigTot) + ' geldig (30 dagen vanaf offertedatum).',
-      'De prijs is gebaseerd op de door u opgegeven afmetingen en wordt definitief bevestigd na een gratis inmeetafspraak op locatie.',
+      'Deze offerte is ' + formatDatumNL(geldigTot) + ' geldig (max. 10 dagen vanaf offertedatum).',
+      'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
       'Inclusief standaard materiaal en professionele montage. Eventueel meerwerk wordt vooraf met u besproken.'
     ];
     voorwaarden.forEach(function(line, i){
