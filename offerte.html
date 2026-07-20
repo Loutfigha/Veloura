@@ -335,7 +335,7 @@
             <div class="calc-success" id="calcSuccess">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
               <h3>Uw offerte is gedownload</h3>
-              <p>De PDF staat in uw downloads-map. We e-mailen offertes op dit moment nog niet automatisch. Stuur 'm gerust zelf door, of neem contact met ons op.</p>
+              <p>De PDF staat in uw downloads-map. Uw e-mailprogramma opent zo met een vooraf ingevuld bericht aan ons. Klik daarin op verzenden om uw aanvraag naar ons door te sturen.</p>
               <button type="button" class="btn btn-ghost" id="resetBtn" style="border-color:rgba(255,255,255,0.3);color:#fff;">Nieuwe berekening starten</button>
             </div>
 
@@ -863,9 +863,41 @@
     doc.save('Offerte-Horrenspecialisten-' + offerteNummer + '.pdf');
   }
 
+  var OFFERTE_EMAIL = 'thefuturedesignalmere@gmail.com';
+
+  function verstuurOfferteMail(){
+    var extras = [];
+    if(optAntipollenEl.checked){ extras.push('Anti-pollen gaas'); }
+    if(optHuisdierEl.checked){ extras.push('Huisdierengaas'); }
+    if(optFijnEl.checked){ extras.push('Extra fijn gaas'); }
+    if(optRalEl.checked){
+      var ral = getSelectedRal();
+      extras.push('RAL kleur' + (ral ? ': ' + ral.label : ''));
+    }
+
+    var naam = naamEl.value.trim();
+    var subject = 'Nieuwe offerte-aanvraag - ' + naam;
+    var body = [
+      'Type hor: ' + (TYPE_LABELS[getSelectedType()] || '-'),
+      'Afmetingen: ' + breedteEl.value + ' x ' + lengteEl.value + ' cm',
+      'Oppervlakte: ' + currentArea.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m2',
+      'Extra opties: ' + (extras.length ? extras.join(', ') : 'geen'),
+      'Indicatieve totaalprijs: ' + formatEUR(currentTotal),
+      '',
+      'Naam: ' + naam,
+      'E-mail: ' + emailEl.value.trim(),
+      'Telefoon: ' + (telefoonEl.value.trim() || '(niet ingevuld)')
+    ].join('\n');
+
+    /* Geen backend beschikbaar: opent de eigen mailapp van de bezoeker
+       met een vooraf ingevuld bericht naar Horrenspecialisten. */
+    window.location.href = 'mailto:' + OFFERTE_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
   akkoordBtn.addEventListener('click', function(){
     if(akkoordBtn.disabled || currentTotal === null) return;
     genereerPDF();
+    verstuurOfferteMail();
     calcResult.style.display = 'none';
     calcSuccess.style.display = 'block';
   });

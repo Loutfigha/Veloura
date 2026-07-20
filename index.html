@@ -640,7 +640,7 @@
           <div class="form-success" id="formSuccess" role="status">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
             <h3>Bedankt voor uw bericht</h3>
-            <p>Wij nemen binnen één werkdag contact met u op.</p>
+            <p>Uw e-mailprogramma opent zo met een vooraf ingevuld bericht aan ons. Klik daarin op verzenden om uw aanvraag te versturen. Wij nemen binnen één werkdag contact met u op.</p>
           </div>
         </div>
       </div>
@@ -737,17 +737,37 @@
     });
   });
 
-  /* ---------- Contact form (client-side only demo) ---------- */
+  /* ---------- Contact form ---------- */
   var form = document.getElementById('contactForm');
   var success = document.getElementById('formSuccess');
+  var CONTACT_EMAIL = 'thefuturedesignalmere@gmail.com';
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(!form.checkValidity()){
       form.reportValidity();
       return;
     }
-    /* NOTE: this demo has no backend. Connect this handler to your
-       form endpoint (e.g. an email service or CRM) to receive real leads. */
+    var naam = document.getElementById('naam').value.trim();
+    var telefoon = document.getElementById('telefoon').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var postcode = document.getElementById('postcode').value.trim();
+    var bericht = document.getElementById('bericht').value.trim();
+
+    var subject = 'Contactformulier website - ' + naam;
+    var body = [
+      'Naam: ' + naam,
+      'Telefoon: ' + telefoon,
+      'E-mail: ' + email,
+      'Postcode: ' + postcode,
+      '',
+      'Bericht:',
+      bericht || '(geen bericht ingevuld)'
+    ].join('\n');
+
+    /* Geen backend beschikbaar: opent de eigen mailapp van de bezoeker
+       met een vooraf ingevuld bericht naar Horrenspecialisten. */
+    window.location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
     form.style.display = 'none';
     success.style.display = 'block';
   });
