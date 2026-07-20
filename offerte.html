@@ -33,7 +33,7 @@
 <!-- ===================== HEADER ===================== -->
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
-    <a href="index.html" class="logo" aria-label="Horrenspecialisten — naar de homepage">
+    <a href="index.html" class="logo" aria-label="Naar de homepage van Horrenspecialisten">
       <img src="images/logo-header.png" alt="Horrenspecialisten" class="logo-mark">
     </a>
 
@@ -86,7 +86,7 @@
           </ul>
           <div class="wizard-progress">
             <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizardProgressFill" style="width:25%"></div></div>
-            <span class="wizard-progress-label">Stap <strong id="wizardStepNum">1</strong> van 4 — <span id="wizardStepName">Type hor</span></span>
+            <span class="wizard-progress-label">Stap <strong id="wizardStepNum">1</strong> van 4 · <span id="wizardStepName">Type hor</span></span>
           </div>
 
           <form id="calcForm" novalidate>
@@ -243,7 +243,7 @@
 
               <div class="calc-note">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="7" rx="1"/><rect x="14" y="15" width="7" height="7" rx="1"/></svg>
-                <span>Horren nodig voor meerdere ramen of deuren? <a href="index.html#contact">Vraag een gecombineerde offerte aan</a> — dan stemmen wij alles in één keer op elkaar af.</span>
+                <span>Horren nodig voor meerdere ramen of deuren? <a href="index.html#contact">Vraag een gecombineerde offerte aan</a>, dan stemmen wij alles in één keer op elkaar af.</span>
               </div>
             </div>
 
@@ -335,7 +335,7 @@
             <div class="calc-success" id="calcSuccess">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
               <h3>Uw offerte is gedownload</h3>
-              <p>De PDF staat in uw downloads-map. We e-mailen offertes op dit moment nog niet automatisch — stuur 'm gerust zelf door, of neem contact met ons op.</p>
+              <p>De PDF staat in uw downloads-map. We e-mailen offertes op dit moment nog niet automatisch. Stuur 'm gerust zelf door, of neem contact met ons op.</p>
               <button type="button" class="btn btn-ghost" id="resetBtn" style="border-color:rgba(255,255,255,0.3);color:#fff;">Nieuwe berekening starten</button>
             </div>
 
@@ -802,7 +802,7 @@
     }
     if(optRalEl.checked){
       var ral = getSelectedRal();
-      extras.push({label: 'RAL kleur' + (ral ? ' — ' + ral.label : ''), price: PRICE_RAL});
+      extras.push({label: 'RAL kleur' + (ral ? ': ' + ral.label : ''), price: PRICE_RAL});
     }
 
     var yCursor = ySpec + 28;
@@ -857,7 +857,7 @@
     doc.line(15, 280, pageW - 15, 280);
     doc.setFontSize(8);
     doc.setTextColor(muted[0], muted[1], muted[2]);
-    doc.text('Horrenspecialisten — Horren op maat door heel Nederland', 15, 286);
+    doc.text('Horrenspecialisten · Horren op maat door heel Nederland', 15, 286);
     doc.text(offerteNummer, pageW - 15, 286, {align:'right'});
 
     doc.save('Offerte-Horrenspecialisten-' + offerteNummer + '.pdf');
