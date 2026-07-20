@@ -311,6 +311,14 @@ textarea.input { min-height: 100px; resize: vertical; }
 .select-card.is-selected .dot { border-color: var(--color-accent); background: var(--color-accent); box-shadow: inset 0 0 0 3px var(--color-bg); }
 .select-card .label { font-family: var(--font-heading); font-size: 16px; }
 .select-card .price-add { font-size: 12px; opacity: .6; }
+.select-card.is-checkbox { flex-direction: row; text-align: left; justify-content: flex-start; min-height: unset; padding: var(--space-3) var(--space-4) var(--space-3) 42px; }
+.select-card.is-checkbox .dot { border-radius: 3px; top: 50%; transform: translateY(-50%); left: var(--space-3); }
+.select-card.is-checkbox.is-selected .dot { box-shadow: none; }
+.select-card.is-checkbox.is-selected .dot::after { content: ''; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid var(--color-bg); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.select-card.is-checkbox .label-row { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.select-card.is-checkbox .label { font-size: 15px; }
+.select-card.is-checkbox .sublabel { font-size: 12.5px; opacity: .65; font-family: var(--font-body); }
+.select-card.is-checkbox .price-add { margin-left: auto; white-space: nowrap; align-self: center; }
 
 .dim-row-v2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
 
