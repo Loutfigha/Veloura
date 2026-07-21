@@ -158,34 +158,36 @@
               <span class="calc-step-num">3</span>
               <span>Extra opties</span>
             </div>
+            <div style="margin-bottom:1.8rem;">
+              <div class="calc-step-label" style="margin-bottom:.9rem;">
+                <span>Type gaas</span>
+              </div>
+              <div class="type-card-grid" id="gaasCardGrid" style="grid-template-columns:1fr 1fr;margin-bottom:1.6rem;">
+                <label class="type-card is-checked" data-gaas-card="standaard">
+                  <input type="radio" name="typeGaas" value="standaard" checked>
+                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/></svg></span>
+                  <span class="label">Standaard gaas</span>
+                </label>
+                <label class="type-card" data-gaas-card="antipollen">
+                  <input type="radio" name="typeGaas" value="antipollen">
+                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.5h16M4 14.5h16M9.5 4v16M14.5 4v16"/><circle cx="9.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/></svg></span>
+                  <span class="label">Anti-pollen gaas</span>
+                </label>
+                <label class="type-card" data-gaas-card="huisdier">
+                  <input type="radio" name="typeGaas" value="huisdier">
+                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 11.5h16M11.5 4v16"/></svg></span>
+                  <span class="label">Huisdierengaas</span>
+                </label>
+                <label class="type-card" data-gaas-card="extrafijn">
+                  <input type="radio" name="typeGaas" value="extrafijn">
+                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 7.4h16M4 10.8h16M4 14.2h16M4 17.6h16M7.4 4v16M10.8 4v16M14.2 4v16M17.6 4v16"/></svg></span>
+                  <span class="label">Extra fijn gaas</span>
+                </label>
+              </div>
+              <p class="dim-hint" id="gaasDescription" style="margin-top:-1rem;margin-bottom:1.4rem;">Ons standaard fiberglas gaas, geschikt voor de meeste situaties.</p>
+            </div>
+
             <div style="display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem;">
-              <label class="option-toggle" id="optAntipollenWrap">
-                <input type="checkbox" id="optAntipollen">
-                <span class="option-toggle-text">
-                  <strong>Anti-pollen gaas</strong>
-                  <span>Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt</span>
-                </span>
-                <span class="option-toggle-price">+ € 30,00</span>
-              </label>
-
-              <label class="option-toggle" id="optHuisdierWrap">
-                <input type="checkbox" id="optHuisdier">
-                <span class="option-toggle-text">
-                  <strong>Huisdierengaas</strong>
-                  <span>Extra sterk, krasbestendig gaas tegen nagels van hond of kat</span>
-                </span>
-                <span class="option-toggle-price">+ € 45,00</span>
-              </label>
-
-              <label class="option-toggle" id="optFijnWrap">
-                <input type="checkbox" id="optFijn">
-                <span class="option-toggle-text">
-                  <strong>Extra fijn gaas</strong>
-                  <span>Nog fijnmaziger weefsel voor maximale weringskracht</span>
-                </span>
-                <span class="option-toggle-price">+ € 30,00</span>
-              </label>
-
               <label class="option-toggle" id="optRalWrap">
                 <input type="checkbox" id="optRal">
                 <span class="option-toggle-text">
@@ -307,9 +309,8 @@
                 <li><span>Type hor</span><span id="specType">—</span></li>
                 <li><span>Afmetingen</span><span id="specDim">—</span></li>
                 <li><span>Oppervlakte</span><span id="specArea">—</span></li>
-                <li id="specAntipollenRow" style="display:none;"><span>Anti-pollen gaas</span><span>+ € 30,00</span></li>
-                <li id="specHuisdierRow" style="display:none;"><span>Huisdierengaas</span><span>+ € 45,00</span></li>
-                <li id="specFijnRow" style="display:none;"><span>Extra fijn gaas</span><span>+ € 30,00</span></li>
+                <li><span>Type gaas</span><span id="specGaas">Standaard</span></li>
+                <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">—</span><span id="specGaasPrice">—</span></li>
                 <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>—</span></li>
               </ul>
 
@@ -441,9 +442,6 @@
 
   var PRICE_PER_M2 = 165;
   var HIDDEN_SURCHARGE = 35; /* verzendkosten: bewust niet los getoond aan de klant, wel verrekend in de totaalprijs */
-  var PRICE_ANTIPOLLEN = 30; /* eenmalig */
-  var PRICE_HUISDIER = 45; /* eenmalig */
-  var PRICE_FIJN = 30; /* eenmalig */
   var PRICE_RAL = 10; /* per hor */
 
   var TYPE_LABELS = {
@@ -453,27 +451,31 @@
     rolhor: 'Rolhor'
   };
 
+  var GAAS_INFO = {
+    standaard: { label: 'Standaard gaas', price: 0, description: 'Ons standaard fiberglas gaas, geschikt voor de meeste situaties.' },
+    antipollen: { label: 'Anti-pollen gaas', price: 30, description: 'Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt.' },
+    huisdier: { label: 'Huisdierengaas', price: 45, description: 'Extra sterk, krasbestendig gaas tegen nagels van hond of kat.' },
+    extrafijn: { label: 'Extra fijn gaas', price: 30, description: 'Nog fijnmaziger weefsel voor maximale weringskracht.' }
+  };
+
   var form = document.getElementById('calcForm');
-  var typeCards = document.querySelectorAll('.type-card');
+  var typeCards = document.querySelectorAll('#typeCardGrid .type-card');
+  var gaasCards = document.querySelectorAll('#gaasCardGrid .type-card');
+  var gaasDescriptionEl = document.getElementById('gaasDescription');
   var lengteEl = document.getElementById('lengte');
   var breedteEl = document.getElementById('breedte');
   var naamEl = document.getElementById('naam');
   var emailEl = document.getElementById('email');
   var telefoonEl = document.getElementById('telefoon');
 
-  var optAntipollenEl = document.getElementById('optAntipollen');
-  var optAntipollenWrap = document.getElementById('optAntipollenWrap');
-  var optHuisdierEl = document.getElementById('optHuisdier');
-  var optHuisdierWrap = document.getElementById('optHuisdierWrap');
-  var optFijnEl = document.getElementById('optFijn');
-  var optFijnWrap = document.getElementById('optFijnWrap');
   var optRalEl = document.getElementById('optRal');
   var optRalWrap = document.getElementById('optRalWrap');
   var ralCodeWrap = document.getElementById('ralCodeWrap');
   var ralSwatches = document.querySelectorAll('.ral-swatch');
-  var specAntipollenRow = document.getElementById('specAntipollenRow');
-  var specHuisdierRow = document.getElementById('specHuisdierRow');
-  var specFijnRow = document.getElementById('specFijnRow');
+  var specGaasEl = document.getElementById('specGaas');
+  var specGaasPriceRow = document.getElementById('specGaasPriceRow');
+  var specGaasPriceLabel = document.getElementById('specGaasPriceLabel');
+  var specGaasPrice = document.getElementById('specGaasPrice');
   var specRalRow = document.getElementById('specRalRow');
   var deliveryWindowEl = document.getElementById('deliveryWindow');
   var step2NextBtn = document.getElementById('step2NextBtn');
@@ -509,6 +511,21 @@
     var name = checked.closest('.ral-swatch').dataset.name;
     return {code: checked.value, name: name, label: name + ' (' + checked.value + ')'};
   }
+
+  function getSelectedGaas(){
+    var checked = form.querySelector('input[name="typeGaas"]:checked');
+    var key = checked ? checked.value : 'standaard';
+    return GAAS_INFO[key] ? Object.assign({key: key}, GAAS_INFO[key]) : Object.assign({key: 'standaard'}, GAAS_INFO.standaard);
+  }
+
+  gaasCards.forEach(function(card){
+    card.addEventListener('click', function(){
+      gaasCards.forEach(function(c){ c.classList.remove('is-checked'); });
+      card.classList.add('is-checked');
+      gaasDescriptionEl.textContent = getSelectedGaas().description;
+      updateCalculation();
+    });
+  });
 
   /* Pre-select type from ?type= query param (links from the productoverzicht) */
   var params = new URLSearchParams(location.search);
@@ -591,9 +608,13 @@
     var dimsValid = validDimension(lengte) && validDimension(breedte);
     step2NextBtn.disabled = !dimsValid;
 
-    specAntipollenRow.style.display = optAntipollenEl.checked ? 'flex' : 'none';
-    specHuisdierRow.style.display = optHuisdierEl.checked ? 'flex' : 'none';
-    specFijnRow.style.display = optFijnEl.checked ? 'flex' : 'none';
+    var gaas = getSelectedGaas();
+    specGaasEl.textContent = gaas.label;
+    specGaasPriceRow.style.display = gaas.price > 0 ? 'flex' : 'none';
+    if(gaas.price > 0){
+      specGaasPriceLabel.textContent = gaas.label;
+      specGaasPrice.textContent = '+ ' + formatEUR(gaas.price);
+    }
     specRalRow.style.display = optRalEl.checked ? 'flex' : 'none';
     if(optRalEl.checked){
       var ral = getSelectedRal();
@@ -603,7 +624,7 @@
     if(dimsValid){
       var areaM2 = (lengte / 100) * (breedte / 100);
       var subtotal = areaM2 * PRICE_PER_M2;
-      var extrasTotal = (optAntipollenEl.checked ? PRICE_ANTIPOLLEN : 0) + (optHuisdierEl.checked ? PRICE_HUISDIER : 0) + (optFijnEl.checked ? PRICE_FIJN : 0) + (optRalEl.checked ? PRICE_RAL : 0);
+      var extrasTotal = gaas.price + (optRalEl.checked ? PRICE_RAL : 0);
       var total = subtotal + HIDDEN_SURCHARGE + extrasTotal;
 
       currentTotal = total;
@@ -656,18 +677,6 @@
     el.addEventListener('input', updateAkkoordState);
   });
 
-  optAntipollenEl.addEventListener('change', function(){
-    optAntipollenWrap.classList.toggle('is-checked', optAntipollenEl.checked);
-    updateCalculation();
-  });
-  optHuisdierEl.addEventListener('change', function(){
-    optHuisdierWrap.classList.toggle('is-checked', optHuisdierEl.checked);
-    updateCalculation();
-  });
-  optFijnEl.addEventListener('change', function(){
-    optFijnWrap.classList.toggle('is-checked', optFijnEl.checked);
-    updateCalculation();
-  });
   optRalEl.addEventListener('change', function(){
     optRalWrap.classList.toggle('is-checked', optRalEl.checked);
     ralCodeWrap.style.display = optRalEl.checked ? 'block' : 'none';
@@ -804,14 +813,9 @@
 
     /* Extra opties (transparant getoond met eigen prijs) */
     var extras = [];
-    if(optAntipollenEl.checked){
-      extras.push({label: 'Anti-pollen gaas', price: PRICE_ANTIPOLLEN});
-    }
-    if(optHuisdierEl.checked){
-      extras.push({label: 'Huisdierengaas', price: PRICE_HUISDIER});
-    }
-    if(optFijnEl.checked){
-      extras.push({label: 'Extra fijn gaas', price: PRICE_FIJN});
+    var gaasPdf = getSelectedGaas();
+    if(gaasPdf.price > 0){
+      extras.push({label: gaasPdf.label, price: gaasPdf.price});
     }
     if(optRalEl.checked){
       var ral = getSelectedRal();
@@ -880,9 +884,8 @@
 
   function verstuurOfferteMail(){
     var extras = [];
-    if(optAntipollenEl.checked){ extras.push('Anti-pollen gaas'); }
-    if(optHuisdierEl.checked){ extras.push('Huisdierengaas'); }
-    if(optFijnEl.checked){ extras.push('Extra fijn gaas'); }
+    var gaasMail = getSelectedGaas();
+    if(gaasMail.price > 0){ extras.push(gaasMail.label); }
     if(optRalEl.checked){
       var ral = getSelectedRal();
       extras.push('RAL kleur' + (ral ? ': ' + ral.label : ''));
@@ -917,14 +920,15 @@
 
   resetBtn.addEventListener('click', function(){
     form.reset();
-    optAntipollenWrap.classList.remove('is-checked');
-    optHuisdierWrap.classList.remove('is-checked');
-    optFijnWrap.classList.remove('is-checked');
     optRalWrap.classList.remove('is-checked');
     ralCodeWrap.style.display = 'none';
     typeCards.forEach(function(card){
       card.classList.toggle('is-checked', card.querySelector('input').checked);
     });
+    gaasCards.forEach(function(card){
+      card.classList.toggle('is-checked', card.querySelector('input').checked);
+    });
+    gaasDescriptionEl.textContent = getSelectedGaas().description;
     ralSwatches.forEach(function(swatch){
       swatch.classList.toggle('is-checked', swatch.querySelector('input').checked);
     });
