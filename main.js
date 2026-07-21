@@ -57,23 +57,38 @@
   navOverlay.className = 'nav-overlay';
   navOverlay.setAttribute('aria-hidden', 'true');
 
+  function openNav(){
+    if(!mainNav || !navToggle) return;
+    mainNav.classList.add('open');
+    navOverlay.classList.add('is-visible');
+    navToggle.setAttribute('aria-expanded','true');
+    document.documentElement.classList.add('nav-locked');
+  }
   function closeNav(){
     if(!mainNav || !navToggle) return;
     mainNav.classList.remove('open');
     navOverlay.classList.remove('is-visible');
     navToggle.setAttribute('aria-expanded','false');
+    document.documentElement.classList.remove('nav-locked');
   }
   if(navToggle && mainNav){
     document.body.appendChild(navOverlay);
     navToggle.addEventListener('click', function(){
-      var isOpen = mainNav.classList.toggle('open');
-      navOverlay.classList.toggle('is-visible', isOpen);
-      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if(mainNav.classList.contains('open')) closeNav(); else openNav();
     });
     mainNav.querySelectorAll('.nav-link').forEach(function(link){
       link.addEventListener('click', closeNav);
     });
     navOverlay.addEventListener('click', closeNav);
+    /* Robust click-outside fallback: closes the drawer for any tap that
+       lands outside it, independent of whether the dimmed overlay div
+       itself received the tap (belt-and-braces on touch browsers where
+       a fast tap can otherwise register as a scroll gesture). */
+    document.addEventListener('click', function(e){
+      if(!mainNav.classList.contains('open')) return;
+      if(mainNav.contains(e.target) || navToggle.contains(e.target)) return;
+      closeNav();
+    });
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape') closeNav();
     });
