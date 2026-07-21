@@ -53,20 +53,27 @@
   /* ---------- Mobile nav toggle ---------- */
   var navToggle = document.getElementById('navToggle');
   var mainNav = document.getElementById('mainNav');
+  var navOverlay = document.createElement('div');
+  navOverlay.className = 'nav-overlay';
+  navOverlay.setAttribute('aria-hidden', 'true');
 
   function closeNav(){
     if(!mainNav || !navToggle) return;
     mainNav.classList.remove('open');
+    navOverlay.classList.remove('is-visible');
     navToggle.setAttribute('aria-expanded','false');
   }
   if(navToggle && mainNav){
+    document.body.appendChild(navOverlay);
     navToggle.addEventListener('click', function(){
       var isOpen = mainNav.classList.toggle('open');
+      navOverlay.classList.toggle('is-visible', isOpen);
       navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
     mainNav.querySelectorAll('.nav-link').forEach(function(link){
       link.addEventListener('click', closeNav);
     });
+    navOverlay.addEventListener('click', closeNav);
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape') closeNav();
     });

@@ -1050,6 +1050,12 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   .nav-toggle{display:flex;}
   .header-actions .btn-sm{display:none;}
   .mobile-cta{display:block;}
+  .nav-overlay{
+    position:fixed;inset:0;background:rgba(20,18,16,0.4);
+    opacity:0;pointer-events:none;transition:opacity .35s var(--ease);
+    z-index:998;
+  }
+  .nav-overlay.is-visible{opacity:1;pointer-events:auto;}
 }
 @media (max-width:960px){
   .hero-inner{grid-template-columns:1fr;}
