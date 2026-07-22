@@ -110,10 +110,10 @@
                 <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 3v18M9 3v18M12 3v18M15 3v18M18 3v18"/></svg></span>
                 <span class="label">Plissé hordeur</span>
               </label>
-              <label class="type-card" data-type-card="rolhor">
-                <input type="radio" name="typeHor" value="rolhor">
-                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="4" rx="1"/><path d="M6 8v12M18 8v12M6 12h12M6 16h12"/></svg></span>
-                <span class="label">Rolhor</span>
+              <label class="type-card" data-type-card="shutters">
+                <input type="radio" name="typeHor" value="shutters">
+                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 8.5h16M4 12h16M4 15.5h16"/></svg></span>
+                <span class="label">Shutters</span>
               </label>
             </div>
             <div class="wizard-nav">
@@ -158,7 +158,7 @@
               <span class="calc-step-num">3</span>
               <span>Extra opties</span>
             </div>
-            <div style="margin-bottom:1.8rem;">
+            <div style="margin-bottom:1.8rem;" id="gaasSectionWrap">
               <div class="calc-step-label" style="margin-bottom:.9rem;">
                 <span>Type gaas</span>
               </div>
@@ -194,7 +194,7 @@
                   <strong>RAL kleur naar keuze</strong>
                   <span>Profiel gespoten in een RAL-kleur naar wens</span>
                 </span>
-                <span class="option-toggle-price">+ € 10,00</span>
+                <span class="option-toggle-price" id="ralPriceLabel">+ € 10,00</span>
               </label>
               <div id="ralCodeWrap" style="display:none;">
                 <span class="field-label-inline">Systeemkleur</span>
@@ -309,7 +309,7 @@
                 <li><span>Type hor</span><span id="specType">—</span></li>
                 <li><span>Afmetingen</span><span id="specDim">—</span></li>
                 <li><span>Oppervlakte</span><span id="specArea">—</span></li>
-                <li><span>Type gaas</span><span id="specGaas">Standaard</span></li>
+                <li id="specGaasRow"><span>Type gaas</span><span id="specGaas">Standaard</span></li>
                 <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">—</span><span id="specGaasPrice">—</span></li>
                 <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>—</span></li>
               </ul>
@@ -408,7 +408,7 @@
           <li><a href="index.html#producten">Raamhorren</a></li>
           <li><a href="index.html#producten">Inzethorren</a></li>
           <li><a href="index.html#producten">Plissé hordeuren</a></li>
-          <li><a href="index.html#producten">Rolhorren</a></li>
+          <li><a href="index.html#producten">Shutters</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -448,8 +448,9 @@
     raamhor: 'Raamhor',
     inzethor: 'Inzethor',
     plisse: 'Plissé hordeur',
-    rolhor: 'Rolhor'
+    shutters: 'Shutters'
   };
+  var ON_REQUEST_TYPES = { shutters: true };
 
   var GAAS_INFO = {
     standaard: { label: 'Standaard gaas', price: 0, description: 'Ons standaard fiberglas gaas, geschikt voor de meeste situaties.' },
@@ -472,6 +473,7 @@
   var optRalWrap = document.getElementById('optRalWrap');
   var ralCodeWrap = document.getElementById('ralCodeWrap');
   var ralSwatches = document.querySelectorAll('.ral-swatch');
+  var specGaasRow = document.getElementById('specGaasRow');
   var specGaasEl = document.getElementById('specGaas');
   var specGaasPriceRow = document.getElementById('specGaasPriceRow');
   var specGaasPriceLabel = document.getElementById('specGaasPriceLabel');
@@ -503,6 +505,17 @@
   function getSelectedType(){
     var checked = form.querySelector('input[name="typeHor"]:checked');
     return checked ? checked.value : 'raamhor';
+  }
+
+  var gaasSectionWrap = document.getElementById('gaasSectionWrap');
+  var ralPriceLabel = document.getElementById('ralPriceLabel');
+
+  function updateProductTypeUI(){
+    var onRequest = !!ON_REQUEST_TYPES[getSelectedType()];
+    /* Gaas (insectengaas) is niet van toepassing op shutters */
+    gaasSectionWrap.style.display = onRequest ? 'none' : 'block';
+    ralPriceLabel.style.display = onRequest ? 'none' : 'inline';
+    specGaasRow.style.display = onRequest ? 'none' : 'flex';
   }
 
   function getSelectedRal(){
@@ -608,10 +621,12 @@
     var dimsValid = validDimension(lengte) && validDimension(breedte);
     step2NextBtn.disabled = !dimsValid;
 
+    var onRequest = !!ON_REQUEST_TYPES[getSelectedType()];
+
     var gaas = getSelectedGaas();
     specGaasEl.textContent = gaas.label;
-    specGaasPriceRow.style.display = gaas.price > 0 ? 'flex' : 'none';
-    if(gaas.price > 0){
+    specGaasPriceRow.style.display = (!onRequest && gaas.price > 0) ? 'flex' : 'none';
+    if(!onRequest && gaas.price > 0){
       specGaasPriceLabel.textContent = gaas.label;
       specGaasPrice.textContent = '+ ' + formatEUR(gaas.price);
     }
@@ -623,14 +638,18 @@
 
     if(dimsValid){
       var areaM2 = (lengte / 100) * (breedte / 100);
-      var subtotal = areaM2 * PRICE_PER_M2;
-      var extrasTotal = gaas.price + (optRalEl.checked ? PRICE_RAL : 0);
-      var total = subtotal + HIDDEN_SURCHARGE + extrasTotal;
-
-      currentTotal = total;
       currentArea = areaM2;
 
-      calcPriceEl.textContent = formatEUR(total);
+      if(onRequest){
+        currentTotal = 'op-aanvraag';
+        calcPriceEl.textContent = 'Op aanvraag';
+      } else {
+        var subtotal = areaM2 * PRICE_PER_M2;
+        var extrasTotal = gaas.price + (optRalEl.checked ? PRICE_RAL : 0);
+        var total = subtotal + HIDDEN_SURCHARGE + extrasTotal;
+        currentTotal = total;
+        calcPriceEl.textContent = formatEUR(total);
+      }
       calcPriceEl.classList.remove('is-empty');
       specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
       specDim.textContent = breedte.toLocaleString('nl-NL') + ' × ' + lengte.toLocaleString('nl-NL') + ' cm';
@@ -671,7 +690,10 @@
     el.addEventListener('change', updateCalculation);
   });
   typeCards.forEach(function(card){
-    card.querySelector('input').addEventListener('change', updateCalculation);
+    card.querySelector('input').addEventListener('change', function(){
+      updateProductTypeUI();
+      updateCalculation();
+    });
   });
   [naamEl, emailEl, telefoonEl].forEach(function(el){
     el.addEventListener('input', updateAkkoordState);
@@ -811,15 +833,19 @@
     doc.setDrawColor(225,222,212);
     doc.line(15, ySpec + 28, pageW - 15, ySpec + 28);
 
+    var onRequestPdf = !!ON_REQUEST_TYPES[getSelectedType()];
+
     /* Extra opties (transparant getoond met eigen prijs) */
     var extras = [];
-    var gaasPdf = getSelectedGaas();
-    if(gaasPdf.price > 0){
-      extras.push({label: gaasPdf.label, price: gaasPdf.price});
+    if(!onRequestPdf){
+      var gaasPdf = getSelectedGaas();
+      if(gaasPdf.price > 0){
+        extras.push({label: gaasPdf.label, price: gaasPdf.price});
+      }
     }
     if(optRalEl.checked){
       var ral = getSelectedRal();
-      extras.push({label: 'RAL kleur' + (ral ? ': ' + ral.label : ''), price: PRICE_RAL});
+      extras.push({label: 'RAL kleur' + (ral ? ': ' + ral.label : ''), price: onRequestPdf ? null : PRICE_RAL});
     }
 
     var yCursor = ySpec + 28;
@@ -835,7 +861,9 @@
       doc.setTextColor(60,60,60);
       extras.forEach(function(extra){
         doc.text(extra.label, 19, yCursor);
-        doc.text(formatEUR(extra.price), pageW - 19, yCursor, {align:'right'});
+        if(extra.price !== null){
+          doc.text(formatEUR(extra.price), pageW - 19, yCursor, {align:'right'});
+        }
         yCursor += 6;
       });
       yCursor += 4;
@@ -850,10 +878,10 @@
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(12);
     doc.setTextColor(255,255,255);
-    doc.text('Indicatieve totaalprijs', 19, yTotaal + 1);
+    doc.text(onRequestPdf ? 'Prijs' : 'Indicatieve totaalprijs', 19, yTotaal + 1);
     doc.setFontSize(15);
     doc.setTextColor(gold[0], gold[1], gold[2]);
-    doc.text(formatEUR(currentTotal), pageW - 19, yTotaal + 1.5, {align:'right'});
+    doc.text(onRequestPdf ? 'Op aanvraag' : formatEUR(currentTotal), pageW - 19, yTotaal + 1.5, {align:'right'});
 
     /* Voorwaarden */
     var yVoorw = yTotaal + 22;
@@ -862,7 +890,9 @@
     doc.setTextColor(muted[0], muted[1], muted[2]);
     var voorwaarden = [
       'Deze offerte is ' + formatDatumNL(geldigTot) + ' geldig (max. 10 dagen vanaf offertedatum).',
-      'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
+      onRequestPdf
+        ? 'Dit product is op aanvraag: de prijs wordt in overleg met u bepaald tijdens een gratis inmeetafspraak op locatie.'
+        : 'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
       'Inclusief standaard materiaal en professionele montage. Eventueel meerwerk wordt vooraf met u besproken.'
     ];
     voorwaarden.forEach(function(line, i){
@@ -883,9 +913,12 @@
   var OFFERTE_EMAIL = 'thefuturedesignalmere@gmail.com';
 
   function verstuurOfferteMail(){
+    var onRequestMail = !!ON_REQUEST_TYPES[getSelectedType()];
     var extras = [];
-    var gaasMail = getSelectedGaas();
-    if(gaasMail.price > 0){ extras.push(gaasMail.label); }
+    if(!onRequestMail){
+      var gaasMail = getSelectedGaas();
+      if(gaasMail.price > 0){ extras.push(gaasMail.label); }
+    }
     if(optRalEl.checked){
       var ral = getSelectedRal();
       extras.push('RAL kleur' + (ral ? ': ' + ral.label : ''));
@@ -898,7 +931,7 @@
       'Afmetingen: ' + breedteEl.value + ' x ' + lengteEl.value + ' cm',
       'Oppervlakte: ' + currentArea.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m2',
       'Extra opties: ' + (extras.length ? extras.join(', ') : 'geen'),
-      'Indicatieve totaalprijs: ' + formatEUR(currentTotal),
+      onRequestMail ? 'Prijs: op aanvraag' : 'Indicatieve totaalprijs: ' + formatEUR(currentTotal),
       '',
       'Naam: ' + naam,
       'E-mail: ' + emailEl.value.trim(),
@@ -932,12 +965,14 @@
     ralSwatches.forEach(function(swatch){
       swatch.classList.toggle('is-checked', swatch.querySelector('input').checked);
     });
+    updateProductTypeUI();
     updateCalculation();
     calcSuccess.style.display = 'none';
     calcResult.style.display = 'block';
     goToStep(1);
   });
 
+  updateProductTypeUI();
   updateCalculation();
 
 })();
