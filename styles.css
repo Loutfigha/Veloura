@@ -811,6 +811,31 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   .sticky-cta-multi{display:block;}
   .breadcrumbs{padding-top:6.5rem;}
 }
+
+/* ===================== PRODUCT PAGE: sticky offerte-sidebar ===================== */
+.product-layout{
+  display:grid;grid-template-columns:1fr 400px;gap:clamp(2rem,4vw,3.5rem);
+  align-items:start;padding:clamp(4.5rem,8vw,8rem) 0;
+}
+.product-layout-main > section{margin-bottom:clamp(3.5rem,6vw,6rem);}
+.product-layout-main > section:last-child{margin-bottom:0;}
+.product-layout-main .promo-grid,
+.product-layout-main .related-grid,
+.product-layout-main .crosssell-grid{grid-template-columns:repeat(2,1fr);}
+.product-layout-sidebar{position:sticky;top:110px;}
+.product-layout-sidebar .section-head{margin-bottom:1.6rem;}
+.product-layout-sidebar .calculator-wrap{grid-template-columns:1fr;}
+.product-layout-sidebar .calc-summary{position:static;}
+@media (max-width:1100px){
+  .product-layout{grid-template-columns:1fr 340px;}
+}
+@media (max-width:960px){
+  .product-layout{grid-template-columns:1fr;padding:clamp(3rem,8vw,5rem) 0;}
+  .product-layout-main .promo-grid,
+  .product-layout-main .related-grid,
+  .product-layout-main .crosssell-grid{grid-template-columns:1fr;}
+  .product-layout-sidebar{position:static;order:-1;margin-bottom:3rem;}
+}
 @media (max-width:640px){
   .gallery-item{flex-basis:78vw;}
 }
