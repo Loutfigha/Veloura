@@ -34,14 +34,14 @@
   function buildWizardHTML(type){
     var onRequest = !!ON_REQUEST_TYPES[type];
     return ''
-    + '<div class="calc-card reveal">'
+    + '<div class="calc-card reveal" id="calcCard">'
     + '  <ul class="calc-intro-checklist">'
     + '    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Op maat gemaakt</li>'
     + '    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vakkundig gemonteerd</li>'
     + '  </ul>'
     + '  <div class="wizard-progress">'
-    + '    <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizardProgressFill" style="width:33.33%"></div></div>'
-    + '    <span class="wizard-progress-label">Stap <strong id="wizardStepNum">1</strong> van 3 · <span id="wizardStepName">Afmetingen</span></span>'
+    + '    <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizardProgressFill" style="width:25%"></div></div>'
+    + '    <span class="wizard-progress-label">Stap <strong id="wizardStepNum">1</strong> van 4 · <span id="wizardStepName">Afmetingen</span></span>'
     + '  </div>'
     + '  <form id="calcForm" novalidate>'
     + '    <div class="wizard-step is-active" data-step="1">'
@@ -110,14 +110,15 @@
     + '        <div class="form-field"><label for="email">E-mail</label><input type="email" id="email" name="email" autocomplete="email" required><span class="field-error" id="errEmail"></span></div>'
     + '        <div class="form-field"><label for="telefoon">Telefoon</label><input type="tel" id="telefoon" name="telefoon" autocomplete="tel" required><span class="field-error" id="errTelefoon"></span></div>'
     + '      </div>'
-    + '      <div class="wizard-nav"><button type="button" class="btn btn-ghost wizard-back" data-goto="2">Vorige</button></div>'
+    + '      <div class="wizard-nav"><button type="button" class="btn btn-ghost wizard-back" data-goto="2">Vorige</button><button type="button" class="btn btn-primary" id="step3NextBtn" disabled>Bekijk uw offerte</button></div>'
     + '    </div>'
     + '  </form>'
     + '</div>'
 
-    + '<aside class="calc-summary reveal" aria-live="polite">'
+    + '<aside class="calc-summary reveal" id="calcSummary" aria-live="polite" style="display:none;">'
     + '  <div class="calc-summary-inner">'
     + '    <div id="calcResult">'
+    + '      <button type="button" class="calc-summary-back" id="summaryBackBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Vorige</button>'
     + '      <p class="eyebrow">Uw offerte</p>'
     + '      <div class="calc-rating-row">'
     + '        <span class="stars" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg></span>'
@@ -197,6 +198,10 @@
     var specDim = mount.querySelector('#specDim');
     var specArea = mount.querySelector('#specArea');
     var akkoordBtn = mount.querySelector('#akkoordBtn');
+    var calcCard = mount.querySelector('#calcCard');
+    var calcSummary = mount.querySelector('#calcSummary');
+    var step3NextBtn = mount.querySelector('#step3NextBtn');
+    var summaryBackBtn = mount.querySelector('#summaryBackBtn');
 
     var calcResult = mount.querySelector('#calcResult');
     var calcSuccess = mount.querySelector('#calcSuccess');
@@ -234,22 +239,30 @@
     var wizardProgressFill = mount.querySelector('#wizardProgressFill');
     var wizardStepNumEl = mount.querySelector('#wizardStepNum');
     var wizardStepNameEl = mount.querySelector('#wizardStepName');
-    var WIZARD_STEP_NAMES = {1:'Afmetingen', 2:'Extra opties', 3:'Uw gegevens'};
+    var WIZARD_STEP_NAMES = {1:'Afmetingen', 2:'Extra opties', 3:'Uw gegevens', 4:'Uw offerte'};
+    var TOTAL_STEPS = 4;
     var currentStep = 1;
 
     function goToStep(n){
-      n = Math.max(1, Math.min(wizardSteps.length, n));
+      n = Math.max(1, Math.min(TOTAL_STEPS, n));
       currentStep = n;
+      var onSummary = (n === TOTAL_STEPS);
+      calcCard.style.display = onSummary ? 'none' : 'block';
+      calcSummary.style.display = onSummary ? 'block' : 'none';
       wizardSteps.forEach(function(step){
         step.classList.toggle('is-active', parseInt(step.dataset.step, 10) === n);
       });
-      wizardProgressFill.style.width = (n / wizardSteps.length * 100) + '%';
+      wizardProgressFill.style.width = (n / TOTAL_STEPS * 100) + '%';
       wizardStepNumEl.textContent = n;
       wizardStepNameEl.textContent = WIZARD_STEP_NAMES[n] || '';
-      var activeLabel = mount.querySelector('.wizard-step[data-step="' + n + '"] .calc-step-label');
-      if(activeLabel){
-        activeLabel.setAttribute('tabindex', '-1');
-        activeLabel.focus({preventScroll: true});
+      if(onSummary){
+        summaryBackBtn.focus({preventScroll: true});
+      } else {
+        var activeLabel = mount.querySelector('.wizard-step[data-step="' + n + '"] .calc-step-label');
+        if(activeLabel){
+          activeLabel.setAttribute('tabindex', '-1');
+          activeLabel.focus({preventScroll: true});
+        }
       }
     }
 
@@ -259,6 +272,11 @@
     mount.querySelectorAll('.wizard-back').forEach(function(btn){
       btn.addEventListener('click', function(){ goToStep(currentStep - 1); });
     });
+    step3NextBtn.addEventListener('click', function(){
+      if(step3NextBtn.disabled) return;
+      goToStep(4);
+    });
+    summaryBackBtn.addEventListener('click', function(){ goToStep(3); });
 
     function computeDeliveryWindow(){
       var start = new Date();
@@ -347,7 +365,9 @@
       errNaam.textContent = '';
       errEmail.textContent = '';
       errTelefoon.textContent = '';
-      akkoordBtn.disabled = !(currentTotal !== null && naamValid && emailValid && telefoonValid);
+      var disabled = !(currentTotal !== null && naamValid && emailValid && telefoonValid);
+      akkoordBtn.disabled = disabled;
+      step3NextBtn.disabled = disabled;
     }
 
     [lengteEl, breedteEl].forEach(function(el){
