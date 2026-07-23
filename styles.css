@@ -812,45 +812,16 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   .breadcrumbs{padding-top:6.5rem;}
 }
 
-/* ===================== PRODUCT PAGE: sticky offerte-sidebar ===================== */
-.product-layout{
-  display:grid;grid-template-columns:1fr 400px;gap:clamp(2rem,4vw,3.5rem);
-  align-items:start;padding:clamp(4.5rem,8vw,8rem) 0;
-}
-.product-layout-main{min-width:0;}
-.product-layout-main > section{margin-bottom:clamp(3.5rem,6vw,6rem);}
-.product-layout-main > section:last-child{margin-bottom:0;}
-.product-layout-main .promo-grid,
-.product-layout-main .related-grid,
-.product-layout-main .crosssell-grid{grid-template-columns:repeat(2,1fr);}
-.product-layout-sidebar{
-  min-width:0;position:sticky;top:110px;
-  max-height:calc(100vh - 130px);overflow-y:auto;overflow-x:hidden;
-  padding-right:.4rem;margin-right:-.4rem;
-  scrollbar-width:thin;scrollbar-color:var(--gold-light) transparent;
-}
-.product-layout-sidebar::-webkit-scrollbar{width:6px;}
-.product-layout-sidebar::-webkit-scrollbar-thumb{background:var(--gold-light);border-radius:100px;}
-.product-layout-sidebar .section-head{margin-bottom:1.1rem;}
-.product-layout-sidebar .section-head h2{font-size:1.35rem;}
-.product-layout-sidebar .section-head p{display:none;}
-.product-layout-sidebar .calculator-wrap{grid-template-columns:1fr;}
-.product-layout-sidebar .calc-card{padding:1.5rem 1.6rem;}
-.product-layout-sidebar .calc-summary{position:static;padding:1.5rem 1.6rem;}
-.product-layout-sidebar .calc-intro-checklist,
-.product-layout-sidebar .calc-rating-row,
-.product-layout-sidebar .calc-delivery,
-.product-layout-sidebar .calc-trust,
-.product-layout-sidebar .calc-whatsapp-help{display:none;}
-@media (max-width:1100px){
-  .product-layout{grid-template-columns:1fr 340px;}
-}
+/* ===================== PRODUCT PAGE: hero met ingebouwde configurator ===================== */
+/* Beeld blijft sticky terwijl de configurator (in hero-content) gewoon
+   met de pagina meescrolt, zonder hoogtelimiet — zelfde patroon als
+   horrentotaal.nl: geen interne scroll nodig in de configurator zelf. */
+.product-hero .hero-visual{position:sticky;top:110px;}
+.product-hero .hero-content #offerteWidget{margin-top:2.2rem;}
+#offerteWidget .calculator-wrap{grid-template-columns:1fr;}
+#offerteWidget .calc-summary{position:static;}
 @media (max-width:960px){
-  .product-layout{grid-template-columns:1fr;padding:clamp(3rem,8vw,5rem) 0;}
-  .product-layout-main .promo-grid,
-  .product-layout-main .related-grid,
-  .product-layout-main .crosssell-grid{grid-template-columns:1fr;}
-  .product-layout-sidebar{position:static;order:-1;margin-bottom:3rem;}
+  .product-hero .hero-visual{position:static;}
 }
 @media (max-width:640px){
   .gallery-item{flex-basis:78vw;}
