@@ -818,13 +818,19 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   align-items:start;padding:clamp(4.5rem,8vw,8rem) 0;
 }
 .product-layout-main{min-width:0;}
-.product-layout-sidebar{min-width:0;}
 .product-layout-main > section{margin-bottom:clamp(3.5rem,6vw,6rem);}
 .product-layout-main > section:last-child{margin-bottom:0;}
 .product-layout-main .promo-grid,
 .product-layout-main .related-grid,
 .product-layout-main .crosssell-grid{grid-template-columns:repeat(2,1fr);}
-.product-layout-sidebar{position:sticky;top:110px;}
+.product-layout-sidebar{
+  min-width:0;position:sticky;top:110px;
+  max-height:calc(100vh - 130px);overflow-y:auto;overflow-x:hidden;
+  padding-right:.4rem;margin-right:-.4rem;
+  scrollbar-width:thin;scrollbar-color:var(--gold-light) transparent;
+}
+.product-layout-sidebar::-webkit-scrollbar{width:6px;}
+.product-layout-sidebar::-webkit-scrollbar-thumb{background:var(--gold-light);border-radius:100px;}
 .product-layout-sidebar .section-head{margin-bottom:1.6rem;}
 .product-layout-sidebar .calculator-wrap{grid-template-columns:1fr;}
 .product-layout-sidebar .calc-summary{position:static;}
