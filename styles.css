@@ -711,6 +711,15 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 .hero-checklist li{display:flex;align-items:center;gap:.55rem;font-size:.88rem;font-weight:500;color:var(--anthracite-light);}
 .hero-checklist svg{width:16px;height:16px;color:var(--gold-dark);flex-shrink:0;}
 
+.hero-whatsapp-cta{
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  width:100%;margin-top:1.2rem;padding:.85rem 1.2rem;border-radius:100px;
+  background:#25D366;color:#fff;font-size:.92rem;font-weight:600;
+  transition:background .3s var(--ease),transform .3s var(--ease);
+}
+.hero-whatsapp-cta:hover{background:#1DA851;transform:translateY(-2px);}
+.hero-whatsapp-cta svg{width:19px;height:19px;flex-shrink:0;}
+
 /* ===================== INFO GRID ===================== */
 .info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;}
 .info-card{
