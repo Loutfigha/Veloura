@@ -692,7 +692,7 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 
 /* ===================== PRODUCT HERO ===================== */
 .product-hero{padding:2.5rem 0 clamp(3rem,6vw,5rem);}
-.product-hero-inner{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(2.5rem,5vw,4rem);align-items:center;}
+.product-hero-inner{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(2.5rem,5vw,4rem);align-items:start;}
 .product-hero-cta-group{display:flex;flex-wrap:wrap;gap:.9rem;margin-bottom:2rem;}
 .btn-whatsapp{background:#25D366;color:#fff;}
 .btn-whatsapp:hover{background:#1DA851;transform:translateY(-2px);box-shadow:var(--shadow-md);}
