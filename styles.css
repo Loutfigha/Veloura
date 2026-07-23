@@ -831,9 +831,17 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 }
 .product-layout-sidebar::-webkit-scrollbar{width:6px;}
 .product-layout-sidebar::-webkit-scrollbar-thumb{background:var(--gold-light);border-radius:100px;}
-.product-layout-sidebar .section-head{margin-bottom:1.6rem;}
+.product-layout-sidebar .section-head{margin-bottom:1.1rem;}
+.product-layout-sidebar .section-head h2{font-size:1.35rem;}
+.product-layout-sidebar .section-head p{display:none;}
 .product-layout-sidebar .calculator-wrap{grid-template-columns:1fr;}
-.product-layout-sidebar .calc-summary{position:static;}
+.product-layout-sidebar .calc-card{padding:1.5rem 1.6rem;}
+.product-layout-sidebar .calc-summary{position:static;padding:1.5rem 1.6rem;}
+.product-layout-sidebar .calc-intro-checklist,
+.product-layout-sidebar .calc-rating-row,
+.product-layout-sidebar .calc-delivery,
+.product-layout-sidebar .calc-trust,
+.product-layout-sidebar .calc-whatsapp-help{display:none;}
 @media (max-width:1100px){
   .product-layout{grid-template-columns:1fr 340px;}
 }
