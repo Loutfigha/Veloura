@@ -8,7 +8,8 @@
 
   var PRICE_PER_M2 = 165;
   var HIDDEN_SURCHARGE = 35; /* verzendkosten: bewust niet los getoond aan de klant, wel verrekend in de totaalprijs */
-  var PRICE_RAL = 10; /* per hor */
+  var PRICE_RAL = 15; /* per hor, niet voor wit (RAL 9010) — dat is standaard inbegrepen */
+  var RAL_WHITE_CODE = 'RAL 9010';
 
   var TYPE_LABELS = {
     raamhor: 'Raamhor',
@@ -79,8 +80,8 @@
     + '      <div style="display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem;">'
     + '        <label class="option-toggle" id="optRalWrap">'
     + '          <input type="checkbox" id="optRal">'
-    + '          <span class="option-toggle-text"><strong>RAL kleur naar keuze</strong><span>Profiel gespoten in een RAL-kleur naar wens</span></span>'
-    + '          <span class="option-toggle-price" id="ralPriceLabel"' + (onRequest ? ' style="display:none;"' : '') + '>+ € 10,00</span>'
+    + '          <span class="option-toggle-text"><strong>RAL kleur naar keuze</strong><span>Wit is standaard inbegrepen, overige kleuren + € 15,00 per hor</span></span>'
+    + '          <span class="option-toggle-price" id="ralPriceLabel"' + (onRequest ? ' style="display:none;"' : '') + '>Inbegrepen</span>'
     + '        </label>'
     + '        <div id="ralCodeWrap" style="display:none;">'
     + '          <span class="field-label-inline">Systeemkleur</span>'
@@ -178,6 +179,7 @@
     var optRalWrap = mount.querySelector('#optRalWrap');
     var ralCodeWrap = mount.querySelector('#ralCodeWrap');
     var ralSwatches = mount.querySelectorAll('.ral-swatch');
+    var ralPriceLabel = mount.querySelector('#ralPriceLabel');
     var specGaasRow = mount.querySelector('#specGaasRow');
     var specGaasEl = mount.querySelector('#specGaas');
     var specGaasPriceRow = mount.querySelector('#specGaasPriceRow');
@@ -217,6 +219,16 @@
       if(!checked) return null;
       var name = checked.closest('.ral-swatch').dataset.name;
       return {code: checked.value, name: name, label: name + ' (' + checked.value + ')'};
+    }
+
+    function getRalPrice(){
+      var ral = getSelectedRal();
+      return (ral && ral.code === RAL_WHITE_CODE) ? 0 : PRICE_RAL;
+    }
+
+    function updateRalPriceLabel(){
+      var free = getRalPrice() === 0;
+      ralPriceLabel.textContent = free ? 'Inbegrepen' : ('+ ' + formatEUR(PRICE_RAL));
     }
 
     function getSelectedGaas(){
@@ -313,10 +325,12 @@
         specGaasPriceLabel.textContent = gaas.label;
         specGaasPrice.textContent = '+ ' + formatEUR(gaas.price);
       }
+      updateRalPriceLabel();
       specRalRow.style.display = optRalEl.checked ? 'flex' : 'none';
       if(optRalEl.checked){
         var ral = getSelectedRal();
-        specRalRow.querySelector('span:last-child').textContent = ral ? ral.name : '—';
+        var ralPrice = getRalPrice();
+        specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (ralPrice > 0 ? ' (+ ' + formatEUR(ralPrice) + ')' : ' (inbegrepen)');
       }
 
       if(dimsValid){
@@ -328,7 +342,7 @@
           calcPriceEl.textContent = 'Op aanvraag';
         } else {
           var subtotal = areaM2 * PRICE_PER_M2;
-          var extrasTotal = gaas.price + (optRalEl.checked ? PRICE_RAL : 0);
+          var extrasTotal = gaas.price + (optRalEl.checked ? getRalPrice() : 0);
           var total = subtotal + HIDDEN_SURCHARGE + extrasTotal;
           currentTotal = total;
           calcPriceEl.textContent = formatEUR(total);
@@ -513,7 +527,8 @@
       }
       if(optRalEl.checked){
         var ral = getSelectedRal();
-        extras.push({label: 'RAL kleur' + (ral ? ': ' + ral.label : ''), price: onRequestPdf ? null : PRICE_RAL});
+        var ralPricePdf = getRalPrice();
+        extras.push({label: 'RAL kleur' + (ral ? ': ' + ral.label : ''), price: (onRequestPdf || ralPricePdf === 0) ? null : ralPricePdf});
       }
 
       var yCursor = ySpec + 28;
