@@ -570,7 +570,7 @@
       doc.setFontSize(8.3);
       doc.setTextColor(muted[0], muted[1], muted[2]);
       var voorwaarden = [
-        'Deze offerte is ' + formatDatumNL(geldigTot) + ' geldig (max. 10 dagen vanaf offertedatum).',
+        'Deze offerte is geldig tot ' + formatDatumNL(geldigTot) + ' (max. 10 dagen vanaf offertedatum).',
         onRequestPdf
           ? 'Dit product is op aanvraag: de prijs wordt in overleg met u bepaald tijdens een gratis inmeetafspraak op locatie.'
           : 'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
