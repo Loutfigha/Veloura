@@ -908,11 +908,12 @@
     doc.text(offerteNummer, pageW - 15, 286, {align:'right'});
 
     doc.save('Offerte-LOUA-' + offerteNummer + '.pdf');
+    return {doc: doc, offerteNummer: offerteNummer};
   }
 
   var OFFERTE_EMAIL = 'info@louaraamdecoratie.nl';
 
-  function verstuurOfferteMail(){
+  function verstuurOfferteMailFallback(){
     var onRequestMail = !!ON_REQUEST_TYPES[getSelectedType()];
     var extras = [];
     if(!onRequestMail){
@@ -935,20 +936,63 @@
       '',
       'Naam: ' + naam,
       'E-mail: ' + emailEl.value.trim(),
-      'Telefoon: ' + telefoonEl.value.trim()
+      'Telefoon: ' + telefoonEl.value.trim(),
+      '',
+      'Let op: de PDF met offertedetails staat als download in uw browser klaar; voeg deze zelf toe als bijlage.'
     ].join('\n');
 
-    /* Geen backend beschikbaar: opent de eigen mailapp van de bezoeker
-       met een vooraf ingevuld bericht naar LOUA. */
+    /* Backend niet bereikbaar: val terug op de eigen mailapp van de bezoeker. */
     window.location.href = 'mailto:' + OFFERTE_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
+  function verstuurOfferteAanvraag(doc, offerteNummer){
+    var pdfDataUri = doc.output('datauristring');
+    var pdfBase64 = pdfDataUri.split(',').pop();
+
+    var onRequestSend = !!ON_REQUEST_TYPES[getSelectedType()];
+    var gaas = onRequestSend ? null : getSelectedGaas();
+    var ral = optRalEl.checked ? getSelectedRal() : null;
+
+    var payload = {
+      type: getSelectedType(),
+      naam: naamEl.value.trim(),
+      email: emailEl.value.trim(),
+      telefoon: telefoonEl.value.trim(),
+      breedte: breedteEl.value,
+      lengte: lengteEl.value,
+      oppervlakte: currentArea !== null ? currentArea.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) : '-',
+      typeGaas: (gaas && gaas.price > 0) ? gaas.label : null,
+      ralKleur: ral ? ral.label : null,
+      prijsLabel: onRequestSend ? 'Op aanvraag' : formatEUR(currentTotal),
+      offerteNummer: offerteNummer,
+      pdfBase64: pdfBase64
+    };
+
+    return fetch('/api/send-offerte', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    }).then(function(res){
+      if(!res.ok){ throw new Error('Versturen mislukt'); }
+      return res.json();
+    });
   }
 
   akkoordBtn.addEventListener('click', function(){
     if(akkoordBtn.disabled || currentTotal === null) return;
-    genereerPDF();
-    verstuurOfferteMail();
-    calcResult.style.display = 'none';
-    calcSuccess.style.display = 'block';
+    akkoordBtn.disabled = true;
+    var pdfResult = genereerPDF();
+    verstuurOfferteAanvraag(pdfResult.doc, pdfResult.offerteNummer).then(function(){
+      calcResult.style.display = 'none';
+      calcSuccess.style.display = 'block';
+    }).catch(function(err){
+      console.error('Offerte versturen via backend mislukt:', err);
+      verstuurOfferteMailFallback();
+      calcResult.style.display = 'none';
+      calcSuccess.style.display = 'block';
+    }).finally(function(){
+      akkoordBtn.disabled = false;
+    });
   });
 
   resetBtn.addEventListener('click', function(){

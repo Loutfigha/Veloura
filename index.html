@@ -631,7 +631,7 @@
           <div class="form-success" id="formSuccess" role="status">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
             <h3>Bedankt voor uw bericht</h3>
-            <p>Uw e-mailprogramma opent zo met een vooraf ingevuld bericht aan ons. Klik daarin op verzenden om uw aanvraag te versturen. Wij nemen binnen één werkdag contact met u op.</p>
+            <p>Uw bericht is verzonden. Wij nemen binnen één werkdag contact met u op.</p>
           </div>
         </div>
       </div>
@@ -732,6 +732,22 @@
   var form = document.getElementById('contactForm');
   var success = document.getElementById('formSuccess');
   var CONTACT_EMAIL = 'info@louaraamdecoratie.nl';
+  var contactSubmitBtn = form.querySelector('button[type="submit"]');
+
+  function mailtoFallback(naam, telefoon, email, postcode, bericht){
+    var subject = 'Contactformulier website - ' + naam;
+    var body = [
+      'Naam: ' + naam,
+      'Telefoon: ' + telefoon,
+      'E-mail: ' + email,
+      'Postcode: ' + postcode,
+      '',
+      'Bericht:',
+      bericht || '(geen bericht ingevuld)'
+    ].join('\n');
+    window.location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(!form.checkValidity()){
@@ -744,23 +760,24 @@
     var postcode = document.getElementById('postcode').value.trim();
     var bericht = document.getElementById('bericht').value.trim();
 
-    var subject = 'Contactformulier website - ' + naam;
-    var body = [
-      'Naam: ' + naam,
-      'Telefoon: ' + telefoon,
-      'E-mail: ' + email,
-      'Postcode: ' + postcode,
-      '',
-      'Bericht:',
-      bericht || '(geen bericht ingevuld)'
-    ].join('\n');
+    if(contactSubmitBtn){ contactSubmitBtn.disabled = true; }
 
-    /* Geen backend beschikbaar: opent de eigen mailapp van de bezoeker
-       met een vooraf ingevuld bericht naar LOUA. */
-    window.location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-
-    form.style.display = 'none';
-    success.style.display = 'block';
+    fetch('/api/send-contact', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({naam: naam, telefoon: telefoon, email: email, postcode: postcode, bericht: bericht})
+    }).then(function(res){
+      if(!res.ok){ throw new Error('Versturen mislukt'); }
+      form.style.display = 'none';
+      success.style.display = 'block';
+    }).catch(function(){
+      /* Backend niet bereikbaar: val terug op de eigen mailapp van de bezoeker. */
+      mailtoFallback(naam, telefoon, email, postcode, bericht);
+      form.style.display = 'none';
+      success.style.display = 'block';
+    }).finally(function(){
+      if(contactSubmitBtn){ contactSubmitBtn.disabled = false; }
+    });
   });
 
 })();
