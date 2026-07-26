@@ -6,7 +6,8 @@
 (function(window){
   "use strict";
 
-  var PRICE_PER_M2 = 165;
+  var PRICE_PER_M2_DEFAULT = 165;
+  var PRICE_PER_M2_BY_TYPE = { plisse: 195 }; /* Plissé hordeuren: duurder per m² dan de overige types */
   var HIDDEN_SURCHARGE = 35; /* verzendkosten: bewust niet los getoond aan de klant, wel verrekend in de totaalprijs */
   var PRICE_RAL = 15; /* per hor, niet voor wit (RAL 9010) — dat is standaard inbegrepen */
   var RAL_WHITE_CODE = 'RAL 9010';
@@ -17,6 +18,10 @@
     plisse: 'Plissé hordeur',
     shutters: 'Shutters'
   };
+
+  function getPricePerM2(type){
+    return PRICE_PER_M2_BY_TYPE[type] || PRICE_PER_M2_DEFAULT;
+  }
   var ON_REQUEST_TYPES = { shutters: true };
 
   var GAAS_INFO = {
@@ -341,7 +346,7 @@
           currentTotal = 'op-aanvraag';
           calcPriceEl.textContent = 'Op aanvraag';
         } else {
-          var subtotal = areaM2 * PRICE_PER_M2;
+          var subtotal = areaM2 * getPricePerM2(getSelectedType());
           var extrasTotal = gaas.price + (optRalEl.checked ? getRalPrice() : 0);
           var total = subtotal + HIDDEN_SURCHARGE + extrasTotal;
           currentTotal = total;
@@ -570,7 +575,7 @@
       doc.setFontSize(8.3);
       doc.setTextColor(muted[0], muted[1], muted[2]);
       var voorwaarden = [
-        'Deze offerte is geldig tot ' + formatDatumNL(geldigTot) + ' (max. 10 dagen vanaf offertedatum).',
+        'Deze offerte is geldig t/m ' + formatDatumNL(geldigTot) + ' (max. 10 dagen vanaf offertedatum).',
         onRequestPdf
           ? 'Dit product is op aanvraag: de prijs wordt in overleg met u bepaald tijdens een gratis inmeetafspraak op locatie.'
           : 'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
