@@ -451,7 +451,7 @@
       doc.setTextColor(anthracite[0], anthracite[1], anthracite[2]);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
-      doc.text('www.velouraraamdecoratie.nl', pageW - 15, 15, {align:'right'});
+      doc.text('louaraamdecoratie.nl', pageW - 15, 15, {align:'right'});
       doc.text('info@louaraamdecoratie.nl', pageW - 15, 20.5, {align:'right'});
       doc.text('+31 6 57 81 52 02', pageW - 15, 26, {align:'right'});
 
