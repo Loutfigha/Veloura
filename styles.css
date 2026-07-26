@@ -211,6 +211,7 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 .footer-logo-icon{height:32px;width:auto;display:block;}
 
 .main-nav ul{display:flex;align-items:center;gap:1.7rem;}
+.main-nav-cta{display:none;}
 .nav-link{
   position:relative;font-size:.94rem;font-weight:500;color:var(--anthracite-light);
   padding:.3rem 0;white-space:nowrap;
@@ -1108,6 +1109,7 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   .nav-toggle{display:flex;}
   .header-actions .btn-sm{display:none;}
   .mobile-cta{display:block;}
+  .main-nav-cta{display:flex;justify-content:center;width:100%;margin-top:1.8rem;}
   .nav-overlay{
     position:fixed;inset:0;background:rgba(20,18,16,0.4);
     opacity:0;pointer-events:none;transition:opacity .35s var(--ease);
