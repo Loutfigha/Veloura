@@ -128,7 +128,7 @@
     + '      <p class="eyebrow">Uw offerte</p>'
     + '      <div class="calc-rating-row">'
     + '        <span class="stars" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg></span>'
-    + '        <span>4,9 · 500+ tevreden klanten</span>'
+    + '        <span>4,7 · 500+ tevreden klanten</span>'
     + '      </div>'
     + '      <div class="calc-price-row"><span class="calc-price-label">Indicatieve offerteprijs</span><span class="calc-price is-empty" id="calcPrice">Vul de afmetingen in</span></div>'
     + '      <p class="calc-summary-note">Inclusief materiaal, op maat productie en montage. Dit is een prijsindicatie: de definitieve prijs kan afwijken en wordt vastgesteld na een gratis meting aan huis.</p>'
