@@ -139,4 +139,98 @@
     });
   }
 
+  /* ---------- Nieuwsbrief-popup: gratis anti-pollen gaas bij aanmelding ---------- */
+  (function(){
+    var STORAGE_KEY = 'louaNewsletterSeen';
+    if(localStorage.getItem(STORAGE_KEY)){ return; }
+
+    var overlayHTML = ''
+      + '<div class="newsletter-popup-overlay" id="newsletterOverlay">'
+      + '  <div class="newsletter-popup" role="dialog" aria-modal="true" aria-labelledby="newsletterTitle">'
+      + '    <button type="button" class="newsletter-popup-close" id="newsletterClose" aria-label="Sluiten">&times;</button>'
+      + '    <div id="newsletterFormView">'
+      + '      <div class="newsletter-popup-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>'
+      + '      <p class="eyebrow">Exclusief voor nieuwe aanmeldingen</p>'
+      + '      <h3 id="newsletterTitle">Ontvang gratis anti-pollen gaas</h3>'
+      + '      <div class="newsletter-popup-body">'
+      + '        <p>Meld u aan voor onze nieuwsbrief en ontvang een gratis upgrade naar anti-pollen gaas (t.w.v. &euro; 30,-) bij uw volgende bestelling.</p>'
+      + '      </div>'
+      + '      <form id="newsletterForm" novalidate>'
+      + '        <input type="email" id="newsletterEmail" name="email" placeholder="Uw e-mailadres" autocomplete="email" required>'
+      + '        <span class="newsletter-popup-error" id="newsletterError">Er ging iets mis. Probeer het later opnieuw.</span>'
+      + '        <button type="submit" class="btn btn-gold" id="newsletterSubmitBtn">Aanmelden &amp; korting ontvangen</button>'
+      + '      </form>'
+      + '      <p class="newsletter-popup-fineprint">We sturen af en toe inspiratie en aanbiedingen, nooit spam. Uitschrijven kan altijd. Zie ons <a href="privacyverklaring.html">privacybeleid</a>.</p>'
+      + '    </div>'
+      + '    <div id="newsletterSuccessView" style="display:none;">'
+      + '      <div class="newsletter-popup-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>'
+      + '      <h3>Bedankt voor uw aanmelding!</h3>'
+      + '      <div class="newsletter-popup-body">'
+      + '        <p>Vermeld onderstaande code bij uw volgende offerteaanvraag voor gratis anti-pollen gaas:</p>'
+      + '      </div>'
+      + '      <div class="newsletter-popup-code" id="newsletterCode">GRATISANTIPOLLEN</div>'
+      + '      <button type="button" class="btn btn-ghost" id="newsletterSuccessClose">Sluiten</button>'
+      + '    </div>'
+      + '  </div>'
+      + '</div>';
+
+    document.body.insertAdjacentHTML('beforeend', overlayHTML);
+
+    var overlay = document.getElementById('newsletterOverlay');
+    var closeBtn = document.getElementById('newsletterClose');
+    var successCloseBtn = document.getElementById('newsletterSuccessClose');
+    var form = document.getElementById('newsletterForm');
+    var formView = document.getElementById('newsletterFormView');
+    var successView = document.getElementById('newsletterSuccessView');
+    var errorEl = document.getElementById('newsletterError');
+    var codeEl = document.getElementById('newsletterCode');
+
+    function showPopup(){
+      overlay.classList.add('is-visible');
+    }
+    function hidePopup(){
+      overlay.classList.remove('is-visible');
+      localStorage.setItem(STORAGE_KEY, '1');
+    }
+
+    var showTimer = setTimeout(showPopup, 8000);
+
+    closeBtn.addEventListener('click', hidePopup);
+    successCloseBtn.addEventListener('click', hidePopup);
+    overlay.addEventListener('click', function(e){
+      if(e.target === overlay){ hidePopup(); }
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && overlay.classList.contains('is-visible')){ hidePopup(); }
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var emailEl = document.getElementById('newsletterEmail');
+      var email = emailEl.value.trim();
+      var submitBtn = document.getElementById('newsletterSubmitBtn');
+      submitBtn.disabled = true;
+      errorEl.style.display = 'none';
+
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email: email})
+      }).then(function(res){
+        if(!res.ok){ throw new Error('Aanmelden mislukt'); }
+        return res.json();
+      }).then(function(data){
+        formView.style.display = 'none';
+        successView.style.display = 'block';
+        if(data && data.code){ codeEl.textContent = data.code; }
+        localStorage.setItem(STORAGE_KEY, '1');
+      }).catch(function(err){
+        console.error('Nieuwsbrief-aanmelding mislukt:', err);
+        errorEl.style.display = 'block';
+      }).finally(function(){
+        submitBtn.disabled = false;
+      });
+    });
+  })();
+
 })();
