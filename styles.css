@@ -845,7 +845,7 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 @media (max-width:640px){
   .gallery-item{flex-basis:78vw;}
   .hero-visual{flex-direction:column;}
-  .hero-thumbs{flex-direction:row;order:2;margin-top:.6rem;}
+  .hero-thumbs{flex-direction:row;order:2;margin-top:.6rem;overflow-x:auto;scrollbar-width:thin;}
   .hero-thumb{width:50px;height:50px;}
 }
 
