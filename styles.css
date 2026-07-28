@@ -1060,6 +1060,25 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   padding:1rem;margin-bottom:1.6rem;word-break:break-word;
 }
 
+/* ===================== COOKIE-BANNER ===================== */
+.cookie-banner{
+  position:fixed;left:1rem;right:1rem;bottom:1rem;z-index:2050;
+  max-width:640px;margin:0 auto;
+  background:var(--white);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);
+  padding:1.6rem 1.8rem;
+  display:flex;flex-wrap:wrap;align-items:center;gap:1.2rem;
+  transform:translateY(140%);opacity:0;transition:transform .4s var(--ease),opacity .4s var(--ease);
+}
+.cookie-banner.is-visible{transform:translateY(0);opacity:1;}
+.cookie-banner p{flex:1 1 260px;font-size:.86rem;color:var(--text-muted);margin:0;line-height:1.6;}
+.cookie-banner p a{color:var(--gold-dark);text-decoration:underline;text-underline-offset:2px;}
+.cookie-banner-actions{display:flex;gap:.7rem;flex-wrap:wrap;flex-shrink:0;margin-left:auto;}
+@media (max-width:640px){
+  .cookie-banner{left:.7rem;right:.7rem;bottom:.7rem;padding:1.3rem 1.4rem;}
+  .cookie-banner-actions{width:100%;}
+  .cookie-banner-actions .btn{flex:1;}
+}
+
 /* ===================== FOOTER ===================== */
 .site-footer{background:var(--anthracite);color:rgba(255,255,255,0.68);padding:4.5rem 0 2rem;}
 .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2.5rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.1);}
@@ -1074,6 +1093,11 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 .footer-legal-links{display:flex;flex-wrap:wrap;gap:1.2rem;}
 .footer-legal-links a{color:rgba(255,255,255,0.45);transition:color .3s var(--ease);}
 .footer-legal-links a:hover{color:var(--gold-light);}
+.footer-cookie-settings{
+  font:inherit;font-size:.82rem;color:rgba(255,255,255,0.45);background:none;border:none;
+  cursor:pointer;padding:0;transition:color .3s var(--ease);
+}
+.footer-cookie-settings:hover{color:var(--gold-light);}
 
 /* ===================== LEGAL CONTENT PAGES ===================== */
 .legal-content{max-width:760px;margin:0 auto;padding:2.5rem 0 5rem;}

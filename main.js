@@ -139,6 +139,76 @@
     });
   }
 
+  /* ---------- Cookiemelding & Google Analytics (alleen na toestemming) ---------- */
+  (function(){
+    var CONSENT_KEY = 'louaCookieConsent';
+    var GA_ID = 'G-9BWLYK4D7H';
+    var gaLoaded = false;
+    var banner = null;
+
+    function loadAnalytics(){
+      if(gaLoaded) return;
+      gaLoaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_ID);
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+      document.head.appendChild(s);
+    }
+
+    function hideBanner(){
+      if(banner){ banner.classList.remove('is-visible'); }
+    }
+
+    function showBanner(){
+      if(!banner){
+        var bannerHTML = ''
+          + '<div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie-toestemming">'
+          + '  <p>Wij gebruiken cookies om het websitebezoek te analyseren (Google Analytics) en zo onze website te verbeteren. Zie ons <a href="cookiebeleid.html">cookiebeleid</a>.</p>'
+          + '  <div class="cookie-banner-actions">'
+          + '    <button type="button" class="btn btn-ghost btn-sm" id="cookieDecline">Weigeren</button>'
+          + '    <button type="button" class="btn btn-gold btn-sm" id="cookieAccept">Accepteren</button>'
+          + '  </div>'
+          + '</div>';
+        document.body.insertAdjacentHTML('beforeend', bannerHTML);
+        banner = document.getElementById('cookieBanner');
+
+        document.getElementById('cookieAccept').addEventListener('click', function(){
+          localStorage.setItem(CONSENT_KEY, 'accepted');
+          loadAnalytics();
+          hideBanner();
+        });
+        document.getElementById('cookieDecline').addEventListener('click', function(){
+          var hadAccepted = localStorage.getItem(CONSENT_KEY) === 'accepted';
+          localStorage.setItem(CONSENT_KEY, 'declined');
+          hideBanner();
+          if(hadAccepted){ location.reload(); }
+        });
+      }
+      setTimeout(function(){ banner.classList.add('is-visible'); }, 50);
+    }
+
+    var consent = localStorage.getItem(CONSENT_KEY);
+    if(consent === 'accepted'){
+      loadAnalytics();
+    } else if(!consent){
+      showBanner();
+    }
+
+    var legalLinks = document.querySelector('.footer-legal-links');
+    if(legalLinks){
+      var settingsBtn = document.createElement('button');
+      settingsBtn.type = 'button';
+      settingsBtn.className = 'footer-cookie-settings';
+      settingsBtn.textContent = 'Cookie-instellingen';
+      settingsBtn.addEventListener('click', showBanner);
+      legalLinks.appendChild(settingsBtn);
+    }
+  })();
+
   /* ---------- Nieuwsbrief-popup: gratis anti-pollen gaas bij aanmelding ---------- */
   (function(){
     var STORAGE_KEY = 'louaNewsletterSeen';
