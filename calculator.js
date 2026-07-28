@@ -7,7 +7,7 @@
   "use strict";
 
   var PRICE_PER_M2_DEFAULT = 165;
-  var PRICE_PER_M2_BY_TYPE = { plisse: 195 }; /* Plissé hordeuren: duurder per m² dan de overige types */
+  var PRICE_PER_M2_BY_TYPE = {}; /* alle producten weer gelijke prijs per m² */
   var HIDDEN_SURCHARGE = 35; /* verzendkosten: bewust niet los getoond aan de klant, wel verrekend in de totaalprijs */
   var PRICE_RAL = 15; /* per hor, niet voor wit (RAL 9010) — dat is standaard inbegrepen */
   var RAL_WHITE_CODE = 'RAL 9010';
