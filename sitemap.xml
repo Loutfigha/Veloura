@@ -31,6 +31,16 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://louaraamdecoratie.nl/horren-almere.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://louaraamdecoratie.nl/horren-bussum.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://louaraamdecoratie.nl/algemene-voorwaarden.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
