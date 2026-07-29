@@ -1083,7 +1083,7 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
 
 /* ===================== FOOTER ===================== */
 .site-footer{background:var(--anthracite);color:rgba(255,255,255,0.68);padding:4.5rem 0 2rem;}
-.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:2.5rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+.footer-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;gap:2.5rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.1);}
 .footer-brand .logo-text{color:#fff;}
 .footer-brand .logo-text em{color:var(--gold-light);}
 .footer-brand p{color:rgba(255,255,255,0.55);margin-top:1rem;font-size:.92rem;max-width:280px;}
