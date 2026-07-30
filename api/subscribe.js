@@ -17,37 +17,10 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { email, previewFollowup } = req.body || {};
+    const { email } = req.body || {};
 
     if (!email || !isValidEmail(email)) {
       res.status(400).json({ error: 'Ongeldig e-mailadres.' });
-      return;
-    }
-
-    if (previewFollowup === true) {
-      const { error: previewError } = await resend.emails.send({
-        from: FROM_EMAIL,
-        to: email,
-        subject: 'Nog niet vergeten? Uw gratis anti-pollen gaas staat klaar',
-        text: [
-          `Gisteren meldde u zich aan voor onze nieuwsbrief en ontving u de code ${DISCOUNT_CODE} voor een gratis upgrade naar anti-pollen gaas (t.w.v. € 30,-).`,
-          '',
-          'Nu de warmere dagen eraan komen, is dit een mooi moment om uw ramen en deuren insectenvrij te maken - en met anti-pollen gaas houdt u meteen ook het meeste stuifmeel buiten.',
-          '',
-          'Vraag vrijblijvend een offerte aan via https://louaraamdecoratie.nl/offerte.html en vermeld de code bij uw aanvraag. Wij meten kosteloos bij u thuis in en denken graag mee over de beste oplossing voor uw situatie.',
-          '',
-          'Vragen? Antwoord gewoon op deze e-mail of bel ons via +31 6 57 81 52 02.',
-          '',
-          'Tot snel!',
-          'Team LOUA Raamdecoratie',
-        ].join('\n'),
-      });
-      if (previewError) {
-        console.error('Resend preview-followup error:', previewError);
-        res.status(502).json({ error: 'Kon previewmail niet versturen.' });
-        return;
-      }
-      res.status(200).json({ ok: true, preview: 'followup' });
       return;
     }
 
