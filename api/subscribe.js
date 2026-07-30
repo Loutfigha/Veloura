@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const TO_EMAIL = 'info@louaraamdecoratie.nl';
 const FROM_EMAIL = 'LOUA Raamdecoratie <nieuwsbrief@louaraamdecoratie.nl>';
 const DISCOUNT_CODE = 'GRATISANTIPOLLEN';
-const FOLLOWUP_DELAY_MS = 5 * 24 * 60 * 60 * 1000;
+const FOLLOWUP_DELAY_MS = 24 * 60 * 60 * 1000;
 
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -70,7 +70,7 @@ module.exports = async function handler(req, res) {
       subject: 'Nog niet vergeten? Uw gratis anti-pollen gaas staat klaar',
       scheduledAt: followUpDate,
       text: [
-        `Een paar dagen geleden meldde u zich aan voor onze nieuwsbrief en ontving u de code ${DISCOUNT_CODE} voor een gratis upgrade naar anti-pollen gaas (t.w.v. € 30,-).`,
+        `Gisteren meldde u zich aan voor onze nieuwsbrief en ontving u de code ${DISCOUNT_CODE} voor een gratis upgrade naar anti-pollen gaas (t.w.v. € 30,-).`,
         '',
         'Nu de warmere dagen eraan komen, is dit een mooi moment om uw ramen en deuren insectenvrij te maken - en met anti-pollen gaas houdt u meteen ook het meeste stuifmeel buiten.',
         '',
