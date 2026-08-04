@@ -87,7 +87,7 @@
     + '      <div style="display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem;">'
     + '        <label class="option-toggle" id="optRalWrap">'
     + '          <input type="checkbox" id="optRal">'
-    + '          <span class="option-toggle-text"><strong>RAL kleur naar keuze</strong><span>Wit is standaard inbegrepen, overige kleuren + € 15,00 per hor</span></span>'
+    + '          <span class="option-toggle-text"><strong>RAL kleur naar keuze</strong><span>' + (onRequest ? 'Wit is standaard inbegrepen, overige kleuren op aanvraag' : 'Wit is standaard inbegrepen, overige kleuren + € 15,00 per hor') + '</span></span>'
     + '          <span class="option-toggle-price" id="ralPriceLabel"' + (onRequest ? ' style="display:none;"' : '') + '>Inbegrepen</span>'
     + '        </label>'
     + '        <div id="ralCodeWrap" style="display:none;">'
