@@ -22,11 +22,12 @@
   function getPricePerM2(type){
     return PRICE_PER_M2_BY_TYPE[type] || PRICE_PER_M2_DEFAULT;
   }
-  var ON_REQUEST_TYPES = { shutters: true };
+  var ON_REQUEST_TYPES = { raamhor: true, inzethor: true, plisse: true, shutters: true }; /* prijzen tijdelijk niet zichtbaar, altijd "op aanvraag" */
+  var NO_GAAS_TYPES = { shutters: true }; /* shutters hebben geen gaassoort-keuze, los van de prijszichtbaarheid */
 
   var GAAS_INFO = {
     standaard: { label: 'Standaard gaas', price: 0, description: 'Ons standaard fiberglas gaas, geschikt voor de meeste situaties.' },
-    antipollen: { label: 'Anti-pollen gaas', price: 30, description: 'Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt.' },
+    antipollen: { label: 'Anti-pollen gaas', price: 0, description: 'Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt. Gratis bij een offerteaanvraag via de website.' },
     huisdier: { label: 'Huisdierengaas', price: 45, description: 'Extra sterk, krasbestendig gaas tegen nagels van hond of kat.' },
     extrafijn: { label: 'Extra fijn gaas', price: 30, description: 'Nog fijnmaziger weefsel voor maximale weringskracht.' }
   };
@@ -39,6 +40,7 @@
 
   function buildWizardHTML(type){
     var onRequest = !!ON_REQUEST_TYPES[type];
+    var hasGaasChoice = !NO_GAAS_TYPES[type];
     return ''
     + '<div class="calc-card reveal" id="calcCard">'
     + '  <ul class="calc-intro-checklist">'
@@ -71,7 +73,7 @@
 
     + '    <div class="wizard-step" data-step="2">'
     + '      <div class="calc-step-label"><span class="calc-step-num">2</span><span>Extra opties</span></div>'
-    + (onRequest ? '' : ''
+    + (hasGaasChoice ? ''
       + '      <div style="margin-bottom:1.8rem;" id="gaasSectionWrap">'
       + '        <div class="calc-step-label" style="margin-bottom:.9rem;"><span>Type gaas</span></div>'
       + '        <div class="type-card-grid" id="gaasCardGrid" style="grid-template-columns:1fr 1fr;margin-bottom:1.6rem;">'
@@ -81,7 +83,7 @@
       + '          <label class="type-card" data-gaas-card="extrafijn"><input type="radio" name="typeGaas" value="extrafijn"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 7.4h16M4 10.8h16M4 14.2h16M4 17.6h16M7.4 4v16M10.8 4v16M14.2 4v16M17.6 4v16"/></svg></span><span class="label">Extra fijn gaas</span></label>'
       + '        </div>'
       + '        <p class="dim-hint" id="gaasDescription" style="margin-top:-1rem;margin-bottom:1.4rem;">Ons standaard fiberglas gaas, geschikt voor de meeste situaties.</p>'
-      + '      </div>')
+      + '      </div>' : '')
     + '      <div style="display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.8rem;">'
     + '        <label class="option-toggle" id="optRalWrap">'
     + '          <input type="checkbox" id="optRal">'
@@ -130,13 +132,16 @@
     + '        <span class="stars" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg></span>'
     + '        <span>4,7 · 500+ tevreden klanten</span>'
     + '      </div>'
-    + '      <div class="calc-price-row"><span class="calc-price-label">Indicatieve offerteprijs</span><span class="calc-price is-empty" id="calcPrice">Vul de afmetingen in</span></div>'
-    + '      <p class="calc-summary-note">Inclusief materiaal, op maat productie en montage. Dit is een prijsindicatie: de definitieve prijs kan afwijken en wordt vastgesteld na een gratis meting aan huis.</p>'
+    + '      <div class="calc-price-row"><span class="calc-price-label">' + (onRequest ? 'Prijs' : 'Indicatieve offerteprijs') + '</span><span class="calc-price is-empty" id="calcPrice">Vul de afmetingen in</span></div>'
+    + '      <p class="calc-summary-note">' + (onRequest
+        ? 'Wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave op basis van deze gegevens. Kiest u voor anti-pollen gaas? Dat is bij een offerteaanvraag via de website altijd gratis.'
+        : 'Inclusief materiaal, op maat productie en montage. Dit is een prijsindicatie: de definitieve prijs kan afwijken en wordt vastgesteld na een gratis meting aan huis.'
+      ) + '</p>'
     + '      <ul class="calc-summary-list" id="calcSpecs">'
     + '        <li><span>Type hor</span><span id="specType">' + (TYPE_LABELS[type] || '—') + '</span></li>'
     + '        <li><span>Afmetingen</span><span id="specDim">—</span></li>'
     + '        <li><span>Oppervlakte</span><span id="specArea">—</span></li>'
-    + '        <li id="specGaasRow"' + (onRequest ? ' style="display:none;"' : '') + '><span>Type gaas</span><span id="specGaas">Standaard</span></li>'
+    + '        <li id="specGaasRow"' + (hasGaasChoice ? '' : ' style="display:none;"') + '><span>Type gaas</span><span id="specGaas">Standaard</span></li>'
     + '        <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">—</span><span id="specGaasPrice">—</span></li>'
     + '        <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>—</span></li>'
     + '      </ul>'
@@ -154,8 +159,11 @@
     + '    </div>'
     + '    <div class="calc-success" id="calcSuccess" style="display:none;">'
     + '      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>'
-    + '      <h3>Uw offerte is gedownload</h3>'
-    + '      <p>De PDF staat in uw downloads-map. Uw e-mailprogramma opent zo met een vooraf ingevuld bericht aan ons. Klik daarin op verzenden om uw aanvraag naar ons door te sturen.</p>'
+    + '      <h3>' + (onRequest ? 'Uw aanvraag is verzonden' : 'Uw offerte is gedownload') + '</h3>'
+    + '      <p>' + (onRequest
+        ? 'De PDF staat in uw downloads-map en wij hebben uw aanvraag ontvangen. Wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave.'
+        : 'De PDF staat in uw downloads-map. Uw e-mailprogramma opent zo met een vooraf ingevuld bericht aan ons. Klik daarin op verzenden om uw aanvraag naar ons door te sturen.'
+      ) + '</p>'
     + '      <button type="button" class="btn btn-ghost" id="resetBtn" style="border-color:rgba(255,255,255,0.3);color:#fff;">Nieuwe berekening starten</button>'
     + '    </div>'
     + '  </div>'
@@ -170,6 +178,7 @@
     mount.innerHTML = buildWizardHTML(type);
 
     var onRequest = !!ON_REQUEST_TYPES[type];
+    var hasGaasChoice = !NO_GAAS_TYPES[type];
 
     var form = mount.querySelector('#calcForm');
     var gaasCards = mount.querySelectorAll('#gaasCardGrid .type-card');
@@ -335,7 +344,7 @@
       if(optRalEl.checked){
         var ral = getSelectedRal();
         var ralPrice = getRalPrice();
-        specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (ralPrice > 0 ? ' (+ ' + formatEUR(ralPrice) + ')' : ' (inbegrepen)');
+        specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (onRequest ? '' : (ralPrice > 0 ? ' (+ ' + formatEUR(ralPrice) + ')' : ' (inbegrepen)'));
       }
 
       if(dimsValid){
@@ -524,10 +533,10 @@
       var onRequestPdf = onRequest;
 
       var extras = [];
-      if(!onRequestPdf){
+      if(hasGaasChoice){
         var gaasPdf = getSelectedGaas();
-        if(gaasPdf.price > 0){
-          extras.push({label: gaasPdf.label, price: gaasPdf.price});
+        if(gaasPdf.key !== 'standaard'){
+          extras.push({label: gaasPdf.label, price: (onRequestPdf || gaasPdf.price === 0) ? null : gaasPdf.price});
         }
       }
       if(optRalEl.checked){
@@ -577,7 +586,7 @@
       var voorwaarden = [
         'Deze offerte is geldig t/m ' + formatDatumNL(geldigTot) + ' (max. 10 dagen vanaf offertedatum).',
         onRequestPdf
-          ? 'Dit product is op aanvraag: de prijs wordt in overleg met u bepaald tijdens een gratis inmeetafspraak op locatie.'
+          ? 'Deze offerte is op aanvraag: wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave. Kiest u voor anti-pollen gaas, dan is dat bij een offerteaanvraag via de website altijd gratis.'
           : 'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
         'Inclusief standaard materiaal en professionele montage. Eventueel meerwerk wordt vooraf met u besproken.'
       ];
@@ -598,9 +607,9 @@
 
     function verstuurOfferteMailFallback(){
       var extras = [];
-      if(!onRequest){
+      if(hasGaasChoice){
         var gaasMail = getSelectedGaas();
-        if(gaasMail.price > 0){ extras.push(gaasMail.label); }
+        if(gaasMail.key !== 'standaard'){ extras.push(gaasMail.label); }
       }
       if(optRalEl.checked){
         var ral = getSelectedRal();
@@ -631,7 +640,7 @@
       var pdfDataUri = doc.output('datauristring');
       var pdfBase64 = pdfDataUri.split(',').pop();
 
-      var gaas = onRequest ? null : getSelectedGaas();
+      var gaas = hasGaasChoice ? getSelectedGaas() : null;
       var ral = optRalEl.checked ? getSelectedRal() : null;
 
       var payload = {
@@ -642,7 +651,7 @@
         breedte: breedteEl.value,
         lengte: lengteEl.value,
         oppervlakte: currentArea !== null ? currentArea.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) : '-',
-        typeGaas: (gaas && gaas.price > 0) ? gaas.label : null,
+        typeGaas: (gaas && gaas.key !== 'standaard') ? gaas.label : null,
         ralKleur: ral ? ral.label : null,
         prijsLabel: onRequest ? 'Op aanvraag' : formatEUR(currentTotal),
         offerteNummer: offerteNummer,

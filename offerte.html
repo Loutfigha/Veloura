@@ -314,10 +314,10 @@
                 <span>4,7 · 500+ tevreden klanten</span>
               </div>
               <div class="calc-price-row">
-                <span class="calc-price-label">Indicatieve offerteprijs</span>
+                <span class="calc-price-label" id="calcPriceLabel">Prijs</span>
                 <span class="calc-price is-empty" id="calcPrice">Vul de afmetingen in</span>
               </div>
-              <p class="calc-summary-note">Inclusief materiaal, op maat productie en montage. Dit is een prijsindicatie: de definitieve prijs kan afwijken en wordt vastgesteld na een gratis meting aan huis.</p>
+              <p class="calc-summary-note" id="calcSummaryNote">Wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave op basis van deze gegevens. Kiest u voor anti-pollen gaas? Dat is bij een offerteaanvraag via de website altijd gratis.</p>
 
               <ul class="calc-summary-list" id="calcSpecs">
                 <li><span>Type hor</span><span id="specType">—</span></li>
@@ -349,8 +349,8 @@
 
             <div class="calc-success" id="calcSuccess">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
-              <h3>Uw offerte is gedownload</h3>
-              <p>De PDF staat in uw downloads-map. Uw e-mailprogramma opent zo met een vooraf ingevuld bericht aan ons. Klik daarin op verzenden om uw aanvraag naar ons door te sturen.</p>
+              <h3>Uw aanvraag is verzonden</h3>
+              <p>De PDF staat in uw downloads-map en wij hebben uw aanvraag ontvangen. Wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave.</p>
               <button type="button" class="btn btn-ghost" id="resetBtn" style="border-color:rgba(255,255,255,0.3);color:#fff;">Nieuwe berekening starten</button>
             </div>
 
@@ -494,11 +494,12 @@
     plisse: 'Plissé hordeur',
     shutters: 'Shutters'
   };
-  var ON_REQUEST_TYPES = { shutters: true };
+  var ON_REQUEST_TYPES = { raamhor: true, inzethor: true, plisse: true, shutters: true }; /* prijzen tijdelijk niet zichtbaar, altijd "op aanvraag" */
+  var NO_GAAS_TYPES = { shutters: true }; /* shutters hebben geen gaassoort-keuze, los van de prijszichtbaarheid */
 
   var GAAS_INFO = {
     standaard: { label: 'Standaard gaas', price: 0, description: 'Ons standaard fiberglas gaas, geschikt voor de meeste situaties.' },
-    antipollen: { label: 'Anti-pollen gaas', price: 30, description: 'Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt.' },
+    antipollen: { label: 'Anti-pollen gaas', price: 0, description: 'Fijnmazig gaas dat ook stuifmeel grotendeels tegenhoudt. Gratis bij een offerteaanvraag via de website.' },
     huisdier: { label: 'Huisdierengaas', price: 45, description: 'Extra sterk, krasbestendig gaas tegen nagels van hond of kat.' },
     extrafijn: { label: 'Extra fijn gaas', price: 30, description: 'Nog fijnmaziger weefsel voor maximale weringskracht.' }
   };
@@ -556,10 +557,11 @@
 
   function updateProductTypeUI(){
     var onRequest = !!ON_REQUEST_TYPES[getSelectedType()];
+    var hasGaasChoice = !NO_GAAS_TYPES[getSelectedType()];
     /* Gaas (insectengaas) is niet van toepassing op shutters */
-    gaasSectionWrap.style.display = onRequest ? 'none' : 'block';
+    gaasSectionWrap.style.display = hasGaasChoice ? 'block' : 'none';
     ralPriceLabel.style.display = onRequest ? 'none' : 'inline';
-    specGaasRow.style.display = onRequest ? 'none' : 'flex';
+    specGaasRow.style.display = hasGaasChoice ? 'flex' : 'none';
   }
 
   function getSelectedRal(){
@@ -689,7 +691,7 @@
     if(optRalEl.checked){
       var ral = getSelectedRal();
       var ralPriceSpec = getRalPrice();
-      specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (ralPriceSpec > 0 ? ' (+ ' + formatEUR(ralPriceSpec) + ')' : ' (inbegrepen)');
+      specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (onRequest ? '' : (ralPriceSpec > 0 ? ' (+ ' + formatEUR(ralPriceSpec) + ')' : ' (inbegrepen)'));
     }
 
     if(dimsValid){
@@ -890,13 +892,14 @@
     doc.line(15, ySpec + 28, pageW - 15, ySpec + 28);
 
     var onRequestPdf = !!ON_REQUEST_TYPES[getSelectedType()];
+    var hasGaasChoicePdf = !NO_GAAS_TYPES[getSelectedType()];
 
     /* Extra opties (transparant getoond met eigen prijs) */
     var extras = [];
-    if(!onRequestPdf){
+    if(hasGaasChoicePdf){
       var gaasPdf = getSelectedGaas();
-      if(gaasPdf.price > 0){
-        extras.push({label: gaasPdf.label, price: gaasPdf.price});
+      if(gaasPdf.key !== 'standaard'){
+        extras.push({label: gaasPdf.label, price: (onRequestPdf || gaasPdf.price === 0) ? null : gaasPdf.price});
       }
     }
     if(optRalEl.checked){
@@ -948,7 +951,7 @@
     var voorwaarden = [
       'Deze offerte is geldig t/m ' + formatDatumNL(geldigTot) + ' (max. 10 dagen vanaf offertedatum).',
       onRequestPdf
-        ? 'Dit product is op aanvraag: de prijs wordt in overleg met u bepaald tijdens een gratis inmeetafspraak op locatie.'
+        ? 'Deze offerte is op aanvraag: wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave. Kiest u voor anti-pollen gaas, dan is dat bij een offerteaanvraag via de website altijd gratis.'
         : 'Dit is een prijsindicatie op basis van de door u opgegeven afmetingen. De definitieve prijs kan hiervan afwijken en wordt vastgesteld tijdens een gratis inmeetafspraak op locatie.',
       'Inclusief standaard materiaal en professionele montage. Eventueel meerwerk wordt vooraf met u besproken.'
     ];
@@ -972,10 +975,11 @@
 
   function verstuurOfferteMailFallback(){
     var onRequestMail = !!ON_REQUEST_TYPES[getSelectedType()];
+    var hasGaasChoiceMail = !NO_GAAS_TYPES[getSelectedType()];
     var extras = [];
-    if(!onRequestMail){
+    if(hasGaasChoiceMail){
       var gaasMail = getSelectedGaas();
-      if(gaasMail.price > 0){ extras.push(gaasMail.label); }
+      if(gaasMail.key !== 'standaard'){ extras.push(gaasMail.label); }
     }
     if(optRalEl.checked){
       var ral = getSelectedRal();
@@ -1007,7 +1011,8 @@
     var pdfBase64 = pdfDataUri.split(',').pop();
 
     var onRequestSend = !!ON_REQUEST_TYPES[getSelectedType()];
-    var gaas = onRequestSend ? null : getSelectedGaas();
+    var hasGaasChoiceSend = !NO_GAAS_TYPES[getSelectedType()];
+    var gaas = hasGaasChoiceSend ? getSelectedGaas() : null;
     var ral = optRalEl.checked ? getSelectedRal() : null;
 
     var payload = {
@@ -1018,7 +1023,7 @@
       breedte: breedteEl.value,
       lengte: lengteEl.value,
       oppervlakte: currentArea !== null ? currentArea.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) : '-',
-      typeGaas: (gaas && gaas.price > 0) ? gaas.label : null,
+      typeGaas: (gaas && gaas.key !== 'standaard') ? gaas.label : null,
       ralKleur: ral ? ral.label : null,
       prijsLabel: onRequestSend ? 'Op aanvraag' : formatEUR(currentTotal),
       offerteNummer: offerteNummer,
