@@ -1081,6 +1081,19 @@ section{position:relative;padding:clamp(4.5rem,8vw,8rem) 0;}
   .cookie-banner-actions .btn{flex:1;}
 }
 
+/* ===================== REGIO'S OVERZICHT ===================== */
+.region-cluster{display:grid;grid-template-columns:repeat(2,1fr);gap:2.6rem 2rem;}
+.region-cluster-block h3{font-size:1.05rem;margin-bottom:1rem;}
+.region-grid{display:flex;flex-wrap:wrap;gap:.6rem;}
+.city-chip-row{display:flex;flex-wrap:wrap;gap:.6rem;}
+.city-chip{
+  display:inline-flex;align-items:center;padding:.5rem 1rem;border-radius:100px;
+  border:1px solid var(--border);font-size:.85rem;font-weight:500;color:var(--text-muted);background:var(--white);
+}
+@media (max-width:640px){
+  .region-cluster{grid-template-columns:1fr;gap:2rem;}
+}
+
 /* ===================== FOOTER ===================== */
 .site-footer{background:var(--anthracite);color:rgba(255,255,255,0.68);padding:4.5rem 0 2rem;}
 .footer-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr 1fr;gap:2.5rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.1);}
