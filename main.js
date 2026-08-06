@@ -139,25 +139,35 @@
     });
   }
 
-  /* ---------- Cookiemelding & Google Analytics (alleen na toestemming) ---------- */
+  /* ---------- Cookiemelding & Google Analytics (Google Consent Mode v2) ----------
+     Het gtag.js-script en de config-call laden altijd (nodig voor Google's eigen
+     tagdetectie/Tag Assistant), maar analytics_storage staat standaard op "denied".
+     Er wordt pas daadwerkelijk data verzameld (cookies, hits) zodra de bezoeker op
+     "Accepteren" klikt en de consent-status naar "granted" wordt bijgewerkt. */
   (function(){
     var CONSENT_KEY = 'louaCookieConsent';
     var GA_ID = 'G-9BWLYK4D7H';
-    var gaLoaded = false;
     var banner = null;
 
-    function loadAnalytics(){
-      if(gaLoaded) return;
-      gaLoaded = true;
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function(){ window.dataLayer.push(arguments); };
-      window.gtag('js', new Date());
-      window.gtag('config', GA_ID);
-      var s = document.createElement('script');
-      s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-      document.head.appendChild(s);
-    }
+    var consent = localStorage.getItem(CONSENT_KEY);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+
+    gtag('consent', 'default', {
+      'analytics_storage': consent === 'accepted' ? 'granted' : 'denied',
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+
+    var gaScript = document.createElement('script');
+    gaScript.async = true;
+    gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(gaScript);
 
     function hideBanner(){
       if(banner){ banner.classList.remove('is-visible'); }
@@ -178,23 +188,19 @@
 
         document.getElementById('cookieAccept').addEventListener('click', function(){
           localStorage.setItem(CONSENT_KEY, 'accepted');
-          loadAnalytics();
+          gtag('consent', 'update', {'analytics_storage': 'granted'});
           hideBanner();
         });
         document.getElementById('cookieDecline').addEventListener('click', function(){
-          var hadAccepted = localStorage.getItem(CONSENT_KEY) === 'accepted';
           localStorage.setItem(CONSENT_KEY, 'declined');
+          gtag('consent', 'update', {'analytics_storage': 'denied'});
           hideBanner();
-          if(hadAccepted){ location.reload(); }
         });
       }
       setTimeout(function(){ banner.classList.add('is-visible'); }, 50);
     }
 
-    var consent = localStorage.getItem(CONSENT_KEY);
-    if(consent === 'accepted'){
-      loadAnalytics();
-    } else if(!consent){
+    if(!consent){
       showBanner();
     }
 
