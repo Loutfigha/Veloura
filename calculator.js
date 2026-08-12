@@ -269,6 +269,14 @@
     var TOTAL_STEPS = 4;
     var currentStep = 1;
 
+    function scrollWizardIntoView(){
+      var header = document.getElementById('siteHeader');
+      var headerHeight = header ? header.offsetHeight : 0;
+      var rect = mount.getBoundingClientRect();
+      var targetY = window.pageYOffset + rect.top - headerHeight - 16;
+      window.scrollTo(0, Math.max(0, targetY));
+    }
+
     function goToStep(n){
       n = Math.max(1, Math.min(TOTAL_STEPS, n));
       currentStep = n;
@@ -281,6 +289,7 @@
       wizardProgressFill.style.width = (n / TOTAL_STEPS * 100) + '%';
       wizardStepNumEl.textContent = n;
       wizardStepNameEl.textContent = WIZARD_STEP_NAMES[n] || '';
+      scrollWizardIntoView();
       if(onSummary){
         summaryBackBtn.focus({preventScroll: true});
       } else {
