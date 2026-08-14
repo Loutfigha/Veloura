@@ -225,6 +225,23 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
 
   .euro-in.inline{display:inline-block;width:110px;flex:0 0 auto}
 
+  .stats-bar{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 18px;margin-bottom:24px;box-shadow:0 1px 2px rgba(32,30,26,.04)}
+  .stats-row{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+  .stat{flex:1 1 auto;min-width:88px;padding:4px 14px;border-right:1px solid var(--line-soft)}
+  .stat:first-child{padding-left:0}
+  .stat:last-of-type{border-right:none}
+  .stat-v{display:block;font-size:19px;font-weight:600;color:var(--ink);white-space:nowrap}
+  .stat-l{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;white-space:nowrap}
+  .btn-stats-hide{background:none;border:none;cursor:pointer;color:#c4bfb4;padding:4px;line-height:0;flex:0 0 auto;margin-left:8px}
+  .btn-stats-hide:hover{color:var(--muted)}
+  .stats-show{display:none;align-items:center;gap:8px;background:none;border:1px dashed var(--line);color:var(--muted);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:24px}
+  .stats-show:hover{color:var(--sand);border-color:var(--sand)}
+  @media(max-width:639px){
+    .stats-row{gap:10px 0}
+    .stat{min-width:44%;border-right:none;padding:4px 0}
+    .stat-v{font-size:17px}
+  }
+
   /* ====== Mobiel ====== */
   @media(max-width:639px){
     header.top{flex-wrap:wrap}
@@ -272,6 +289,21 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
       <button class="btn btn-ink" id="btnOfferteTop">📄&nbsp; Offerte maken</button>
     </div>
   </header>
+
+  <div class="stats-bar" id="statsBar">
+    <div class="stats-row">
+      <div class="stat"><span class="stat-v" id="statConcept">0</span><span class="stat-l">Concept</span></div>
+      <div class="stat"><span class="stat-v" id="statVerzonden">0</span><span class="stat-l">Verzonden</span></div>
+      <div class="stat"><span class="stat-v" id="statGeaccepteerd">0</span><span class="stat-l">Geaccepteerd</span></div>
+      <div class="stat"><span class="stat-v" id="statGeweigerd">0</span><span class="stat-l">Geweigerd</span></div>
+      <div class="stat"><span class="stat-v" id="statOmzet">€ 0</span><span class="stat-l">Omzet (geaccepteerd)</span></div>
+      <div class="stat"><span class="stat-v" id="statConversie">—</span><span class="stat-l">Conversie</span></div>
+      <button class="btn-stats-hide" id="btnStatsHide" title="Overzicht verbergen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-10-8-10-8a18.6 18.6 0 0 1 4.22-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 10 8 10 8a18.6 18.6 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>
+      </button>
+    </div>
+  </div>
+  <button class="stats-show" id="btnStatsShow">📊 Overzicht resultaten tonen</button>
 
   <div class="grid">
     <div class="col">
@@ -709,11 +741,14 @@ var offertesHistorie=[];
   if(h){ try{ var arr=JSON.parse(h); if(Array.isArray(arr)) offertesHistorie=arr; }catch(e){} }
 })();
 function saveHistory(){ LS_set(HISTORY_KEY, JSON.stringify(offertesHistorie)); }
+var _histSeq=0;
+offertesHistorie.forEach(function(h){ if(h.id>_histSeq) _histSeq=h.id; });
+function nextHistId(){ _histSeq=Math.max(Date.now(),_histSeq+1); return _histSeq; }
 function saveToHistory(){
   var o=offerteData();
   var idx=offertesHistorie.findIndex(function(h){return h.offerteNr===state.offerteNr;});
   var record={
-    id: idx!==-1 ? offertesHistorie[idx].id : Date.now(),
+    id: idx!==-1 ? offertesHistorie[idx].id : nextHistId(),
     offerteNr: state.offerteNr,
     datum: state.offerteDatum,
     klantNaam: state.klant.naam || "Naamloos",
@@ -724,8 +759,30 @@ function saveToHistory(){
   };
   if(idx!==-1){ offertesHistorie[idx]=record; } else { offertesHistorie.unshift(record); }
   saveHistory();
+  renderStats();
 }
 var STATUS_LABELS={concept:"Concept",verzonden:"Verzonden",geaccepteerd:"Geaccepteerd",geweigerd:"Geweigerd"};
+var STATS_HIDDEN_KEY="loua_stats_hidden";
+function renderStats(){
+  var counts={concept:0,verzonden:0,geaccepteerd:0,geweigerd:0};
+  var omzet=0;
+  offertesHistorie.forEach(function(h){
+    var st=STATUS_LABELS[h.status]?h.status:"concept";
+    counts[st]++;
+    if(st==="geaccepteerd") omzet+=(h.totaal||0);
+  });
+  el("statConcept").textContent=counts.concept;
+  el("statVerzonden").textContent=counts.verzonden;
+  el("statGeaccepteerd").textContent=counts.geaccepteerd;
+  el("statGeweigerd").textContent=counts.geweigerd;
+  el("statOmzet").textContent=euro(omzet);
+  var afgehandeld=counts.geaccepteerd+counts.geweigerd;
+  el("statConversie").textContent=afgehandeld?Math.round(counts.geaccepteerd/afgehandeld*100)+"%":"—";
+
+  var hidden=LS_get(STATS_HIDDEN_KEY)==="1";
+  el("statsBar").style.display=hidden?"none":"block";
+  el("btnStatsShow").style.display=hidden?"inline-flex":"none";
+}
 function renderHistorie(filter){
   var wrap=el("histTableWrap");
   var list=offertesHistorie;
@@ -760,7 +817,7 @@ function renderHistorie(filter){
     sel.onchange=function(){
       var id=parseFloat(sel.dataset.id);
       var rec=offertesHistorie.find(function(h){return h.id===id;});
-      if(rec){ rec.status=sel.value; saveHistory(); sel.className="status-select status-"+sel.value; toast("Status bijgewerkt naar '"+STATUS_LABELS[sel.value]+"'"); }
+      if(rec){ rec.status=sel.value; saveHistory(); renderStats(); sel.className="status-select status-"+sel.value; toast("Status bijgewerkt naar '"+STATUS_LABELS[sel.value]+"'"); }
     };
   });
   wrap.querySelectorAll("[data-act]").forEach(function(btn){
@@ -783,7 +840,7 @@ function renderHistorie(filter){
       } else if(btn.dataset.act==="del"){
         if(btn.textContent==="Zeker weten?"){
           offertesHistorie=offertesHistorie.filter(function(h){return h.id!==id;});
-          saveHistory(); renderHistorie(el("histSearch").value);
+          saveHistory(); renderStats(); renderHistorie(el("histSearch").value);
           toast("Offerte verwijderd");
         } else {
           btn.textContent="Zeker weten?";
@@ -1111,7 +1168,7 @@ function initApp(){
   var hersteld=restoreDraft();
   if(hersteld) pushStateIntoFields();
 
-  renderProfielen(); renderRegels(); renderTransport(); renderProductBeheer(); bindKlant(); bindOfferteVelden(); recompute();
+  renderProfielen(); renderRegels(); renderTransport(); renderProductBeheer(); bindKlant(); bindOfferteVelden(); recompute(); renderStats();
   if(hersteld) toast("Vorig concept hersteld");
 
   el("btnBeheer").onclick=function(){state.beheer=!state.beheer;el("btnBeheer").textContent=state.beheer?"✓ Klaar":"⚙ Beheer";renderProfielen();};
@@ -1147,6 +1204,9 @@ function initApp(){
   };
 
   el("btnHistorie").onclick=function(){ renderHistorie(""); el("histSearch").value=""; el("histOverlay").classList.add("open"); };
+
+  el("btnStatsHide").onclick=function(){ LS_set(STATS_HIDDEN_KEY,"1"); renderStats(); toast("Overzicht verborgen"); };
+  el("btnStatsShow").onclick=function(){ LS_set(STATS_HIDDEN_KEY,"0"); renderStats(); };
   el("btnHistClose").onclick=function(){ el("histOverlay").classList.remove("open"); };
   el("histOverlay").addEventListener("click",function(e){if(e.target===el("histOverlay"))el("histOverlay").classList.remove("open");});
   el("histSearch").oninput=function(){ renderHistorie(this.value); };
