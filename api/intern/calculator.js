@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const CALCULATOR_HTML = `<!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -813,6 +815,9 @@ initApp();
 </html>
 `;
 
+const COOKIE_NAME = 'loua_calc_session';
+const MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 dagen
+
 function timingSafeStringEqual(a, b) {
   if (typeof a !== 'string' || typeof b !== 'string') return false;
   if (a.length !== b.length) return false;
@@ -823,45 +828,142 @@ function timingSafeStringEqual(a, b) {
   return result === 0;
 }
 
-function isAuthorized(req) {
-  var user = process.env.CALC_USER;
-  var pass = process.env.CALC_PASS;
-  if (!user || !pass) return null; // not configured
+function getSecret() {
+  return (process.env.CALC_USER || '') + ':' + (process.env.CALC_PASS || '');
+}
 
-  var auth = req.headers['authorization'] || '';
-  if (auth.slice(0, 6) !== 'Basic ') return false;
+function signPayload(payload) {
+  return crypto.createHmac('sha256', getSecret()).update(payload).digest('hex');
+}
 
-  var decoded;
-  try {
-    decoded = Buffer.from(auth.slice(6), 'base64').toString('utf8');
-  } catch (e) {
-    return false;
+function createSessionCookie() {
+  var payload = 'ok.' + Date.now();
+  var value = encodeURIComponent(payload + '.' + signPayload(payload));
+  return COOKIE_NAME + '=' + value + '; HttpOnly; Secure; SameSite=Lax; Path=/intern/calculator; Max-Age=' + MAX_AGE_SECONDS;
+}
+
+function clearSessionCookie() {
+  return COOKIE_NAME + '=; HttpOnly; Secure; SameSite=Lax; Path=/intern/calculator; Max-Age=0';
+}
+
+function parseCookies(header) {
+  var out = {};
+  (header || '').split(';').forEach(function (part) {
+    var idx = part.indexOf('=');
+    if (idx === -1) return;
+    var k = part.slice(0, idx).trim();
+    var v = part.slice(idx + 1).trim();
+    if (k) out[k] = decodeURIComponent(v);
+  });
+  return out;
+}
+
+function hasValidSession(req) {
+  var cookies = parseCookies(req.headers['cookie']);
+  var raw = cookies[COOKIE_NAME];
+  if (!raw) return false;
+  var lastDot = raw.lastIndexOf('.');
+  if (lastDot === -1) return false;
+  var payload = raw.slice(0, lastDot);
+  var sig = raw.slice(lastDot + 1);
+  if (!timingSafeStringEqual(sig, signPayload(payload))) return false;
+  var m = /^ok\.(\d+)$/.exec(payload);
+  if (!m) return false;
+  var issuedAt = parseInt(m[1], 10);
+  if (!issuedAt || Date.now() - issuedAt > MAX_AGE_SECONDS * 1000) return false;
+  return true;
+}
+
+function getFormFields(req) {
+  var body = req.body;
+  if (body && typeof body === 'object') return body;
+  if (typeof body === 'string' && body.length) {
+    var params = new URLSearchParams(body);
+    return { username: params.get('username'), password: params.get('password') };
   }
-  var sepIndex = decoded.indexOf(':');
-  if (sepIndex === -1) return false;
-  var u = decoded.slice(0, sepIndex);
-  var p = decoded.slice(sepIndex + 1);
+  return {};
+}
 
-  return timingSafeStringEqual(u, user) && timingSafeStringEqual(p, pass);
+function loginPageHtml(errorMsg) {
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>LOUA · Intern inloggen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{ --cream:#FAFAF8; --surface:#FFFFFF; --ink:#201E1A; --sand:#A98C63; --sand-tint:#A98C6314; --line:#E7E2D9; --muted:#78716c; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .display{font-family:'Cormorant Garamond',Georgia,serif}
+  .login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .login .box{width:100%;max-width:360px;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:36px 30px;box-shadow:0 12px 32px rgba(32,30,26,.10)}
+  .login img{height:40px;margin-bottom:20px}
+  .login .eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--sand);margin:0 0 8px}
+  .login h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;margin:0 0 4px}
+  .login p.sub{color:var(--muted);font-size:14px;margin:0 0 26px}
+  label.veld{display:block;text-align:left;margin-bottom:14px}
+  label.veld .lab{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:4px}
+  input{width:100%;border:1px solid #E4DFD6;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;color:var(--ink);font-family:inherit;outline:none;transition:border .15s,box-shadow .15s}
+  input:focus{border-color:var(--sand);box-shadow:0 0 0 3px rgba(169,140,99,.22)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:11px 18px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;width:100%;margin-top:8px;background:var(--ink);color:#fff;transition:opacity .15s}
+  .btn:hover{opacity:.9}
+  .err{color:#b91c1c;font-size:13px;margin-top:16px;min-height:18px}
+</style>
+</head>
+<body>
+  <div class="login">
+    <div class="box">
+      <img src="https://www.louaraamdecoratie.nl/images/logo-loua-dark-on-transparent.png" alt="LOUA Raamdecoratie" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'display',style:'font-size:20px;font-weight:600;margin-bottom:20px',textContent:'LOUA Raamdecoratie'}))" />
+      <p class="eyebrow">Interne tool</p>
+      <h2 class="display">Prijscalculator</h2>
+      <p class="sub">Log in om verder te gaan.</p>
+      <form method="POST" action="/intern/calculator">
+        <label class="veld"><span class="lab">Gebruikersnaam</span><input type="text" name="username" autocomplete="username" required autofocus /></label>
+        <label class="veld"><span class="lab">Wachtwoord</span><input type="password" name="password" autocomplete="current-password" required /></label>
+        <button class="btn" type="submit">Inloggen</button>
+      </form>
+      <p class="err">${errorMsg || ''}</p>
+    </div>
+  </div>
+</body>
+</html>`;
 }
 
 module.exports = function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, private');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
 
-  var authorized = isAuthorized(req);
-
-  if (authorized === null) {
+  var user = process.env.CALC_USER;
+  var pass = process.env.CALC_PASS;
+  if (!user || !pass) {
     res.status(500).send('Basic Auth is niet geconfigureerd. Zet CALC_USER en CALC_PASS als environment variables in Vercel.');
     return;
   }
 
-  if (!authorized) {
-    res.setHeader('WWW-Authenticate', 'Basic realm="LOUA intern"');
-    res.status(401).send('Authenticatie vereist');
+  if (req.method === 'POST') {
+    var fields = getFormFields(req);
+    var u = typeof fields.username === 'string' ? fields.username : '';
+    var p = typeof fields.password === 'string' ? fields.password : '';
+    var valid = timingSafeStringEqual(u, user) && timingSafeStringEqual(p, pass);
+    if (valid) {
+      res.setHeader('Set-Cookie', createSessionCookie());
+      res.status(200).send(CALCULATOR_HTML);
+      return;
+    }
+    res.status(401).send(loginPageHtml('Onjuiste gebruikersnaam of wachtwoord.'));
     return;
   }
 
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.status(200).send(CALCULATOR_HTML);
+  if (hasValidSession(req)) {
+    res.status(200).send(CALCULATOR_HTML);
+    return;
+  }
+
+  res.status(401).send(loginPageHtml(''));
 };
