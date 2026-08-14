@@ -537,17 +537,17 @@ function offerteData(){
 }
 function renderDoc(){
   var b=state.bedrijf, k=state.klant, o=offerteData();
-  var contact=[b.adres,b.pcplaats].filter(Boolean).join("\n")+((b.tel||b.email)?"\n":"")+[b.tel,b.email].filter(Boolean).join(" · ");
+  var contact=[b.adres,b.pcplaats].filter(Boolean).join("\\n")+((b.tel||b.email)?"\\n":"")+[b.tel,b.email].filter(Boolean).join(" · ");
   var rijen = o.lijnen.length ? o.lijnen.map(function(l){
     return '<tr><td><span class="om">'+esc(l.om)+'</span>'+(l.detail?'<span class="om-sub">'+esc(l.detail)+'</span>':'')+'</td><td class="c">'+l.aantal+'</td><td class="r">'+euro(l.stuk)+'</td><td class="r" style="font-weight:500">'+euro(l.totaal)+'</td></tr>';
   }).join("") : '<tr><td colspan="4" style="text-align:center;color:#a8a29e;padding:16px 0">Nog geen regels — vul afmetingen in de calculator in.</td></tr>';
   var voet=[b.kvk&&("KvK "+b.kvk),b.btwnr&&("BTW "+b.btwnr),b.iban&&("IBAN "+b.iban)].filter(Boolean).join("  ·  ");
   el("offerteDoc").innerHTML=
     '<div class="doc-head"><div>'+
-      '<img src="'+LOGO+'" alt="LOUA" onerror="this.replaceWith(Object.assign(document.createElement(\'div\'),{className:\'doc-brandname\',textContent:\''+esc(b.naam||"LOUA Raamdecoratie")+'\'}))"/>'+
+      '<img src="'+LOGO+'" alt="LOUA" onerror="this.replaceWith(Object.assign(document.createElement(\\'div\\'),{className:\\'doc-brandname\\',textContent:\\''+esc(b.naam||"LOUA Raamdecoratie")+'\\'}))"/>'+
       '<div class="doc-contact">'+esc(contact)+'</div>'+
     '</div><div><p class="doc-title">Offerte</p><p class="doc-meta">Nummer: '+esc(state.offerteNr||"—")+'</p><p class="doc-meta">Datum: '+esc(datumNL(state.offerteDatum))+'</p></div></div>'+
-    '<div class="doc-parties"><div><p class="doc-lab">Aan</p><p class="doc-to-name">'+esc(k.naam||"—")+'</p><p class="doc-to">'+esc([k.adres,k.pcplaats].filter(Boolean).join("\n"))+'</p>'+(k.email?'<p class="doc-to">'+esc(k.email)+'</p>':'')+'</div>'+
+    '<div class="doc-parties"><div><p class="doc-lab">Aan</p><p class="doc-to-name">'+esc(k.naam||"—")+'</p><p class="doc-to">'+esc([k.adres,k.pcplaats].filter(Boolean).join("\\n"))+'</p>'+(k.email?'<p class="doc-to">'+esc(k.email)+'</p>':'')+'</div>'+
       (state.kenmerk?'<div style="max-width:50%"><p class="doc-lab">Kenmerk</p><p class="doc-to" style="color:#44403c">'+esc(state.kenmerk)+'</p></div>':'')+'</div>'+
     '<table><thead><tr><th>Omschrijving</th><th class="c">Aantal</th><th class="r">Stukprijs</th><th class="r">Totaal</th></tr></thead><tbody>'+rijen+'</tbody></table>'+
     '<div class="totalen"><div class="box">'+
