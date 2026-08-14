@@ -73,6 +73,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
   .chip .p{font-size:12px;font-weight:500;color:var(--sand)}
   .chip .p.zero{color:#a8a29e}
   .beheerrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .beheerrow input:first-child{flex:1}
   .pctwrap{position:relative;width:96px;flex:0 0 auto}
   .pctwrap span{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#a8a29e;font-size:14px;pointer-events:none}
   .pctwrap input{text-align:right;padding-right:26px}
@@ -223,6 +224,31 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
   .hist-empty svg{margin:0 auto 12px;opacity:.5;display:block}
 
   .euro-in.inline{display:inline-block;width:110px;flex:0 0 auto}
+
+  /* ====== Mobiel ====== */
+  @media(max-width:639px){
+    header.top{flex-wrap:wrap}
+    .hdr-actions{width:100%;flex-wrap:wrap}
+    .hdr-actions .autosave{order:-1;width:100%;justify-content:center;margin-bottom:2px}
+    .hdr-actions .btn-ghost-sm{flex:1 1 0;justify-content:center}
+    .hdr-actions .btn-ink{flex:1 1 100%;justify-content:center;order:1}
+
+    .hist-table thead{display:none}
+    .hist-table,.hist-table tbody{display:block;width:100%}
+    .hist-table tr{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:14px 0;border-top:1px solid var(--line)}
+    .hist-table tr:first-child{border-top:none}
+    .hist-table td{display:block;border:none;padding:0;text-align:left}
+    .hist-table td:first-child{flex:1 1 100%}
+    .hist-table td:last-child{flex:1 1 100%;text-align:left}
+    .hist-actions{justify-content:flex-start;flex-wrap:wrap}
+    .hist-actions button{flex:1 1 auto}
+
+    .toast-container{left:16px;right:16px;max-width:none}
+  }
+  @media(max-width:479px){
+    .beheerrow{flex-wrap:wrap}
+    .beheerrow input:first-child{flex:1 1 100%}
+  }
 </style>
 </head>
 <body>
@@ -502,7 +528,7 @@ function renderProfielen(){
   } else {
     state.profielen.forEach(function(p){
       var row=document.createElement("div"); row.className="beheerrow";
-      var ni=document.createElement("input"); ni.value=p.naam; ni.placeholder="Naam"; ni.style.flex="1";
+      var ni=document.createElement("input"); ni.value=p.naam; ni.placeholder="Naam";
       ni.oninput=function(){p.naam=ni.value;saveProfielen();recompute();renderDoc();};
       var pw=document.createElement("div"); pw.className="pctwrap";
       var pi=document.createElement("input"); pi.type="number"; pi.value=p.pct;
@@ -570,7 +596,7 @@ function renderProductBeheer(){
   area.innerHTML="";
   state.producten.forEach(function(p){
     var row=document.createElement("div"); row.className="beheerrow";
-    var ni=document.createElement("input"); ni.value=p.naam; ni.placeholder="Productnaam"; ni.style.flex="1";
+    var ni=document.createElement("input"); ni.value=p.naam; ni.placeholder="Productnaam";
     ni.oninput=function(){p.naam=ni.value;saveProducten();renderRegels();recompute();renderDoc();};
     var pw=document.createElement("span"); pw.className="euro-in inline";
     var euroLab=document.createElement("span"); euroLab.textContent="€";
