@@ -183,6 +183,46 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
     .doc{box-shadow:none !important;border:none !important;border-radius:0 !important}
     @page{margin:16mm}
   }
+
+  /* ====== Next-level additions ====== */
+  .hdr-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+  .btn-ghost-sm{background:transparent;border:1.5px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 16px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;transition:border-color .15s,background .15s}
+  .btn-ghost-sm:hover{border-color:var(--sand);background:var(--sand-tint)}
+
+  .autosave{font-size:12px;color:#a8a29e;display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .3s;white-space:nowrap}
+  .autosave.show{opacity:1}
+  .autosave svg{width:14px;height:14px;color:#1a7a4c;flex:0 0 auto}
+
+  .toast-container{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:10px;max-width:340px;pointer-events:none}
+  .toast{background:var(--ink);color:#fff;border-radius:12px;padding:13px 16px;font-size:13px;line-height:1.4;box-shadow:0 10px 28px rgba(0,0,0,.20);opacity:0;transform:translateY(10px) scale(.98);transition:opacity .25s,transform .25s}
+  .toast.show{opacity:1;transform:translateY(0) scale(1)}
+  .toast.error{background:#b91c1c}
+  .toast.success{background:#15803d}
+
+  @keyframes pulseVal{0%{transform:scale(1)}35%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .pulse{animation:pulseVal .35s ease}
+
+  .hist-toolbar{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+  .hist-search{flex:1}
+  .hist-table{width:100%;border-collapse:collapse;font-size:13px}
+  .hist-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;padding:0 10px 10px}
+  .hist-table th:last-child,.hist-table td:last-child{text-align:right}
+  .hist-table td{padding:12px 10px;border-top:1px solid var(--line);vertical-align:middle}
+  .hist-klant{font-weight:500;font-size:14px}
+  .hist-nr{color:#a8a29e;font-size:12px;margin-top:2px}
+  .status-select{border:1.5px solid transparent;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;background-position:right 8px center}
+  .status-concept{background:#F1EFEA;color:#78716c}
+  .status-verzonden{background:#EAF1FC;color:#1d4ed8}
+  .status-geaccepteerd{background:#E6F6ED;color:#15803d}
+  .status-geweigerd{background:#FCEAEA;color:#b91c1c}
+  .hist-actions{display:flex;gap:6px;justify-content:flex-end}
+  .hist-actions button{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--muted);white-space:nowrap}
+  .hist-actions button:hover{border-color:var(--sand);color:var(--sand)}
+  .hist-actions button.danger:hover{border-color:#b91c1c;color:#b91c1c}
+  .hist-empty{text-align:center;padding:60px 20px;color:#a8a29e}
+  .hist-empty svg{margin:0 auto 12px;opacity:.5;display:block}
+
+  .euro-in.inline{display:inline-block;width:110px;flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -199,7 +239,12 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
         <h1 class="display">Horren op maat</h1>
       </div>
     </div>
-    <button class="btn btn-ink" id="btnOfferteTop">📄&nbsp; Offerte maken</button>
+    <div class="hdr-actions">
+      <span class="autosave" id="autosaveIndicator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Concept opgeslagen</span>
+      <button class="btn-ghost-sm" id="btnNieuw">🗋 Nieuw</button>
+      <button class="btn-ghost-sm" id="btnHistorie">🕘 Geschiedenis</button>
+      <button class="btn btn-ink" id="btnOfferteTop">📄&nbsp; Offerte maken</button>
+    </div>
   </header>
 
   <div class="grid">
@@ -232,8 +277,12 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
       <section class="card">
         <div class="card-head">
           <p class="eyebrow">Producten</p>
-          <span class="hint" id="ramenTeller">0 ramen</span>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="hint" id="ramenTeller">0 ramen</span>
+            <button class="linkbtn" id="btnBeheerProd">⚙ Beheer</button>
+          </div>
         </div>
+        <div id="prodBeheerArea" style="display:none;margin-bottom:12px"></div>
         <div id="regels" style="display:flex;flex-direction:column;gap:12px"></div>
         <button class="btn-dashed" id="btnAddRegel" style="margin-top:12px">＋ Product toevoegen</button>
       </section>
@@ -279,6 +328,24 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
   </div>
 </div>
 </div>
+
+<!-- ====== GESCHIEDENIS MODAL ====== -->
+<div class="overlay" id="histOverlay">
+  <div class="modal" style="max-width:920px;">
+    <div class="toolbar no-print">
+      <h2 class="display">Geschiedenis</h2>
+      <button class="iconbtn" id="btnHistClose" style="color:#78716c;font-size:20px;padding:0 6px">✕</button>
+    </div>
+    <div class="panel-edit no-print" style="padding:18px">
+      <div class="hist-toolbar">
+        <input id="histSearch" class="hist-search" placeholder="Zoek op klant of offertenummer..." />
+      </div>
+      <div id="histTableWrap"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
 
 <!-- ====== OFFERTE MODAL ====== -->
 <div class="overlay" id="overlay">
@@ -329,7 +396,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
 <script>
 "use strict";
 /* ---------- Gegevens ---------- */
-var PRODUCTEN = [
+var DEFAULT_PRODUCTEN = [
   { naam:"Standaard Hor", prijs:97 },
   { naam:"Standaard Hor met Magneet", prijs:107 },
   { naam:"Standaard Hor met Magneet en antipol", prijs:117 },
@@ -359,7 +426,7 @@ function LS_set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 
 /* ---------- State ---------- */
 var _id=1;
-function nieuwRegel(){return {id:_id++,locatie:"",productIdx:0,prijs:String(PRODUCTEN[0].prijs),breedte:"",hoogte:"",aantal:"1",rall:false};}
+function nieuwRegel(){var _p=(typeof state!=="undefined"&&state&&state.producten&&state.producten[0])?state.producten[0]:DEFAULT_PRODUCTEN[0];return {id:_id++,locatie:"",productIdx:0,prijs:String(_p.prijs),breedte:"",hoogte:"",aantal:"1",rall:false};}
 var state={
   regels:[nieuwRegel()],
   montage:true,
@@ -368,6 +435,8 @@ var state={
   profielen:[{id:1,naam:"Standaard",pct:"0"},{id:2,naam:"Zakelijk / aannemer",pct:"-10"},{id:3,naam:"Spoed / meerwerk",pct:"15"}],
   actiefProfiel:1,
   beheer:false,
+  producten: DEFAULT_PRODUCTEN.map(function(p,i){return {id:i+1,naam:p.naam,prijs:p.prijs};}),
+  beheerProd:false,
   bedrijf:Object.assign({},STD_BEDRIJF),
   klant:{naam:"",adres:"",pcplaats:"",email:""},
   kenmerk:"",
@@ -377,6 +446,7 @@ var state={
   geldigheid:"30"
 };
 var _pid=100;
+var _prodId=1000;
 
 /* ---------- Opslag laden ---------- */
 (function(){
@@ -384,9 +454,12 @@ var _pid=100;
   if(p){try{var arr=JSON.parse(p);if(Array.isArray(arr)&&arr.length){state.profielen=arr;_pid=Math.max.apply(null,arr.map(function(x){return x.id+1;}).concat([100]));state.actiefProfiel=arr[0].id;}}catch(e){}}
   var b=LS_get("loua_bedrijf");
   if(b){try{state.bedrijf=Object.assign({},STD_BEDRIJF,JSON.parse(b));}catch(e){}}
+  var pr=LS_get("loua_producten");
+  if(pr){try{var arrpr=JSON.parse(pr);if(Array.isArray(arrpr)&&arrpr.length){state.producten=arrpr;_prodId=Math.max.apply(null,arrpr.map(function(x){return x.id+1;}).concat([1000]));}}catch(e){}}
 })();
 function saveProfielen(){LS_set("loua_profielen",JSON.stringify(state.profielen));}
 function saveBedrijf(){LS_set("loua_bedrijf",JSON.stringify(state.bedrijf));}
+function saveProducten(){LS_set("loua_producten",JSON.stringify(state.producten));}
 
 /* ---------- Berekening ---------- */
 function bereken(){
@@ -455,7 +528,7 @@ function renderProfielen(){
 }
 
 /* ---------- Render: regels ---------- */
-function optionsHTML(sel){return PRODUCTEN.map(function(p,i){return '<option value="'+i+'"'+(i===sel?' selected':'')+'>'+esc(p.naam)+'</option>';}).join("");}
+function optionsHTML(sel){return state.producten.map(function(p,i){return '<option value="'+i+'"'+(i===sel?' selected':'')+'>'+esc(p.naam)+'</option>';}).join("");}
 function renderRegels(){
   var cont=el("regels"); cont.innerHTML="";
   state.regels.forEach(function(r,i){
@@ -476,16 +549,222 @@ function renderRegels(){
         '<div class="regel-tot"><span class="m2">— m²</span><span class="lt">€ 0,00</span><button class="iconbtn del" '+(state.regels.length===1?'disabled':'')+'>🗑</button></div>'+
       '</div></div></div>';
     var loc=d.querySelector('input[list=loclist]'); loc.value=r.locatie; loc.oninput=function(){r.locatie=loc.value;renderDoc();};
-    var prod=d.querySelector('.prod'); prod.onchange=function(){r.productIdx=parseInt(prod.value);r.prijs=String(PRODUCTEN[r.productIdx].prijs);pr.value=r.prijs;recompute();renderDoc();};
+    var prod=d.querySelector('.prod'); prod.onchange=function(){r.productIdx=parseInt(prod.value);r.prijs=String(state.producten[r.productIdx]?state.producten[r.productIdx].prijs:0);pr.value=r.prijs;recompute();renderDoc();};
     var br=d.querySelector('.br'); br.value=r.breedte; br.oninput=function(){r.breedte=br.value;recompute();renderDoc();};
     var ho=d.querySelector('.ho'); ho.value=r.hoogte; ho.oninput=function(){r.hoogte=ho.value;recompute();renderDoc();};
     var aa=d.querySelector('.aa'); aa.value=r.aantal; aa.oninput=function(){r.aantal=aa.value;recompute();renderDoc();};
     var pr=d.querySelector('.pr'); pr.value=r.prijs; pr.oninput=function(){r.prijs=pr.value;recompute();renderDoc();};
     var ra=d.querySelector('.ra'); ra.checked=r.rall; ra.onchange=function(){r.rall=ra.checked;recompute();renderDoc();};
-    var reset=d.querySelector('.reset'); reset.onclick=function(){r.prijs=String(PRODUCTEN[r.productIdx].prijs);pr.value=r.prijs;recompute();renderDoc();};
+    var reset=d.querySelector('.reset'); reset.onclick=function(){r.prijs=String(state.producten[r.productIdx]?state.producten[r.productIdx].prijs:0);pr.value=r.prijs;recompute();renderDoc();};
     var del=d.querySelector('.del'); del.onclick=function(){if(state.regels.length>1){state.regels=state.regels.filter(function(x){return x.id!==r.id;});renderRegels();recompute();renderDoc();}};
     r._m2=d.querySelector('.m2'); r._lt=d.querySelector('.lt'); r._reset=reset;
     cont.appendChild(d);
+  });
+}
+
+/* ---------- Render: productbeheer ---------- */
+function renderProductBeheer(){
+  var area=el("prodBeheerArea");
+  if(!state.beheerProd){ area.style.display="none"; area.innerHTML=""; return; }
+  area.style.display="block";
+  area.innerHTML="";
+  state.producten.forEach(function(p){
+    var row=document.createElement("div"); row.className="beheerrow";
+    var ni=document.createElement("input"); ni.value=p.naam; ni.placeholder="Productnaam"; ni.style.flex="1";
+    ni.oninput=function(){p.naam=ni.value;saveProducten();renderRegels();recompute();renderDoc();};
+    var pw=document.createElement("span"); pw.className="euro-in inline";
+    var euroLab=document.createElement("span"); euroLab.textContent="€";
+    var pi=document.createElement("input"); pi.type="number"; pi.min="0"; pi.value=p.prijs;
+    pi.oninput=function(){p.prijs=parseFloat(pi.value)||0;saveProducten();renderRegels();recompute();renderDoc();};
+    pw.appendChild(euroLab); pw.appendChild(pi);
+    var del=document.createElement("button"); del.className="iconbtn"; del.innerHTML="🗑"; del.disabled=state.producten.length===1;
+    del.onclick=function(){
+      state.producten=state.producten.filter(function(x){return x.id!==p.id;});
+      saveProducten();renderProductBeheer();renderRegels();recompute();renderDoc();
+      toast("Product verwijderd");
+    };
+    row.appendChild(ni);row.appendChild(pw);row.appendChild(del);
+    area.appendChild(row);
+  });
+  var add=document.createElement("button"); add.className="btn-dashed"; add.innerHTML="＋ Product toevoegen"; add.style.marginTop="4px";
+  add.onclick=function(){
+    state.producten.push({id:_prodId++,naam:"Nieuw product",prijs:0});
+    saveProducten();renderProductBeheer();renderRegels();
+    toast("Product toegevoegd");
+  };
+  area.appendChild(add);
+  var hint=document.createElement("p"); hint.className="hint"; hint.style.paddingTop="4px";
+  hint.textContent="Wijzigingen gelden voor nieuw gekozen regels; bestaande regels behouden hun ingevulde prijs.";
+  area.appendChild(hint);
+}
+
+/* ---------- Meldingen (toasts) ---------- */
+function toast(msg, type){
+  var container=el("toastContainer");
+  if(!container) return;
+  var t=document.createElement("div");
+  t.className="toast"+(type?(" "+type):"");
+  t.textContent=msg;
+  container.appendChild(t);
+  requestAnimationFrame(function(){ t.classList.add("show"); });
+  setTimeout(function(){
+    t.classList.remove("show");
+    setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 300);
+  }, 2800);
+}
+
+/* ---------- Concept: autosave & herstel ---------- */
+var AUTOSAVE_KEY="loua_calc_draft";
+var _autosaveTimer=null;
+function serializeState(){
+  return {
+    regels: state.regels.map(function(r){return {locatie:r.locatie,productIdx:r.productIdx,prijs:r.prijs,breedte:r.breedte,hoogte:r.hoogte,aantal:r.aantal,rall:r.rall};}),
+    montage: state.montage,
+    transport: state.transport,
+    aantalOpleveringen: state.aantalOpleveringen,
+    actiefProfiel: state.actiefProfiel,
+    klant: Object.assign({},state.klant),
+    kenmerk: state.kenmerk,
+    offerteNr: state.offerteNr,
+    offerteDatum: state.offerteDatum,
+    btwPct: state.btwPct,
+    geldigheid: state.geldigheid
+  };
+}
+function scheduleAutosave(){
+  if(_autosaveTimer) clearTimeout(_autosaveTimer);
+  _autosaveTimer=setTimeout(function(){
+    LS_set(AUTOSAVE_KEY, JSON.stringify(serializeState()));
+    var ind=el("autosaveIndicator");
+    if(ind){
+      ind.classList.add("show");
+      clearTimeout(ind._hideTimer);
+      ind._hideTimer=setTimeout(function(){ ind.classList.remove("show"); }, 1800);
+    }
+  }, 500);
+}
+function restoreDraft(){
+  var raw=LS_get(AUTOSAVE_KEY);
+  if(!raw) return false;
+  try{
+    var d=JSON.parse(raw);
+    if(!d || !Array.isArray(d.regels) || !d.regels.length) return false;
+    applySnapshot(d);
+    return true;
+  }catch(e){ return false; }
+}
+function applySnapshot(d){
+  state.regels = d.regels.map(function(r){ var nr=nieuwRegel(); return Object.assign(nr, r, {id:nr.id}); });
+  state.montage = d.montage!==undefined ? d.montage : true;
+  state.transport = d.transport || "geen";
+  state.aantalOpleveringen = d.aantalOpleveringen || "2";
+  if(d.actiefProfiel!==undefined) state.actiefProfiel = d.actiefProfiel;
+  state.klant = d.klant ? Object.assign({naam:"",adres:"",pcplaats:"",email:""}, d.klant) : state.klant;
+  state.kenmerk = d.kenmerk || "";
+  state.offerteNr = d.offerteNr || "";
+  state.offerteDatum = d.offerteDatum || state.offerteDatum;
+  state.btwPct = d.btwPct || "21";
+  state.geldigheid = d.geldigheid || "30";
+}
+function pushStateIntoFields(){
+  el("k_naam").value=state.klant.naam||""; el("k_email").value=state.klant.email||"";
+  el("k_adres").value=state.klant.adres||""; el("k_pcplaats").value=state.klant.pcplaats||"";
+  el("k_kenmerk").value=state.kenmerk||"";
+  el("montageToggle").className="toggle"+(state.montage?" on":"");
+  el("aantalOpleveringen").value=state.aantalOpleveringen;
+  el("opleveringWrap").style.display = state.transport==="meer" ? "block":"none";
+}
+
+/* ---------- Geschiedenis ---------- */
+var HISTORY_KEY="loua_geschiedenis";
+var offertesHistorie=[];
+(function(){
+  var h=LS_get(HISTORY_KEY);
+  if(h){ try{ var arr=JSON.parse(h); if(Array.isArray(arr)) offertesHistorie=arr; }catch(e){} }
+})();
+function saveHistory(){ LS_set(HISTORY_KEY, JSON.stringify(offertesHistorie)); }
+function saveToHistory(){
+  var o=offerteData();
+  var idx=offertesHistorie.findIndex(function(h){return h.offerteNr===state.offerteNr;});
+  var record={
+    id: idx!==-1 ? offertesHistorie[idx].id : Date.now(),
+    offerteNr: state.offerteNr,
+    datum: state.offerteDatum,
+    klantNaam: state.klant.naam || "Naamloos",
+    totaal: o.totaalIncl,
+    status: idx!==-1 ? offertesHistorie[idx].status : "concept",
+    savedAt: new Date().toISOString(),
+    snapshot: serializeState()
+  };
+  if(idx!==-1){ offertesHistorie[idx]=record; } else { offertesHistorie.unshift(record); }
+  saveHistory();
+}
+var STATUS_LABELS={concept:"Concept",verzonden:"Verzonden",geaccepteerd:"Geaccepteerd",geweigerd:"Geweigerd"};
+function renderHistorie(filter){
+  var wrap=el("histTableWrap");
+  var list=offertesHistorie;
+  if(filter){
+    var f=filter.toLowerCase();
+    list=offertesHistorie.filter(function(h){
+      return (h.klantNaam||"").toLowerCase().indexOf(f)!==-1 || (h.offerteNr||"").toLowerCase().indexOf(f)!==-1;
+    });
+  }
+  if(!list.length){
+    wrap.innerHTML='<div class="hist-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" width="40" height="40"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M9 4v18"/></svg><p>'+(offertesHistorie.length?"Geen offertes gevonden.":"Nog geen offertes opgeslagen. Maak uw eerste offerte om deze hier terug te zien.")+'</p></div>';
+    return;
+  }
+  var rows=list.map(function(h){
+    var st=STATUS_LABELS[h.status]?h.status:"concept";
+    return '<tr>'+
+      '<td><div class="hist-klant">'+esc(h.klantNaam)+'</div><div class="hist-nr">'+esc(h.offerteNr||"—")+' · '+esc(datumNL(h.datum))+'</div></td>'+
+      '<td>'+euro(h.totaal)+'</td>'+
+      '<td><select class="status-select status-'+st+'" data-id="'+h.id+'">'+
+        Object.keys(STATUS_LABELS).map(function(k){return '<option value="'+k+'"'+(k===st?' selected':'')+'>'+STATUS_LABELS[k]+'</option>';}).join('')+
+      '</select></td>'+
+      '<td><div class="hist-actions">'+
+        '<button data-act="open" data-id="'+h.id+'">Openen</button>'+
+        '<button data-act="dup" data-id="'+h.id+'">Dupliceren</button>'+
+        '<button data-act="del" data-id="'+h.id+'" class="danger">Verwijderen</button>'+
+      '</div></td>'+
+    '</tr>';
+  }).join('');
+  wrap.innerHTML='<table class="hist-table"><thead><tr><th>Klant</th><th>Totaal</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>';
+
+  wrap.querySelectorAll(".status-select").forEach(function(sel){
+    sel.onchange=function(){
+      var id=parseFloat(sel.dataset.id);
+      var rec=offertesHistorie.find(function(h){return h.id===id;});
+      if(rec){ rec.status=sel.value; saveHistory(); sel.className="status-select status-"+sel.value; toast("Status bijgewerkt naar '"+STATUS_LABELS[sel.value]+"'"); }
+    };
+  });
+  wrap.querySelectorAll("[data-act]").forEach(function(btn){
+    btn.onclick=function(){
+      var id=parseFloat(btn.dataset.id);
+      var rec=offertesHistorie.find(function(h){return h.id===id;});
+      if(!rec) return;
+      if(btn.dataset.act==="open"){
+        applySnapshot(rec.snapshot); pushStateIntoFields();
+        renderProfielen();renderRegels();renderTransport();recompute();renderDoc();
+        el("histOverlay").classList.remove("open");
+        openOfferte();
+        toast("Offerte "+(rec.offerteNr||"")+" geopend");
+      } else if(btn.dataset.act==="dup"){
+        var snap=Object.assign({},rec.snapshot,{offerteNr:"",offerteDatum:new Date().toISOString().slice(0,10)});
+        applySnapshot(snap); pushStateIntoFields();
+        renderProfielen();renderRegels();renderTransport();recompute();renderDoc();
+        el("histOverlay").classList.remove("open");
+        toast("Gedupliceerd naar nieuw concept");
+      } else if(btn.dataset.act==="del"){
+        if(btn.textContent==="Zeker weten?"){
+          offertesHistorie=offertesHistorie.filter(function(h){return h.id!==id;});
+          saveHistory(); renderHistorie(el("histSearch").value);
+          toast("Offerte verwijderd");
+        } else {
+          btn.textContent="Zeker weten?";
+          setTimeout(function(){ if(btn && btn.isConnected) btn.textContent="Verwijderen"; }, 3000);
+        }
+      }
+    };
   });
 }
 
@@ -506,7 +785,7 @@ function recompute(){
   c.rows.forEach(function(x){
     if(x.r._m2) x.r._m2.textContent = x.m2>0 ? x.m2.toFixed(2).replace(".",",")+" m² p/st" : "— m²";
     if(x.r._lt) x.r._lt.textContent = euro(x.totaal);
-    if(x.r._reset) x.r._reset.style.display = (x.basis!==PRODUCTEN[x.r.productIdx].prijs)?"inline-flex":"none";
+    if(x.r._reset) x.r._reset.style.display = (state.producten[x.r.productIdx]&&x.basis!==state.producten[x.r.productIdx].prijs)?"inline-flex":"none";
   });
   el("ramenTeller").textContent=c.totaalRamen+" raam"+(c.totaalRamen===1?"":"en");
   el("montageSub").textContent=euro(MONTAGE)+" per raam · "+c.totaalRamen+" ramen";
@@ -516,7 +795,12 @@ function recompute(){
   if(c.pct!==0){pr.style.display="flex";el("ovProfielLabel").textContent=(c.profiel.naam||"Profiel")+" ("+(c.pct>0?"+":"")+c.pct+"%)";el("ovProfielVal").textContent=euro(c.profielBedrag);}else pr.style.display="none";
   var mr=el("ovMontageRow"); if(c.montageK>0){mr.style.display="flex";el("ovMontageVal").textContent=euro(c.montageK);}else mr.style.display="none";
   var tr=el("ovTransportRow"); if(c.transportK>0){tr.style.display="flex";el("ovTransportVal").textContent=euro(c.transportK);}else tr.style.display="none";
-  el("ovTotaal").textContent=euro(c.eind);
+  var _newTotaalTxt=euro(c.eind);
+  var _totEl=el("ovTotaal");
+  if(_totEl.textContent && _totEl.textContent!==_newTotaalTxt){
+    _totEl.classList.remove("pulse"); void _totEl.offsetWidth; _totEl.classList.add("pulse");
+  }
+  _totEl.textContent=_newTotaalTxt;
 }
 
 /* ---------- Offerte document ---------- */
@@ -526,7 +810,7 @@ function offerteData(){
     if(x.aantal<=0||x.m2<=0)return;
     var stuk=x.effect*x.m2*c.factor;
     var loc=(x.r.locatie||"").trim();
-    var naam=PRODUCTEN[x.r.productIdx].naam+(x.r.rall?" · speciale RAL-kleur":"");
+    var naam=(state.producten[x.r.productIdx]?state.producten[x.r.productIdx].naam:"Product")+(x.r.rall?" · speciale RAL-kleur":"");
     var maat=(x.b||0)+" × "+(x.h||0)+" cm · "+x.m2.toFixed(2).replace(".",",")+" m²";
     lijnen.push({om:loc||naam,detail:(loc?naam+" · ":"")+maat,aantal:x.aantal,stuk:stuk,totaal:stuk*x.aantal});
   });
@@ -556,12 +840,13 @@ function renderDoc(){
       '<div class="grand"><span>Totaal</span><span>'+euro(o.totaalIncl)+'</span></div>'+
     '</div></div>'+
     '<div class="doc-foot"><p>Deze offerte is '+esc(state.geldigheid||"30")+' dagen geldig vanaf de offertedatum. Genoemde bedragen zijn onder voorbehoud van definitieve inmeting.</p>'+(voet?'<p style="margin-top:4px">'+esc(voet)+'</p>':'')+'</div>';
+  scheduleAutosave();
 }
 
 /* ---------- PDF-export ---------- */
 function genereerPDF(){
   if(!window.jspdf || !window.jspdf.jsPDF){
-    alert('De PDF-module wordt nog geladen. Probeer het over een moment opnieuw.');
+    toast('De PDF-module wordt nog geladen. Probeer het over een moment opnieuw.', 'error');
     return;
   }
   if(!state.offerteNr){
@@ -741,6 +1026,8 @@ function genereerPDF(){
   if(voet){ doc.text(voet, marginX, y); }
 
   doc.save('Offerte-' + (state.offerteNr||'concept') + '.pdf');
+  saveToHistory();
+  toast('Offerte ' + (state.offerteNr||'') + ' opgeslagen en gedownload.', 'success');
 }
 
 /* ---------- Bindingen ---------- */
@@ -795,7 +1082,11 @@ function initApp(){
   LOCATIE_SUGGESTIES.forEach(function(s){var o=document.createElement("option");o.value=s;dl.appendChild(o);});
   document.body.appendChild(dl);
 
-  renderProfielen(); renderRegels(); renderTransport(); bindKlant(); bindOfferteVelden(); recompute();
+  var hersteld=restoreDraft();
+  if(hersteld) pushStateIntoFields();
+
+  renderProfielen(); renderRegels(); renderTransport(); renderProductBeheer(); bindKlant(); bindOfferteVelden(); recompute();
+  if(hersteld) toast("Vorig concept hersteld");
 
   el("btnBeheer").onclick=function(){state.beheer=!state.beheer;el("btnBeheer").textContent=state.beheer?"✓ Klaar":"⚙ Beheer";renderProfielen();};
   el("btnAddRegel").onclick=function(){state.regels.push(nieuwRegel());renderRegels();recompute();renderDoc();};
@@ -804,8 +1095,35 @@ function initApp(){
   el("btnOfferteTop").onclick=openOfferte;
   el("btnOfferteSide").onclick=openOfferte;
   el("btnClose").onclick=function(){el("overlay").classList.remove("open");};
-  el("btnPdf").onclick=function(){genereerPDF();};
+  el("btnPdf").onclick=function(){
+    var btn=el("btnPdf"); var origHtml=btn.innerHTML;
+    btn.innerHTML="Bezig..."; btn.disabled=true;
+    setTimeout(function(){
+      try{ genereerPDF(); } finally { btn.innerHTML=origHtml; btn.disabled=false; }
+    }, 50);
+  };
   el("overlay").addEventListener("click",function(e){if(e.target===el("overlay"))el("overlay").classList.remove("open");});
+
+  el("btnBeheerProd").onclick=function(){state.beheerProd=!state.beheerProd;el("btnBeheerProd").textContent=state.beheerProd?"✓ Klaar":"⚙ Beheer";renderProductBeheer();};
+
+  el("btnNieuw").onclick=function(){
+    if(state.regels.length>1 || state.klant.naam || state.regels.some(function(r){return r.breedte||r.hoogte;})){
+      if(!confirm("Nieuw concept starten? Niet-opgeslagen wijzigingen aan het huidige concept gaan verloren.")) return;
+    }
+    state.regels=[nieuwRegel()];
+    state.klant={naam:"",adres:"",pcplaats:"",email:""};
+    state.kenmerk=""; state.offerteNr=""; state.montage=true; state.transport="geen";
+    state.offerteDatum=new Date().toISOString().slice(0,10);
+    pushStateIntoFields();
+    renderRegels(); renderTransport(); recompute(); renderDoc();
+    LS_set(AUTOSAVE_KEY,"");
+    toast("Nieuw concept gestart");
+  };
+
+  el("btnHistorie").onclick=function(){ renderHistorie(""); el("histSearch").value=""; el("histOverlay").classList.add("open"); };
+  el("btnHistClose").onclick=function(){ el("histOverlay").classList.remove("open"); };
+  el("histOverlay").addEventListener("click",function(e){if(e.target===el("histOverlay"))el("histOverlay").classList.remove("open");});
+  el("histSearch").oninput=function(){ renderHistorie(this.value); };
 }
 
 /* ---------- Init ---------- */
