@@ -227,6 +227,11 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
 
   .kleurwrap{display:flex;align-items:center;flex-wrap:wrap;gap:8px;flex:1 1 260px}
   .kleurwrap-lab{font-size:14px;color:#57534e}
+  .profielwrap{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:12px}
+  .profiel-toggle{display:flex;gap:6px}
+  .ptbtn{background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--muted)}
+  .ptbtn .sub{color:#a8a29e;margin-left:3px}
+  .ptbtn.sel{border-color:var(--sand);background:var(--sand-tint);color:var(--ink);font-weight:500}
   .swatches{display:flex;flex-wrap:wrap;gap:6px}
   .swatch{width:22px;height:22px;border-radius:999px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0;flex:0 0 auto}
   .swatch:hover{box-shadow:0 0 0 1px var(--sand)}
@@ -559,7 +564,7 @@ function LS_set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 
 /* ---------- State ---------- */
 var _id=1;
-function nieuwRegel(){var _p=(typeof state!=="undefined"&&state&&state.producten&&state.producten[0])?state.producten[0]:DEFAULT_PRODUCTEN[0];return {id:_id++,locatie:"",productIdx:0,prijs:String(_p.prijs),breedte:"",hoogte:"",aantal:"1",rall:false,kleur:""};}
+function nieuwRegel(){var _p=(typeof state!=="undefined"&&state&&state.producten&&state.producten[0])?state.producten[0]:DEFAULT_PRODUCTEN[0];return {id:_id++,locatie:"",productIdx:0,prijs:String(_p.prijs),breedte:"",hoogte:"",aantal:"1",rall:false,kleur:"",bodemprofiel:"35"};}
 var state={
   regels:[nieuwRegel()],
   montage:true,
@@ -677,6 +682,7 @@ function renderRegels(){
         '<label class="veld"><span class="lab">Prijs / m²</span><span class="euro-in"><span>€</span><input type="number" min="0" class="pr"/></span></label>'+
       '</div>'+
       '<button class="reset">↺ Afwijkende prijs</button>'+
+      '<div class="profielwrap"><span class="kleurwrap-lab">Bodemprofiel</span><div class="profiel-toggle"><button type="button" class="ptbtn pt35">Standaard <span class="sub">35mm</span></button><button type="button" class="ptbtn pt9">Plat <span class="sub">9mm</span></button></div></div>'+
       '<div class="rij-onder">'+
         '<div class="kleurwrap"><span class="kleurwrap-lab">Kleur</span><div class="swatches"></div><span class="kleur-naam"></span></div>'+
         '<div class="regel-tot"><span class="m2">— m²</span><span class="lt">€ 0,00</span><button class="iconbtn del" '+(state.regels.length===1?'disabled':'')+'>🗑</button></div>'+
@@ -711,6 +717,12 @@ function renderRegels(){
       swWrap.appendChild(sw);
     });
     setKleurLabel();
+
+    var pt35=d.querySelector('.pt35'), pt9=d.querySelector('.pt9');
+    function setProfielSel(){ pt35.classList.toggle('sel', r.bodemprofiel!=="9"); pt9.classList.toggle('sel', r.bodemprofiel==="9"); }
+    pt35.onclick=function(){ r.bodemprofiel="35"; setProfielSel(); renderDoc(); };
+    pt9.onclick=function(){ r.bodemprofiel="9"; setProfielSel(); renderDoc(); };
+    setProfielSel();
 
     r._previewEl=d.querySelector('.hor-preview');
     r._previewFront=d.querySelector('.hor-preview-front');
@@ -778,7 +790,7 @@ var AUTOSAVE_KEY="loua_calc_draft";
 var _autosaveTimer=null;
 function serializeState(){
   return {
-    regels: state.regels.map(function(r){return {locatie:r.locatie,productIdx:r.productIdx,prijs:r.prijs,breedte:r.breedte,hoogte:r.hoogte,aantal:r.aantal,rall:r.rall,kleur:r.kleur};}),
+    regels: state.regels.map(function(r){return {locatie:r.locatie,productIdx:r.productIdx,prijs:r.prijs,breedte:r.breedte,hoogte:r.hoogte,aantal:r.aantal,rall:r.rall,kleur:r.kleur,bodemprofiel:r.bodemprofiel};}),
     montage: state.montage,
     transport: state.transport,
     aantalOpleveringen: state.aantalOpleveringen,
@@ -996,7 +1008,8 @@ function offerteData(){
     var stuk=x.effect*x.m2*c.factor;
     var loc=(x.r.locatie||"").trim();
     var kleurLbl=x.r.kleur?(" · "+kleurNaam(x.r.kleur)+" ("+x.r.kleur+")"):(x.r.rall?" · speciale RAL-kleur":"");
-    var naam=(state.producten[x.r.productIdx]?state.producten[x.r.productIdx].naam:"Product")+kleurLbl;
+    var profielLbl=x.r.bodemprofiel==="9"?" · plat bodemprofiel (9mm)":"";
+    var naam=(state.producten[x.r.productIdx]?state.producten[x.r.productIdx].naam:"Product")+kleurLbl+profielLbl;
     var maat=(x.b||0)+" × "+(x.h||0)+" cm · "+x.m2.toFixed(2).replace(".",",")+" m²";
     lijnen.push({om:loc||naam,detail:(loc?naam+" · ":"")+maat,aantal:x.aantal,stuk:stuk,totaal:stuk*x.aantal});
   });
