@@ -215,6 +215,8 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
   .status-concept{background:#F1EFEA;color:#78716c}
   .status-verzonden{background:#EAF1FC;color:#1d4ed8}
   .status-geaccepteerd{background:#E6F6ED;color:#15803d}
+  .status-besteld{background:#FDF3E7;color:#b45309}
+  .status-productverzonden{background:#E6F6F6;color:#0f766e}
   .status-geweigerd{background:#FCEAEA;color:#b91c1c}
   .hist-actions{display:flex;gap:6px;justify-content:flex-end}
   .hist-actions button{background:none;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;color:var(--muted);white-space:nowrap}
@@ -1040,15 +1042,20 @@ function saveToHistory(){
   saveHistory();
   renderStats();
 }
-var STATUS_LABELS={concept:"Concept",verzonden:"Verzonden",geaccepteerd:"Geaccepteerd",geweigerd:"Geweigerd"};
+var STATUS_LABELS={concept:"Concept",verzonden:"Offerte verzonden",geaccepteerd:"Geaccepteerd",besteld:"Besteld",productverzonden:"Product verzonden",geweigerd:"Geweigerd"};
+var GEWONNEN_STATUSSEN=["geaccepteerd","besteld","productverzonden"];
 var STATS_HIDDEN_KEY="loua_stats_hidden";
 function renderStats(){
   var counts={concept:0,verzonden:0,geaccepteerd:0,geweigerd:0};
   var omzet=0;
   offertesHistorie.forEach(function(h){
     var st=STATUS_LABELS[h.status]?h.status:"concept";
-    counts[st]++;
-    if(st==="geaccepteerd") omzet+=(h.totaal||0);
+    if(GEWONNEN_STATUSSEN.indexOf(st)!==-1){
+      counts.geaccepteerd++;
+      omzet+=(h.totaal||0);
+    } else {
+      counts[st]++;
+    }
   });
   el("statConcept").textContent=counts.concept;
   el("statVerzonden").textContent=counts.verzonden;
