@@ -485,6 +485,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
       <div class="inkoop-row"><span class="l">Verkoopbedrag (excl. BTW)</span><span class="v" id="inkoopVerkoop">€ 0,00</span></div>
       <div class="inkoop-row strong"><span class="l">Brutowinst</span><span class="v" id="inkoopWinst">€ 0,00</span></div>
       <div class="inkoop-row strong"><span class="l">20% van winst (af te staan)</span><span class="v" id="inkoopWinst20">€ 0,00</span></div>
+      <div class="inkoop-row strong"><span class="l">Blijft over voor u</span><span class="v" id="inkoopNettoOver">€ 0,00</span></div>
       <p class="hint" style="padding-top:14px;padding-bottom:6px">Inkoopprijs per regel (€/m², vast)</p>
       <div id="analyticsRegelsArea"></div>
       <p class="hint" style="padding-top:14px;padding-bottom:6px">Vaste inkoopprijzen per product (€/m²)</p>
@@ -735,7 +736,8 @@ function bereken(){
   var inkoopSom=rows.reduce(function(s,x){var pnaam=state.producten[x.r.productIdx]?state.producten[x.r.productIdx].naam:"";var ipx=inkoopVoorNaam(pnaam)+((x.r.kleur||x.r.rall)?INKOOP_RALL:0);return s+ipx*x.m2*x.aantal;},0);
   var brutoWinst=eind-inkoopSom;
   var winst20=brutoWinst*0.20;
-  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind,berekendEind:berekendEind,epActief:epActief,inkoopSom:inkoopSom,brutoWinst:brutoWinst,winst20:winst20};
+  var nettoOver=brutoWinst-winst20;
+  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind,berekendEind:berekendEind,epActief:epActief,inkoopSom:inkoopSom,brutoWinst:brutoWinst,winst20:winst20,nettoOver:nettoOver};
 }
 
 /* ---------- Render: profielen ---------- */
@@ -927,6 +929,7 @@ function renderAnalyticsSummary(){
   el("inkoopVerkoop").textContent=euro(c.eind);
   el("inkoopWinst").textContent=euro(c.brutoWinst);
   el("inkoopWinst20").textContent=euro(c.winst20);
+  el("inkoopNettoOver").textContent=euro(c.nettoOver);
 }
 function renderAnalytics(){
   renderAnalyticsRegels();
