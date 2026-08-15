@@ -253,6 +253,13 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
   .hor-photo-btn:hover .hor-photo-zoom{opacity:1}
   .hor-photo-note{font-size:11px;color:#a8a29e;text-align:center;max-width:260px}
 
+  .inkoop-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:7px 0;border-top:1px solid var(--line-soft)}
+  .inkoop-row:first-child{border-top:none}
+  .inkoop-row .l{color:var(--muted)}
+  .inkoop-row .v{font-weight:500;color:var(--ink)}
+  .inkoop-row.strong{margin-top:2px}
+  .inkoop-row.strong .l,.inkoop-row.strong .v{font-weight:600;color:var(--ink)}
+
   .stats-bar{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 18px;margin-bottom:24px;box-shadow:0 1px 2px rgba(32,30,26,.04)}
   .stats-row{display:flex;align-items:center;gap:0;flex-wrap:wrap}
   .stat{flex:1 1 auto;min-width:88px;padding:4px 14px;border-right:1px solid var(--line-soft)}
@@ -408,6 +415,24 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
             <button type="button" class="ptbtn" id="epIncl">Bedrag incl. BTW</button>
           </div>
           <label class="veld"><span class="lab">Eindprijs</span><span class="euro-in"><span>€</span><input type="number" min="0" step="0.01" id="eigenPrijsBedrag" placeholder="0,00"/></span></label>
+        </div>
+      </section>
+
+      <!-- Inkoop & winst -->
+      <section class="card">
+        <div class="opt-row" style="border-bottom:none;padding-bottom:0">
+          <div class="opt-l">
+            <div class="opt-ic">📊</div>
+            <div><div class="opt-t">Inkoop &amp; winst</div><div class="opt-s" id="inkoopSub">Verborgen</div></div>
+          </div>
+          <button class="toggle" id="inkoopToggle"><span class="knob"></span></button>
+        </div>
+        <div id="inkoopBody" style="display:none;padding-top:16px">
+          <div class="inkoop-row"><span class="l">Inkoopsom</span><span class="v" id="inkoopSom">€ 0,00</span></div>
+          <div class="inkoop-row"><span class="l">Verkoopbedrag (excl. BTW)</span><span class="v" id="inkoopVerkoop">€ 0,00</span></div>
+          <div class="inkoop-row strong"><span class="l">Brutowinst</span><span class="v" id="inkoopWinst">€ 0,00</span></div>
+          <div class="inkoop-row strong"><span class="l">20% van winst (af te staan)</span><span class="v" id="inkoopWinst20">€ 0,00</span></div>
+          <p class="hint" style="padding-top:10px">Vul de inkoopprijs per m² in bij elke productregel. Verschijnt nergens op de offerte of PDF.</p>
         </div>
       </section>
     </div>
@@ -624,7 +649,7 @@ function LS_set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 
 /* ---------- State ---------- */
 var _id=1;
-function nieuwRegel(){var _p=(typeof state!=="undefined"&&state&&state.producten&&state.producten[0])?state.producten[0]:DEFAULT_PRODUCTEN[0];return {id:_id++,locatie:"",productIdx:0,prijs:String(_p.prijs),breedte:"",hoogte:"",aantal:"1",rall:false,kleur:"",bodemprofiel:"35"};}
+function nieuwRegel(){var _p=(typeof state!=="undefined"&&state&&state.producten&&state.producten[0])?state.producten[0]:DEFAULT_PRODUCTEN[0];return {id:_id++,locatie:"",productIdx:0,prijs:String(_p.prijs),breedte:"",hoogte:"",aantal:"1",rall:false,kleur:"",bodemprofiel:"35",inkoopprijs:""};}
 var state={
   regels:[nieuwRegel()],
   montage:true,
@@ -697,7 +722,10 @@ function bereken(){
       }
     }
   }
-  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind,berekendEind:berekendEind,epActief:epActief};
+  var inkoopSom=rows.reduce(function(s,x){var ip=parseFloat(x.r.inkoopprijs)||0;return s+ip*x.m2*x.aantal;},0);
+  var brutoWinst=eind-inkoopSom;
+  var winst20=brutoWinst*0.20;
+  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind,berekendEind:berekendEind,epActief:epActief,inkoopSom:inkoopSom,brutoWinst:brutoWinst,winst20:winst20};
 }
 
 /* ---------- Render: profielen ---------- */
@@ -757,6 +785,7 @@ function renderRegels(){
         '<label class="veld"><span class="lab">Aantal</span><input type="number" min="1" class="aa"/></label>'+
         '<label class="veld"><span class="lab">Prijs / m²</span><span class="euro-in"><span>€</span><input type="number" min="0" class="pr"/></span></label>'+
       '</div>'+
+      '<div class="inkoop-veld" style="display:none;margin-top:8px"><label class="veld"><span class="lab">Inkoopprijs / m²</span><span class="euro-in"><span>€</span><input type="number" min="0" class="inkoop"/></span></label></div>'+
       '<button class="reset">↺ Afwijkende prijs</button>'+
       '<div class="profielwrap"><span class="kleurwrap-lab">Bodemprofiel</span><div class="profiel-toggle"><button type="button" class="ptbtn pt35">Standaard <span class="sub">35mm</span></button><button type="button" class="ptbtn pt9">Plat <span class="sub">9mm</span></button></div></div>'+
       '<div class="rij-onder">'+
@@ -775,6 +804,7 @@ function renderRegels(){
     var ho=d.querySelector('.ho'); ho.value=r.hoogte; ho.oninput=function(){r.hoogte=ho.value;recompute();renderDoc();updatePreview(r);};
     var aa=d.querySelector('.aa'); aa.value=r.aantal; aa.oninput=function(){r.aantal=aa.value;recompute();renderDoc();};
     var pr=d.querySelector('.pr'); pr.value=r.prijs; pr.oninput=function(){r.prijs=pr.value;recompute();renderDoc();};
+    var ip=d.querySelector('.inkoop'); ip.value=r.inkoopprijs||""; ip.oninput=function(){r.inkoopprijs=ip.value;recompute();};
     var reset=d.querySelector('.reset'); reset.onclick=function(){r.prijs=String(state.producten[r.productIdx]?state.producten[r.productIdx].prijs:0);pr.value=r.prijs;recompute();renderDoc();};
     var del=d.querySelector('.del'); del.onclick=function(){if(state.regels.length>1){state.regels=state.regels.filter(function(x){return x.id!==r.id;});renderRegels();recompute();renderDoc();}};
     r._m2=d.querySelector('.m2'); r._lt=d.querySelector('.lt'); r._reset=reset;
@@ -811,6 +841,8 @@ function renderRegels(){
     r._photoBtn=d.querySelector('.hor-photo-btn');
     r._photoImg=d.querySelector('.hor-photo-img');
     r._photoNote=d.querySelector('.hor-photo-note');
+    r._inkoopVeld=d.querySelector('.inkoop-veld');
+    r._inkoopVeld.style.display=isInkoopZichtbaar()?"block":"none";
     updatePreview(r);
 
     cont.appendChild(d);
@@ -873,7 +905,7 @@ var AUTOSAVE_KEY="loua_calc_draft";
 var _autosaveTimer=null;
 function serializeState(){
   return {
-    regels: state.regels.map(function(r){return {locatie:r.locatie,productIdx:r.productIdx,prijs:r.prijs,breedte:r.breedte,hoogte:r.hoogte,aantal:r.aantal,rall:r.rall,kleur:r.kleur,bodemprofiel:r.bodemprofiel};}),
+    regels: state.regels.map(function(r){return {locatie:r.locatie,productIdx:r.productIdx,prijs:r.prijs,breedte:r.breedte,hoogte:r.hoogte,aantal:r.aantal,rall:r.rall,kleur:r.kleur,bodemprofiel:r.bodemprofiel,inkoopprijs:r.inkoopprijs};}),
     montage: state.montage,
     transport: state.transport,
     aantalOpleveringen: state.aantalOpleveringen,
@@ -1079,6 +1111,10 @@ function recompute(){
   var mr=el("ovMontageRow"); if(c.montageK>0){mr.style.display="flex";el("ovMontageVal").textContent=euro(c.montageK);}else mr.style.display="none";
   var br=el("ovBodemRow"); if(c.bodemprofielK>0){br.style.display="flex";el("ovBodemVal").textContent=euro(c.bodemprofielK);}else br.style.display="none";
   el("ovTotaalLabel").textContent=c.epActief?"Totaal (eigen prijs, excl. BTW)":"Totaal (excl. BTW)";
+  el("inkoopSom").textContent=euro(c.inkoopSom);
+  el("inkoopVerkoop").textContent=euro(c.eind);
+  el("inkoopWinst").textContent=euro(c.brutoWinst);
+  el("inkoopWinst20").textContent=euro(c.winst20);
   var tr=el("ovTransportRow"); if(c.transportK>0){tr.style.display="flex";el("ovTransportVal").textContent=euro(c.transportK);}else tr.style.display="none";
   var _newTotaalTxt=euro(c.eind);
   var _totEl=el("ovTotaal");
@@ -1363,6 +1399,16 @@ function openOfferte(){
   el("overlay").classList.add("open");
 }
 
+var INKOOP_ZICHTBAAR_KEY="loua_inkoop_zichtbaar";
+function isInkoopZichtbaar(){ return LS_get(INKOOP_ZICHTBAAR_KEY)==="1"; }
+function syncInkoopUI(){
+  var zichtbaar=isInkoopZichtbaar();
+  el("inkoopToggle").className="toggle"+(zichtbaar?" on":"");
+  el("inkoopBody").style.display=zichtbaar?"block":"none";
+  el("inkoopSub").textContent=zichtbaar?"Zichtbaar":"Verborgen";
+  state.regels.forEach(function(r){ if(r._inkoopVeld) r._inkoopVeld.style.display=zichtbaar?"block":"none"; });
+}
+
 function syncEigenPrijsUI(){
   var actief=!!(state.eigenPrijs&&state.eigenPrijs.actief);
   el("eigenPrijsToggle").className="toggle"+(actief?" on":"");
@@ -1394,6 +1440,8 @@ function initApp(){
   el("epIncl").onclick=function(){state.eigenPrijs.basis="incl";syncEigenPrijsUI();recompute();renderDoc();};
   el("eigenPrijsBedrag").oninput=function(){state.eigenPrijs.bedrag=this.value;recompute();renderDoc();};
   syncEigenPrijsUI();
+  el("inkoopToggle").onclick=function(){LS_set(INKOOP_ZICHTBAAR_KEY, isInkoopZichtbaar()?"0":"1");syncInkoopUI();};
+  syncInkoopUI();
   el("aantalOpleveringen").oninput=function(){state.aantalOpleveringen=this.value;recompute();renderDoc();};
   el("btnOfferteTop").onclick=openOfferte;
   el("btnOfferteSide").onclick=openOfferte;
