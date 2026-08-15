@@ -247,6 +247,11 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
   @media(max-width:639px){
     .hor-preview{transform:perspective(700px) rotateY(-10deg) rotateX(3deg)}
   }
+  .hor-photo-btn{position:relative;display:inline-flex;border:none;background:none;padding:0;cursor:zoom-in;border-radius:8px;overflow:hidden;box-shadow:0 10px 24px rgba(32,30,26,.16)}
+  .hor-photo-img{display:block;max-width:220px;max-height:200px;width:auto;height:auto;border-radius:8px}
+  .hor-photo-zoom{position:absolute;bottom:6px;right:6px;background:rgba(32,30,26,.75);color:#fff;font-size:11px;padding:3px 8px;border-radius:999px;opacity:0;transition:opacity .15s;pointer-events:none}
+  .hor-photo-btn:hover .hor-photo-zoom{opacity:1}
+  .hor-photo-note{font-size:11px;color:#a8a29e;text-align:center;max-width:260px}
 
   .stats-bar{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 18px;margin-bottom:24px;box-shadow:0 1px 2px rgba(32,30,26,.04)}
   .stats-row{display:flex;align-items:center;gap:0;flex-wrap:wrap}
@@ -398,6 +403,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
             <div class="ovrow"><span class="l">Producten</span><span class="v" id="ovProducten">€ 0,00</span></div>
             <div class="ovrow" id="ovProfielRow" style="display:none"><span class="l" id="ovProfielLabel"></span><span class="v" id="ovProfielVal"></span></div>
             <div class="ovrow" id="ovMontageRow" style="display:none"><span class="l">Montage</span><span class="v" id="ovMontageVal"></span></div>
+            <div class="ovrow" id="ovBodemRow" style="display:none"><span class="l">Plat bodemprofiel</span><span class="v" id="ovBodemVal"></span></div>
             <div class="ovrow" id="ovTransportRow" style="display:none"><span class="l">Transport</span><span class="v" id="ovTransportVal"></span></div>
           </div>
           <div class="panel-tot"><span class="l">Totaal (excl. BTW)</span><span class="v" id="ovTotaal">€ 0,00</span></div>
@@ -408,6 +414,19 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
     </div>
   </div>
 </div>
+</div>
+
+<!-- ====== FOTO LIGHTBOX ====== -->
+<div class="overlay" id="fotoOverlay">
+  <div class="modal" style="max-width:640px">
+    <div class="toolbar no-print">
+      <h2 class="display" id="fotoOverlayTitel">Productfoto</h2>
+      <button class="iconbtn" id="btnFotoClose" style="color:#78716c;font-size:20px;padding:0 6px">✕</button>
+    </div>
+    <div class="panel-edit no-print" style="padding:0;overflow:hidden">
+      <img id="fotoOverlayImg" alt="" style="width:100%;display:block" />
+    </div>
+  </div>
 </div>
 
 <!-- ====== GESCHIEDENIS MODAL ====== -->
@@ -488,7 +507,14 @@ var DEFAULT_PRODUCTEN = [
   { naam:"Honeycomb (plisse) niet verduisterend", prijs:127 },
   { naam:"Honeycomb (plisse) incl. hor niet verduisterend 80%", prijs:130 },
 ];
-var RALL=2, MONTAGE=25, TRANSPORT_1=80, TRANSPORT_MEER=40;
+var RALL=2, MONTAGE=25, TRANSPORT_1=80, TRANSPORT_MEER=40, BODEMPROFIEL_PLAT=30;
+var PRODUCT_FOTOS={
+  "Standaard Hor":"https://www.louaraamdecoratie.nl/images/hor-standaard-hor.jpg",
+  "Standaard Hor met Magneet":"https://www.louaraamdecoratie.nl/images/hor-standaard-hor-magneet.webp",
+  "Standaard Hor met Magneet en antipol":"https://www.louaraamdecoratie.nl/images/hor-standaard-hor-magneet-antipol.webp",
+  "Hor dubbelkant bedienbaar standaard magneet":"https://www.louaraamdecoratie.nl/images/hor-dubbelkant-standaard-magneet.webp",
+  "Hor dubbelkant bedienbaar standaard magneet en antipol":"https://www.louaraamdecoratie.nl/images/hor-dubbelkant-standaard-magneet-antipol.webp"
+};
 var RAL_KLEUREN=[
   {code:"",naam:"Standaard",hex:"#F4F4F1"},
   {code:"RAL9016",naam:"Verkeerswit",hex:"#F1F0EA"},
@@ -528,21 +554,37 @@ function computePreviewSize(breedte,hoogte){
 }
 function updatePreview(r){
   if(!r._previewEl) return;
-  var dims=computePreviewSize(r.breedte,r.hoogte);
-  r._previewEl.style.width=dims.pw+"px";
-  r._previewEl.style.height=dims.ph+"px";
   var naam=(state.producten[r.productIdx]?state.producten[r.productIdx].naam:"");
-  var plisse=isPlisseProduct(naam);
-  var frameHex=kleurHex(r.kleur||(r.rall?"RAL9005":""));
-  r._previewFront.style.borderColor=frameHex;
-  r._previewEdge.style.background=shadeHex(frameHex,-38);
-  if(plisse){
-    var donker=/verduisterend/i.test(naam) && !/niet verduisterend/i.test(naam);
-    r._previewFront.style.backgroundImage=plissePattern(donker);
-    r._previewFront.style.backgroundColor=donker?"#d8d2c4":"#ece7dd";
+  var fotoSrc=PRODUCT_FOTOS[naam];
+  if(fotoSrc){
+    r._previewEl.style.display="none";
+    r._photoBtn.style.display="inline-flex";
+    r._photoNote.style.display="block";
+    if(r._photoImg.getAttribute("src")!==fotoSrc){ r._photoImg.src=fotoSrc; r._photoImg.alt=naam; }
+    r._photoBtn.onclick=function(){
+      el("fotoOverlayImg").src=fotoSrc; el("fotoOverlayImg").alt=naam;
+      el("fotoOverlayTitel").textContent=naam;
+      el("fotoOverlay").classList.add("open");
+    };
   } else {
-    r._previewFront.style.backgroundImage=meshPattern();
-    r._previewFront.style.backgroundColor="#eef0ec";
+    r._previewEl.style.display="";
+    r._photoBtn.style.display="none";
+    r._photoNote.style.display="none";
+    var dims=computePreviewSize(r.breedte,r.hoogte);
+    r._previewEl.style.width=dims.pw+"px";
+    r._previewEl.style.height=dims.ph+"px";
+    var plisse=isPlisseProduct(naam);
+    var frameHex=kleurHex(r.kleur||(r.rall?"RAL9005":""));
+    r._previewFront.style.borderColor=frameHex;
+    r._previewEdge.style.background=shadeHex(frameHex,-38);
+    if(plisse){
+      var donker=/verduisterend/i.test(naam) && !/niet verduisterend/i.test(naam);
+      r._previewFront.style.backgroundImage=plissePattern(donker);
+      r._previewFront.style.backgroundColor=donker?"#d8d2c4":"#ece7dd";
+    } else {
+      r._previewFront.style.backgroundImage=meshPattern();
+      r._previewFront.style.backgroundColor="#eef0ec";
+    }
   }
   if(r._previewCaption) r._previewCaption.textContent=(r.breedte||"—")+" × "+(r.hoogte||"—")+" cm";
 }
@@ -617,11 +659,13 @@ function bereken(){
   var profielBedrag=productSom*(pct/100);
   var productNa=productSom+profielBedrag;
   var montageK=state.montage?MONTAGE*totaalRamen:0;
+  var ramenPlat=rows.reduce(function(s,x){return s+(x.r.bodemprofiel==="9"?x.aantal:0);},0);
+  var bodemprofielK=ramenPlat*BODEMPROFIEL_PLAT;
   var transportK=0, transportLabel="";
   if(state.transport==="een"){transportK=TRANSPORT_1;transportLabel="Transport (1 oplevering)";}
   else if(state.transport==="meer"){var n=Math.max(1,parseInt(state.aantalOpleveringen)||0);transportK=TRANSPORT_MEER*n;transportLabel="Transport ("+n+" opleveringen)";}
-  var eind=productNa+montageK+transportK;
-  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,transportK:transportK,transportLabel:transportLabel,eind:eind};
+  var eind=productNa+montageK+bodemprofielK+transportK;
+  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind};
 }
 
 /* ---------- Render: profielen ---------- */
@@ -687,7 +731,11 @@ function renderRegels(){
         '<div class="kleurwrap"><span class="kleurwrap-lab">Kleur</span><div class="swatches"></div><span class="kleur-naam"></span></div>'+
         '<div class="regel-tot"><span class="m2">— m²</span><span class="lt">€ 0,00</span><button class="iconbtn del" '+(state.regels.length===1?'disabled':'')+'>🗑</button></div>'+
       '</div>'+
-      '<div class="hor-preview-wrap"><div class="hor-preview"><div class="hor-preview-front"></div><div class="hor-preview-edge"></div></div><span class="hor-preview-caption">— × — cm</span></div>'+
+      '<div class="hor-preview-wrap"><div class="hor-preview"><div class="hor-preview-front"></div><div class="hor-preview-edge"></div></div>'+
+        '<button type="button" class="hor-photo-btn" style="display:none"><img class="hor-photo-img" alt="" /><span class="hor-photo-zoom">🔍 Bekijk groter</span></button>'+
+        '<span class="hor-preview-caption">— × — cm</span>'+
+        '<span class="hor-photo-note" style="display:none">Referentiebeeld — kleur op foto kan afwijken van gekozen kleur.</span>'+
+      '</div>'+
       '</div></div>';
     var loc=d.querySelector('input[list=loclist]'); loc.value=r.locatie; loc.oninput=function(){r.locatie=loc.value;renderDoc();};
     var prod=d.querySelector('.prod'); prod.onchange=function(){r.productIdx=parseInt(prod.value);r.prijs=String(state.producten[r.productIdx]?state.producten[r.productIdx].prijs:0);pr.value=r.prijs;recompute();renderDoc();updatePreview(r);};
@@ -720,14 +768,17 @@ function renderRegels(){
 
     var pt35=d.querySelector('.pt35'), pt9=d.querySelector('.pt9');
     function setProfielSel(){ pt35.classList.toggle('sel', r.bodemprofiel!=="9"); pt9.classList.toggle('sel', r.bodemprofiel==="9"); }
-    pt35.onclick=function(){ r.bodemprofiel="35"; setProfielSel(); renderDoc(); };
-    pt9.onclick=function(){ r.bodemprofiel="9"; setProfielSel(); renderDoc(); };
+    pt35.onclick=function(){ r.bodemprofiel="35"; setProfielSel(); recompute(); renderDoc(); };
+    pt9.onclick=function(){ r.bodemprofiel="9"; setProfielSel(); recompute(); renderDoc(); };
     setProfielSel();
 
     r._previewEl=d.querySelector('.hor-preview');
     r._previewFront=d.querySelector('.hor-preview-front');
     r._previewEdge=d.querySelector('.hor-preview-edge');
     r._previewCaption=d.querySelector('.hor-preview-caption');
+    r._photoBtn=d.querySelector('.hor-photo-btn');
+    r._photoImg=d.querySelector('.hor-photo-img');
+    r._photoNote=d.querySelector('.hor-photo-note');
     updatePreview(r);
 
     cont.appendChild(d);
@@ -991,6 +1042,7 @@ function recompute(){
   var pr=el("ovProfielRow");
   if(c.pct!==0){pr.style.display="flex";el("ovProfielLabel").textContent=(c.profiel.naam||"Profiel")+" ("+(c.pct>0?"+":"")+c.pct+"%)";el("ovProfielVal").textContent=euro(c.profielBedrag);}else pr.style.display="none";
   var mr=el("ovMontageRow"); if(c.montageK>0){mr.style.display="flex";el("ovMontageVal").textContent=euro(c.montageK);}else mr.style.display="none";
+  var br=el("ovBodemRow"); if(c.bodemprofielK>0){br.style.display="flex";el("ovBodemVal").textContent=euro(c.bodemprofielK);}else br.style.display="none";
   var tr=el("ovTransportRow"); if(c.transportK>0){tr.style.display="flex";el("ovTransportVal").textContent=euro(c.transportK);}else tr.style.display="none";
   var _newTotaalTxt=euro(c.eind);
   var _totEl=el("ovTotaal");
@@ -1014,6 +1066,7 @@ function offerteData(){
     lijnen.push({om:loc||naam,detail:(loc?naam+" · ":"")+maat,aantal:x.aantal,stuk:stuk,totaal:stuk*x.aantal});
   });
   if(c.montageK>0)lijnen.push({om:"Montage",detail:euro(MONTAGE)+" per raam",aantal:c.totaalRamen,stuk:MONTAGE,totaal:c.montageK});
+  if(c.bodemprofielK>0)lijnen.push({om:"Plat bodemprofiel (9mm)",detail:euro(BODEMPROFIEL_PLAT)+" per raam",aantal:c.ramenPlat,stuk:BODEMPROFIEL_PLAT,totaal:c.bodemprofielK});
   if(c.transportK>0)lijnen.push({om:c.transportLabel,detail:"",aantal:1,stuk:c.transportK,totaal:c.transportK});
   var subtotaal=c.eind, pct=parseFloat(state.btwPct)||0, btw=subtotaal*(pct/100);
   return {lijnen:lijnen,subtotaal:subtotaal,btwPct:pct,btw:btw,totaalIncl:subtotaal+btw};
@@ -1318,6 +1371,9 @@ function initApp(){
     LS_set(AUTOSAVE_KEY,"");
     toast("Nieuw concept gestart");
   };
+
+  el("btnFotoClose").onclick=function(){ el("fotoOverlay").classList.remove("open"); };
+  el("fotoOverlay").addEventListener("click",function(e){if(e.target===el("fotoOverlay"))el("fotoOverlay").classList.remove("open");});
 
   el("btnHistorie").onclick=function(){ renderHistorie(""); el("histSearch").value=""; el("histOverlay").classList.add("open"); };
 
