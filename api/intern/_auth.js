@@ -24,11 +24,11 @@ function signPayload(payload) {
 function createSessionCookie() {
   var payload = 'ok.' + Date.now();
   var value = encodeURIComponent(payload + '.' + signPayload(payload));
-  return COOKIE_NAME + '=' + value + '; HttpOnly; Secure; SameSite=Lax; Path=/intern/calculator; Max-Age=' + MAX_AGE_SECONDS;
+  return COOKIE_NAME + '=' + value + '; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=' + MAX_AGE_SECONDS;
 }
 
 function clearSessionCookie() {
-  return COOKIE_NAME + '=; HttpOnly; Secure; SameSite=Lax; Path=/intern/calculator; Max-Age=0';
+  return COOKIE_NAME + '=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0';
 }
 
 function parseCookies(header) {
