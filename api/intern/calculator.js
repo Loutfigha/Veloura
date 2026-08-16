@@ -491,6 +491,28 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
       <p class="hint" style="padding-top:14px;padding-bottom:6px">Vaste inkoopprijzen per product (€/m²)</p>
       <div id="inkoopPrijzenArea"></div>
       <p class="hint" style="padding-top:10px">Zichtbaar via de Analytics-knop; verschijnt nergens op de offerte of PDF.</p>
+
+      <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--line)">
+        <p class="hint" style="padding-bottom:10px;font-weight:600;color:var(--ink);font-size:13px;text-transform:uppercase;letter-spacing:.04em">Rapportage</p>
+        <div class="profiel-toggle" style="margin-bottom:10px;flex-wrap:wrap">
+          <button type="button" class="ptbtn" id="rapMaand">Deze maand</button>
+          <button type="button" class="ptbtn" id="rapKwartaal">Dit kwartaal</button>
+          <button type="button" class="ptbtn" id="rapJaar">Dit jaar</button>
+          <button type="button" class="ptbtn" id="rapAangepast">Aangepast</button>
+        </div>
+        <div class="grid2" id="rapAangepastVelden" style="display:none;margin-bottom:12px">
+          <label class="veld"><span class="lab">Van</span><input type="date" id="rapVan"/></label>
+          <label class="veld"><span class="lab">Tot</span><input type="date" id="rapTot"/></label>
+        </div>
+        <div class="inkoop-row"><span class="l">Aantal offertes</span><span class="v" id="rapAantal">0</span></div>
+        <div class="inkoop-row"><span class="l">Verkoopbedrag (excl. BTW)</span><span class="v" id="rapVerkoop">€ 0,00</span></div>
+        <div class="inkoop-row"><span class="l">Inkoopsom</span><span class="v" id="rapInkoop">€ 0,00</span></div>
+        <div class="inkoop-row"><span class="l">Transportkosten</span><span class="v" id="rapTransport">€ 0,00</span></div>
+        <div class="inkoop-row strong"><span class="l">Brutowinst</span><span class="v" id="rapWinst">€ 0,00</span></div>
+        <div class="inkoop-row strong"><span class="l">20% van winst</span><span class="v" id="rapWinst20">€ 0,00</span></div>
+        <div class="inkoop-row strong"><span class="l">Blijft over</span><span class="v" id="rapNettoOver">€ 0,00</span></div>
+        <button class="btn btn-ink" id="btnRapExport" style="width:100%;margin-top:14px">📥 Exporteren naar Excel</button>
+      </div>
     </div>
   </div>
 </div>
@@ -543,6 +565,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 "use strict";
 /* ---------- Gegevens ---------- */
@@ -939,6 +962,123 @@ function renderAnalytics(){
   renderAnalyticsRegels();
   renderInkoopPrijzen();
   renderAnalyticsSummary();
+  setActiefRapKnop("rapMaand");
+  periodeDezeMaand();
+}
+
+/* ---------- Rapportage ---------- */
+function berekenVoorRecord(rec){
+  var snap=(rec&&rec.snapshot)||{};
+  var backupState=state;
+  state=Object.assign({},backupState,{
+    regels: Array.isArray(snap.regels) ? snap.regels.map(function(r){ var nr=nieuwRegel(); return Object.assign(nr,r,{id:nr.id}); }) : [],
+    montage: snap.montage!==undefined ? snap.montage : true,
+    transport: snap.transport||"geen",
+    aantalOpleveringen: snap.aantalOpleveringen||"2",
+    actiefProfiel: snap.actiefProfiel!==undefined ? snap.actiefProfiel : backupState.actiefProfiel,
+    eigenPrijs: snap.eigenPrijs ? Object.assign({actief:false,basis:"excl",bedrag:""},snap.eigenPrijs) : {actief:false,basis:"excl",bedrag:""},
+    btwPct: snap.btwPct||"21",
+    transportKosten: snap.transportKosten||""
+  });
+  var c;
+  try{ c=bereken(); } finally { state=backupState; }
+  return c;
+}
+function isoVandaag(){ return new Date().toISOString().slice(0,10); }
+var _rapPeriode={van:"",tot:""};
+function zetPeriode(van,tot){
+  _rapPeriode={van:van,tot:tot};
+  el("rapVan").value=van; el("rapTot").value=tot;
+  renderRapportage();
+}
+function setActiefRapKnop(id){
+  ["rapMaand","rapKwartaal","rapJaar","rapAangepast"].forEach(function(bid){ el(bid).classList.toggle("sel",bid===id); });
+}
+function periodeDezeMaand(){
+  var nu=new Date();
+  var van=new Date(nu.getFullYear(),nu.getMonth(),1);
+  el("rapAangepastVelden").style.display="none";
+  zetPeriode(van.toISOString().slice(0,10), isoVandaag());
+}
+function periodeDitKwartaal(){
+  var nu=new Date();
+  var van=new Date(nu.getFullYear(),Math.floor(nu.getMonth()/3)*3,1);
+  el("rapAangepastVelden").style.display="none";
+  zetPeriode(van.toISOString().slice(0,10), isoVandaag());
+}
+function periodeDitJaar(){
+  var nu=new Date();
+  var van=new Date(nu.getFullYear(),0,1);
+  el("rapAangepastVelden").style.display="none";
+  zetPeriode(van.toISOString().slice(0,10), isoVandaag());
+}
+function filterOffertesOpPeriode(){
+  var van=_rapPeriode.van, tot=_rapPeriode.tot;
+  return offertesHistorie.filter(function(h){
+    var d=h.datum;
+    if(!d) return false;
+    return (!van||d>=van) && (!tot||d<=tot);
+  });
+}
+function renderRapportage(){
+  var lijst=filterOffertesOpPeriode();
+  var totVerkoop=0,totInkoop=0,totTransport=0,totWinst=0,totWinst20=0,totNetto=0;
+  lijst.forEach(function(h){
+    var c=berekenVoorRecord(h);
+    totVerkoop+=c.eind; totInkoop+=c.inkoopSom; totTransport+=c.transportKostenBedrag;
+    totWinst+=c.brutoWinst; totWinst20+=c.winst20; totNetto+=c.nettoOver;
+  });
+  el("rapAantal").textContent=lijst.length;
+  el("rapVerkoop").textContent=euro(totVerkoop);
+  el("rapInkoop").textContent=euro(totInkoop);
+  el("rapTransport").textContent=euro(totTransport);
+  el("rapWinst").textContent=euro(totWinst);
+  el("rapWinst20").textContent=euro(totWinst20);
+  el("rapNettoOver").textContent=euro(totNetto);
+}
+function exporteerRapportageExcel(){
+  if(typeof XLSX==="undefined"){ toast("Excel-module wordt nog geladen. Probeer het zo opnieuw.","error"); return; }
+  var lijst=filterOffertesOpPeriode();
+  if(!lijst.length){ toast("Geen offertes in deze periode om te exporteren.","error"); return; }
+  var afronden=function(n){ return Math.round((n||0)*100)/100; };
+  var detailRows=lijst.map(function(h){
+    var c=berekenVoorRecord(h);
+    return {
+      "Offertenummer": h.offerteNr||"",
+      "Klant": h.klantNaam||"",
+      "Datum": h.datum||"",
+      "Status": STATUS_LABELS[h.status]||h.status||"",
+      "Verkoopbedrag (excl. BTW)": afronden(c.eind),
+      "Inkoopsom": afronden(c.inkoopSom),
+      "Transportkosten": afronden(c.transportKostenBedrag),
+      "Brutowinst": afronden(c.brutoWinst),
+      "20% van winst": afronden(c.winst20),
+      "Blijft over": afronden(c.nettoOver)
+    };
+  });
+  var totalen=detailRows.reduce(function(s,r){
+    s.verkoop+=r["Verkoopbedrag (excl. BTW)"]; s.inkoop+=r["Inkoopsom"]; s.transport+=r["Transportkosten"];
+    s.winst+=r["Brutowinst"]; s.winst20+=r["20% van winst"]; s.netto+=r["Blijft over"];
+    return s;
+  },{verkoop:0,inkoop:0,transport:0,winst:0,winst20:0,netto:0});
+  var van=el("rapVan").value||"—", tot=el("rapTot").value||"—";
+  var samenvattingAOA=[
+    ["Rapportage",""],
+    ["Periode", van+" t/m "+tot],
+    ["Aantal offertes", detailRows.length],
+    ["Verkoopbedrag (excl. BTW)", afronden(totalen.verkoop)],
+    ["Inkoopsom", afronden(totalen.inkoop)],
+    ["Transportkosten", afronden(totalen.transport)],
+    ["Brutowinst", afronden(totalen.winst)],
+    ["20% van winst", afronden(totalen.winst20)],
+    ["Blijft over", afronden(totalen.netto)]
+  ];
+  var wb=XLSX.utils.book_new();
+  var wsSamenvatting=XLSX.utils.aoa_to_sheet(samenvattingAOA);
+  var wsDetail=XLSX.utils.json_to_sheet(detailRows);
+  XLSX.utils.book_append_sheet(wb,wsSamenvatting,"Samenvatting");
+  XLSX.utils.book_append_sheet(wb,wsDetail,"Offertes");
+  XLSX.writeFile(wb, "Rapportage_"+van+"_tot_"+tot+".xlsx");
 }
 
 /* ---------- Meldingen (toasts) ---------- */
@@ -1556,6 +1696,13 @@ function initApp(){
   el("analyticsTransportKosten").oninput=function(){ state.transportKosten=this.value; renderAnalyticsSummary(); };
   el("btnAnalytics").onclick=function(){ renderAnalytics(); el("analyticsOverlay").classList.add("open"); };
   el("btnAnalyticsClose").onclick=function(){ el("analyticsOverlay").classList.remove("open"); };
+  el("rapMaand").onclick=function(){ setActiefRapKnop("rapMaand"); periodeDezeMaand(); };
+  el("rapKwartaal").onclick=function(){ setActiefRapKnop("rapKwartaal"); periodeDitKwartaal(); };
+  el("rapJaar").onclick=function(){ setActiefRapKnop("rapJaar"); periodeDitJaar(); };
+  el("rapAangepast").onclick=function(){ setActiefRapKnop("rapAangepast"); el("rapAangepastVelden").style.display="grid"; renderRapportage(); };
+  el("rapVan").oninput=function(){ _rapPeriode.van=this.value; renderRapportage(); };
+  el("rapTot").oninput=function(){ _rapPeriode.tot=this.value; renderRapportage(); };
+  el("btnRapExport").onclick=exporteerRapportageExcel;
   el("analyticsOverlay").addEventListener("click",function(e){if(e.target===el("analyticsOverlay"))el("analyticsOverlay").classList.remove("open");});
   el("aantalOpleveringen").oninput=function(){state.aantalOpleveringen=this.value;recompute();renderDoc();};
   el("btnOfferteTop").onclick=openOfferte;
