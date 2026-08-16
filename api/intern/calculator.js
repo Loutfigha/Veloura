@@ -1054,6 +1054,34 @@ function verwijderOfferteRecord(id){
     body: JSON.stringify({ id: id })
   }).then(function(r){ if(!r.ok) throw new Error("verwijderen mislukt"); });
 }
+var OUDE_HISTORY_KEY="loua_geschiedenis";
+function migreerOudeGeschiedenis(){
+  var raw;
+  try{ raw=localStorage.getItem(OUDE_HISTORY_KEY); }catch(e){ raw=null; }
+  if(!raw) return;
+  var arr;
+  try{ arr=JSON.parse(raw); }catch(e){ arr=null; }
+  if(!Array.isArray(arr) || !arr.length){
+    try{ localStorage.removeItem(OUDE_HISTORY_KEY); }catch(e){}
+    return;
+  }
+  var wachtend=arr.length, gelukt=0;
+  arr.forEach(function(rec){
+    opslaanOfferteRecord(rec).then(function(){ gelukt++; }).catch(function(){}).then(function(){
+      wachtend--;
+      if(wachtend===0){
+        try{
+          localStorage.setItem(OUDE_HISTORY_KEY+"_backup", raw);
+          localStorage.removeItem(OUDE_HISTORY_KEY);
+        }catch(e){}
+        if(gelukt>0){
+          toast(gelukt+" eerdere offerte"+(gelukt===1?"":"s")+" overgezet naar de nieuwe opslag.", "success");
+        }
+        laadGeschiedenis();
+      }
+    });
+  });
+}
 function saveToHistory(){
   var o=offerteData();
   var idx=offertesHistorie.findIndex(function(h){return h.offerteNr===state.offerteNr;});
@@ -1514,6 +1542,7 @@ function initApp(){
 
   renderProfielen(); renderRegels(); renderTransport(); renderProductBeheer(); bindKlant(); bindOfferteVelden(); recompute(); renderStats();
   laadGeschiedenis();
+  migreerOudeGeschiedenis();
   if(hersteld) toast("Vorig concept hersteld");
 
   el("btnBeheer").onclick=function(){state.beheer=!state.beheer;el("btnBeheer").textContent=state.beheer?"✓ Klaar":"⚙ Beheer";renderProfielen();};
