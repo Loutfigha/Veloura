@@ -1660,6 +1660,10 @@ module.exports = function handler(req, res) {
   }
 
   if (hasValidSession(req)) {
+    // Ververst de cookie bij elk bezoek, zodat sessies die zijn afgegeven vóór
+    // een eventuele wijziging van het cookie-pad (of andere cookie-instellingen)
+    // vanzelf worden bijgewerkt zonder dat opnieuw inloggen nodig is.
+    res.setHeader('Set-Cookie', createSessionCookie());
     res.status(200).send(CALCULATOR_HTML);
     return;
   }
