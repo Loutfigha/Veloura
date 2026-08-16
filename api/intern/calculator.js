@@ -481,7 +481,9 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
       <button class="iconbtn" id="btnAnalyticsClose" style="color:#78716c;font-size:20px;padding:0 6px">✕</button>
     </div>
     <div class="panel-edit no-print" style="padding:18px">
+      <label class="veld" style="margin-bottom:14px"><span class="lab">Eigen transportkosten (optioneel)</span><span class="euro-in"><span>€</span><input type="number" min="0" step="0.01" id="analyticsTransportKosten" placeholder="0,00"/></span></label>
       <div class="inkoop-row"><span class="l">Inkoopsom</span><span class="v" id="inkoopSom">€ 0,00</span></div>
+      <div class="inkoop-row"><span class="l">Transportkosten</span><span class="v" id="inkoopTransportKosten">€ 0,00</span></div>
       <div class="inkoop-row"><span class="l">Verkoopbedrag (excl. BTW)</span><span class="v" id="inkoopVerkoop">€ 0,00</span></div>
       <div class="inkoop-row strong"><span class="l">Brutowinst</span><span class="v" id="inkoopWinst">€ 0,00</span></div>
       <div class="inkoop-row strong"><span class="l">20% van winst (af te staan)</span><span class="v" id="inkoopWinst20">€ 0,00</span></div>
@@ -674,7 +676,8 @@ var state={
   offerteDatum:new Date().toISOString().slice(0,10),
   btwPct:"21",
   geldigheid:"30",
-  eigenPrijs:{actief:false,basis:"excl",bedrag:""}
+  eigenPrijs:{actief:false,basis:"excl",bedrag:""},
+  transportKosten:""
 };
 var _pid=100;
 var _prodId=1000;
@@ -734,10 +737,11 @@ function bereken(){
     }
   }
   var inkoopSom=rows.reduce(function(s,x){var pnaam=state.producten[x.r.productIdx]?state.producten[x.r.productIdx].naam:"";var ipx=inkoopVoorNaam(pnaam)+((x.r.kleur||x.r.rall)?INKOOP_RALL:0);return s+ipx*x.m2*x.aantal;},0);
-  var brutoWinst=eind-inkoopSom;
+  var transportKostenBedrag=parseFloat(state.transportKosten)||0;
+  var brutoWinst=eind-inkoopSom-transportKostenBedrag;
   var winst20=brutoWinst*0.20;
   var nettoOver=brutoWinst-winst20;
-  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind,berekendEind:berekendEind,epActief:epActief,inkoopSom:inkoopSom,brutoWinst:brutoWinst,winst20:winst20,nettoOver:nettoOver};
+  return {rows:rows,productSom:productSom,totaalRamen:totaalRamen,profiel:profiel,pct:pct,factor:factor,profielBedrag:profielBedrag,productNa:productNa,montageK:montageK,ramenPlat:ramenPlat,bodemprofielK:bodemprofielK,transportK:transportK,transportLabel:transportLabel,eind:eind,berekendEind:berekendEind,epActief:epActief,inkoopSom:inkoopSom,transportKostenBedrag:transportKostenBedrag,brutoWinst:brutoWinst,winst20:winst20,nettoOver:nettoOver};
 }
 
 /* ---------- Render: profielen ---------- */
@@ -925,7 +929,9 @@ function renderAnalyticsRegels(){
 }
 function renderAnalyticsSummary(){
   var c=bereken();
+  el("analyticsTransportKosten").value=state.transportKosten||"";
   el("inkoopSom").textContent=euro(c.inkoopSom);
+  el("inkoopTransportKosten").textContent=euro(c.transportKostenBedrag);
   el("inkoopVerkoop").textContent=euro(c.eind);
   el("inkoopWinst").textContent=euro(c.brutoWinst);
   el("inkoopWinst20").textContent=euro(c.winst20);
@@ -968,7 +974,8 @@ function serializeState(){
     offerteDatum: state.offerteDatum,
     btwPct: state.btwPct,
     geldigheid: state.geldigheid,
-    eigenPrijs: Object.assign({},state.eigenPrijs)
+    eigenPrijs: Object.assign({},state.eigenPrijs),
+    transportKosten: state.transportKosten
   };
 }
 function scheduleAutosave(){
@@ -1006,6 +1013,7 @@ function applySnapshot(d){
   state.btwPct = d.btwPct || "21";
   state.geldigheid = d.geldigheid || "30";
   state.eigenPrijs = d.eigenPrijs ? Object.assign({actief:false,basis:"excl",bedrag:""}, d.eigenPrijs) : {actief:false,basis:"excl",bedrag:""};
+  state.transportKosten = d.transportKosten || "";
 }
 function pushStateIntoFields(){
   el("k_naam").value=state.klant.naam||""; el("k_email").value=state.klant.email||"";
@@ -1483,6 +1491,7 @@ function initApp(){
   el("epIncl").onclick=function(){state.eigenPrijs.basis="incl";syncEigenPrijsUI();recompute();renderDoc();};
   el("eigenPrijsBedrag").oninput=function(){state.eigenPrijs.bedrag=this.value;recompute();renderDoc();};
   syncEigenPrijsUI();
+  el("analyticsTransportKosten").oninput=function(){ state.transportKosten=this.value; renderAnalyticsSummary(); };
   el("btnAnalytics").onclick=function(){ renderAnalytics(); el("analyticsOverlay").classList.add("open"); };
   el("btnAnalyticsClose").onclick=function(){ el("analyticsOverlay").classList.remove("open"); };
   el("analyticsOverlay").addEventListener("click",function(e){if(e.target===el("analyticsOverlay"))el("analyticsOverlay").classList.remove("open");});
