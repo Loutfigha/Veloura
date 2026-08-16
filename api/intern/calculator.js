@@ -1023,17 +1023,37 @@ function pushStateIntoFields(){
   syncEigenPrijsUI();
 }
 
-/* ---------- Geschiedenis ---------- */
-var HISTORY_KEY="loua_geschiedenis";
+/* ---------- Geschiedenis (server-opslag via Neon) ---------- */
+var OFFERTES_API="/api/intern/offertes";
 var offertesHistorie=[];
-(function(){
-  var h=LS_get(HISTORY_KEY);
-  if(h){ try{ var arr=JSON.parse(h); if(Array.isArray(arr)) offertesHistorie=arr; }catch(e){} }
-})();
-function saveHistory(){ LS_set(HISTORY_KEY, JSON.stringify(offertesHistorie)); }
 var _histSeq=0;
-offertesHistorie.forEach(function(h){ if(h.id>_histSeq) _histSeq=h.id; });
 function nextHistId(){ _histSeq=Math.max(Date.now(),_histSeq+1); return _histSeq; }
+function laadGeschiedenis(){
+  return fetch(OFFERTES_API).then(function(r){
+    if(!r.ok) throw new Error("laden mislukt");
+    return r.json();
+  }).then(function(data){
+    offertesHistorie = Array.isArray(data) ? data : [];
+    offertesHistorie.forEach(function(h){ if(h.id>_histSeq) _histSeq=h.id; });
+    renderStats();
+  }).catch(function(){
+    toast("Geschiedenis laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.", "error");
+  });
+}
+function opslaanOfferteRecord(record){
+  return fetch(OFFERTES_API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(record)
+  }).then(function(r){ if(!r.ok) throw new Error("opslaan mislukt"); });
+}
+function verwijderOfferteRecord(id){
+  return fetch(OFFERTES_API, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id })
+  }).then(function(r){ if(!r.ok) throw new Error("verwijderen mislukt"); });
+}
 function saveToHistory(){
   var o=offerteData();
   var idx=offertesHistorie.findIndex(function(h){return h.offerteNr===state.offerteNr;});
@@ -1048,8 +1068,10 @@ function saveToHistory(){
     snapshot: serializeState()
   };
   if(idx!==-1){ offertesHistorie[idx]=record; } else { offertesHistorie.unshift(record); }
-  saveHistory();
   renderStats();
+  opslaanOfferteRecord(record).catch(function(){
+    toast("Offerte is lokaal bijgewerkt, maar opslaan in de geschiedenis is mislukt.", "error");
+  });
 }
 var STATUS_LABELS={concept:"Concept",verzonden:"Offerte verzonden",geaccepteerd:"Geaccepteerd",besteld:"Besteld",productverzonden:"Product verzonden",geweigerd:"Geweigerd"};
 var GEWONNEN_STATUSSEN=["geaccepteerd","besteld","productverzonden"];
@@ -1112,7 +1134,15 @@ function renderHistorie(filter){
     sel.onchange=function(){
       var id=parseFloat(sel.dataset.id);
       var rec=offertesHistorie.find(function(h){return h.id===id;});
-      if(rec){ rec.status=sel.value; saveHistory(); renderStats(); sel.className="status-select status-"+sel.value; toast("Status bijgewerkt naar '"+STATUS_LABELS[sel.value]+"'"); }
+      if(rec){
+        var vorigeStatus=rec.status;
+        rec.status=sel.value; renderStats(); sel.className="status-select status-"+sel.value;
+        toast("Status bijgewerkt naar '"+STATUS_LABELS[sel.value]+"'");
+        opslaanOfferteRecord(rec).catch(function(){
+          rec.status=vorigeStatus; renderStats(); sel.value=vorigeStatus; sel.className="status-select status-"+vorigeStatus;
+          toast("Status opslaan is mislukt, teruggezet.", "error");
+        });
+      }
     };
   });
   wrap.querySelectorAll("[data-act]").forEach(function(btn){
@@ -1135,8 +1165,12 @@ function renderHistorie(filter){
       } else if(btn.dataset.act==="del"){
         if(btn.textContent==="Zeker weten?"){
           offertesHistorie=offertesHistorie.filter(function(h){return h.id!==id;});
-          saveHistory(); renderStats(); renderHistorie(el("histSearch").value);
+          renderStats(); renderHistorie(el("histSearch").value);
           toast("Offerte verwijderd");
+          verwijderOfferteRecord(id).catch(function(){
+            offertesHistorie.push(rec); renderStats(); renderHistorie(el("histSearch").value);
+            toast("Verwijderen op de server is mislukt, offerte teruggezet.", "error");
+          });
         } else {
           btn.textContent="Zeker weten?";
           setTimeout(function(){ if(btn && btn.isConnected) btn.textContent="Verwijderen"; }, 3000);
@@ -1479,6 +1513,7 @@ function initApp(){
   if(hersteld) pushStateIntoFields();
 
   renderProfielen(); renderRegels(); renderTransport(); renderProductBeheer(); bindKlant(); bindOfferteVelden(); recompute(); renderStats();
+  laadGeschiedenis();
   if(hersteld) toast("Vorig concept hersteld");
 
   el("btnBeheer").onclick=function(){state.beheer=!state.beheer;el("btnBeheer").textContent=state.beheer?"✓ Klaar":"⚙ Beheer";renderProfielen();};
