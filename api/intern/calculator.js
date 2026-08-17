@@ -322,6 +322,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
       <button class="btn-ghost-sm" id="btnNieuw">🗋 Nieuw</button>
       <button class="btn-ghost-sm" id="btnHistorie">🕘 Geschiedenis</button>
       <button class="btn-ghost-sm" id="btnAnalytics">📊 Analytics</button>
+      <button class="btn-ghost-sm" id="btnOpslaanWijziging1" style="display:none;border-color:var(--sand);color:var(--sand)">💾 Wijzigingen opslaan</button>
       <button class="btn btn-ink" id="btnOfferteTop">📄&nbsp; Offerte maken</button>
     </div>
   </header>
@@ -525,6 +526,7 @@ const CALCULATOR_HTML = `<!DOCTYPE html>
     <div class="toolbar no-print">
       <h2 class="display">Offerte</h2>
       <div style="display:flex;gap:8px">
+        <button class="btn-ghost-sm" id="btnOpslaanWijziging2" style="display:none;border-color:var(--sand);color:var(--sand)">💾 Wijzigingen opslaan</button>
         <button class="btn btn-ink" id="btnPdf">⬇ Download PDF</button>
         <button class="iconbtn" id="btnClose" style="color:#78716c;font-size:20px;padding:0 6px">✕</button>
       </div>
@@ -1176,6 +1178,7 @@ function laadGeschiedenis(){
     offertesHistorie = Array.isArray(data) ? data : [];
     offertesHistorie.forEach(function(h){ if(h.id>_histSeq) _histSeq=h.id; });
     renderStats();
+    updateOpslaanKnopZichtbaarheid();
   }).catch(function(){
     toast("Geschiedenis laden is mislukt. Vernieuw de pagina om het opnieuw te proberen.", "error");
   });
@@ -1240,6 +1243,17 @@ function saveToHistory(){
   opslaanOfferteRecord(record).catch(function(){
     toast("Offerte is lokaal bijgewerkt, maar opslaan in de geschiedenis is mislukt.", "error");
   });
+}
+function updateOpslaanKnopZichtbaarheid(){
+  var zichtbaar = !!(state.offerteNr && offertesHistorie.some(function(h){ return h.offerteNr===state.offerteNr; }));
+  ["btnOpslaanWijziging1","btnOpslaanWijziging2"].forEach(function(id){
+    var b=el(id); if(b) b.style.display = zichtbaar ? "inline-flex" : "none";
+  });
+}
+function opslaanWijzigingKlik(){
+  saveToHistory();
+  updateOpslaanKnopZichtbaarheid();
+  toast("Wijzigingen opgeslagen in geschiedenis.", "success");
 }
 var STATUS_LABELS={concept:"Concept",verzonden:"Offerte verzonden",geaccepteerd:"Geaccepteerd",besteld:"Besteld",productverzonden:"Product verzonden",geweigerd:"Geweigerd"};
 var GEWONNEN_STATUSSEN=["geaccepteerd","besteld","productverzonden"];
@@ -1410,6 +1424,7 @@ function renderDoc(){
   var rijen = o.lijnen.length ? o.lijnen.map(function(l){
     return '<tr><td><span class="om">'+esc(l.om)+'</span>'+(l.detail?'<span class="om-sub">'+esc(l.detail)+'</span>':'')+'</td><td class="c">'+l.aantal+'</td><td class="r">'+euro(l.stuk)+'</td><td class="r" style="font-weight:500">'+euro(l.totaal)+'</td></tr>';
   }).join("") : '<tr><td colspan="4" style="text-align:center;color:#a8a29e;padding:16px 0">Nog geen regels — vul afmetingen in de calculator in.</td></tr>';
+  updateOpslaanKnopZichtbaarheid();
   var voet=[b.kvk&&("KvK "+b.kvk),b.btwnr&&("BTW "+b.btwnr),b.iban&&("IBAN "+b.iban)].filter(Boolean).join("  ·  ");
   el("offerteDoc").innerHTML=
     '<div class="doc-head"><div>'+
@@ -1707,6 +1722,8 @@ function initApp(){
   el("aantalOpleveringen").oninput=function(){state.aantalOpleveringen=this.value;recompute();renderDoc();};
   el("btnOfferteTop").onclick=openOfferte;
   el("btnOfferteSide").onclick=openOfferte;
+  el("btnOpslaanWijziging1").onclick=opslaanWijzigingKlik;
+  el("btnOpslaanWijziging2").onclick=opslaanWijzigingKlik;
   el("btnClose").onclick=function(){el("overlay").classList.remove("open");};
   el("btnPdf").onclick=function(){
     var btn=el("btnPdf"); var origHtml=btn.innerHTML;
