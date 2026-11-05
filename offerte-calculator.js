@@ -28,8 +28,8 @@
   };
 
   var form = document.getElementById('calcForm');
-  var typeCards = document.querySelectorAll('#typeCardGrid .type-card');
-  var gaasCards = document.querySelectorAll('#gaasCardGrid .type-card');
+  var typeCards = document.querySelectorAll('#typeCardGrid .type-option');
+  var gaasCards = document.querySelectorAll('#gaasCardGrid .type-option');
   var gaasDescriptionEl = document.getElementById('gaasDescription');
   var lengteEl = document.getElementById('lengte');
   var breedteEl = document.getElementById('breedte');
@@ -225,7 +225,7 @@
     if(optRalEl.checked){
       var ral = getSelectedRal();
       var ralPriceSpec = getRalPrice();
-      specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (onRequest ? '' : (ralPriceSpec > 0 ? ' (+ ' + formatEUR(ralPriceSpec) + ')' : ' (inbegrepen)'));
+      specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '-') + (onRequest ? '' : (ralPriceSpec > 0 ? ' (+ ' + formatEUR(ralPriceSpec) + ')' : ' (inbegrepen)'));
     }
 
     if(dimsValid){
@@ -243,7 +243,7 @@
         calcPriceEl.textContent = formatEUR(total);
       }
       calcPriceEl.classList.remove('is-empty');
-      specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
+      specType.textContent = TYPE_LABELS[getSelectedType()] || '-';
       specDim.textContent = breedte.toLocaleString('nl-NL') + ' × ' + lengte.toLocaleString('nl-NL') + ' cm';
       specArea.textContent = areaM2.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m²';
     } else {
@@ -251,9 +251,9 @@
       currentArea = null;
       calcPriceEl.textContent = 'Vul de afmetingen in';
       calcPriceEl.classList.add('is-empty');
-      specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
-      specDim.textContent = '—';
-      specArea.textContent = '—';
+      specType.textContent = TYPE_LABELS[getSelectedType()] || '-';
+      specDim.textContent = '-';
+      specArea.textContent = '-';
     }
 
     updateAkkoordState();

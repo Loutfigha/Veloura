@@ -1,5 +1,6 @@
 (function(){
   "use strict";
+  document.documentElement.classList.add('js');
 
   var yearEl = document.getElementById('year');
   if(yearEl) yearEl.textContent = new Date().getFullYear();
@@ -226,7 +227,6 @@
       + '    <button type="button" class="newsletter-popup-close" id="newsletterClose" aria-label="Sluiten">&times;</button>'
       + '    <div id="newsletterFormView">'
       + '      <div class="newsletter-popup-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>'
-      + '      <p class="eyebrow">Exclusief voor nieuwe aanmeldingen</p>'
       + '      <h3 id="newsletterTitle">Ontvang gratis anti-pollen gaas</h3>'
       + '      <div class="newsletter-popup-body">'
       + '        <p>Meld u aan voor onze nieuwsbrief en ontvang een gratis upgrade naar anti-pollen gaas (t.w.v. &euro; 30,-) bij uw volgende bestelling.</p>'
@@ -261,15 +261,29 @@
     var errorEl = document.getElementById('newsletterError');
     var codeEl = document.getElementById('newsletterCode');
 
+    function setBackgroundInert(on){
+      Array.prototype.forEach.call(document.body.children, function(el){
+        if(el === overlay || el.tagName === 'SCRIPT') return;
+        el.inert = on;
+      });
+    }
     function showPopup(){
       overlay.classList.add('is-visible');
+      setBackgroundInert(true);
+      closeBtn.focus({preventScroll: true});
     }
     function hidePopup(){
       overlay.classList.remove('is-visible');
+      setBackgroundInert(false);
       localStorage.setItem(STORAGE_KEY, '1');
     }
 
-    var showTimer = setTimeout(showPopup, 8000);
+    function showWhenBannerGone(){
+      var banner = document.getElementById('cookieBanner');
+      if(banner && banner.classList.contains('is-visible')){ setTimeout(showWhenBannerGone, 1500); }
+      else { showPopup(); }
+    }
+    var showTimer = setTimeout(showWhenBannerGone, 8000);
 
     closeBtn.addEventListener('click', hidePopup);
     successCloseBtn.addEventListener('click', hidePopup);

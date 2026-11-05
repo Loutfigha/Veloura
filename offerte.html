@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Offerte Calculator | Prijs Horren op Maat Berekenen – LOUA</title>
+<title>Offerte Calculator | Prijs Horren op Maat Berekenen | LOUA</title>
 <meta name="description" content="Bereken direct de prijs van uw horren op maat. Vul de afmetingen van uw raam of deur in en ontvang meteen een vrijblijvende offerte als PDF.">
 <meta name="keywords" content="offerte horren, horren prijs berekenen, hor op maat prijs, loua offerte">
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#FAFAF8">
+<meta name="theme-color" content="#F4F0E8">
 <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="images/favicon-192.png">
 <link rel="apple-touch-icon" href="images/favicon-192.png">
@@ -27,7 +27,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400&family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles.css">
 
@@ -83,7 +83,6 @@
     <div class="hero-bg" aria-hidden="true"></div>
     <div class="container">
       <div class="section-head center reveal" style="max-width:720px;">
-        <p class="eyebrow" style="justify-content:center;">Offerte calculator</p>
         <h1 style="font-size:clamp(2.2rem,3.6vw + 1rem,3.4rem);">Bereken direct de prijs van uw hor op maat</h1>
         <p style="font-size:1.08rem;">Vul de afmetingen van uw raam of deur in en zie meteen een prijsindicatie. Akkoord? Dan ontvangt u deze direct als PDF. De definitieve prijs stellen wij vast na een gratis meting aan huis.</p>
       </div>
@@ -98,8 +97,8 @@
         <!-- ---------- FORM ---------- -->
         <div class="calc-card reveal">
           <ul class="calc-intro-checklist">
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Op maat gemaakt</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vakkundig gemonteerd</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Op maat gemaakt</li>
+            <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vakkundig gemonteerd</li>
           </ul>
           <div class="wizard-progress">
             <div class="wizard-progress-track"><div class="wizard-progress-fill" id="wizardProgressFill" style="width:25%"></div></div>
@@ -113,24 +112,24 @@
               <span>Type hor</span>
             </div>
             <div class="type-card-grid" id="typeCardGrid" style="margin-bottom:.4rem;">
-              <label class="type-card is-checked" data-type-card="raamhor">
+              <label class="type-option is-checked" data-type-option="raamhor">
                 <input type="radio" name="typeHor" value="raamhor" checked>
-                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 12h16M12 4v16"/></svg></span>
+                <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 12h16M12 4v16"/></svg></span>
                 <span class="label">Raamhor</span>
               </label>
-              <label class="type-card" data-type-card="inzethor">
+              <label class="type-option" data-type-option="inzethor">
                 <input type="radio" name="typeHor" value="inzethor">
-                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/></svg></span>
+                <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1.5"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/></svg></span>
                 <span class="label">Inzethor</span>
               </label>
-              <label class="type-card" data-type-card="plisse">
+              <label class="type-option" data-type-option="plisse">
                 <input type="radio" name="typeHor" value="plisse">
-                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 3v18M9 3v18M12 3v18M15 3v18M18 3v18"/></svg></span>
+                <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M6 3v18M9 3v18M12 3v18M15 3v18M18 3v18"/></svg></span>
                 <span class="label">Plissé hordeur</span>
               </label>
-              <label class="type-card" data-type-card="shutters">
+              <label class="type-option" data-type-option="shutters">
                 <input type="radio" name="typeHor" value="shutters">
-                <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 8.5h16M4 12h16M4 15.5h16"/></svg></span>
+                <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 8.5h16M4 12h16M4 15.5h16"/></svg></span>
                 <span class="label">Shutters</span>
               </label>
             </div>
@@ -152,7 +151,7 @@
                   <input type="number" id="breedte" name="breedte" inputmode="decimal" min="20" max="400" step="0.5" placeholder="bijv. 80" autocomplete="off" required>
                   <span class="unit">cm</span>
                 </div>
-                <span class="dim-hint">Min. 20 cm – Max. 400 cm</span>
+                <span class="dim-hint">Min. 20 cm, max. 400 cm</span>
                 <span class="field-error" id="errBreedte"></span>
               </div>
               <div class="form-field">
@@ -161,7 +160,7 @@
                   <input type="number" id="lengte" name="lengte" inputmode="decimal" min="20" max="400" step="0.5" placeholder="bijv. 120" autocomplete="off" required>
                   <span class="unit">cm</span>
                 </div>
-                <span class="dim-hint">Min. 20 cm – Max. 400 cm</span>
+                <span class="dim-hint">Min. 20 cm, max. 400 cm</span>
                 <span class="field-error" id="errLengte"></span>
               </div>
             </div>
@@ -181,24 +180,24 @@
                 <span>Type gaas</span>
               </div>
               <div class="type-card-grid" id="gaasCardGrid" style="grid-template-columns:1fr 1fr;margin-bottom:1.6rem;">
-                <label class="type-card is-checked" data-gaas-card="standaard">
+                <label class="type-option is-checked" data-gaas-card="standaard">
                   <input type="radio" name="typeGaas" value="standaard" checked>
-                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/></svg></span>
+                  <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/></svg></span>
                   <span class="label">Standaard gaas</span>
                 </label>
-                <label class="type-card" data-gaas-card="antipollen">
+                <label class="type-option" data-gaas-card="antipollen">
                   <input type="radio" name="typeGaas" value="antipollen">
-                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.5h16M4 14.5h16M9.5 4v16M14.5 4v16"/><circle cx="9.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/></svg></span>
+                  <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.5h16M4 14.5h16M9.5 4v16M14.5 4v16"/><circle cx="9.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/></svg></span>
                   <span class="label">Anti-pollen gaas</span>
                 </label>
-                <label class="type-card" data-gaas-card="huisdier">
+                <label class="type-option" data-gaas-card="huisdier">
                   <input type="radio" name="typeGaas" value="huisdier">
-                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 11.5h16M11.5 4v16"/></svg></span>
+                  <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 11.5h16M11.5 4v16"/></svg></span>
                   <span class="label">Huisdierengaas</span>
                 </label>
-                <label class="type-card" data-gaas-card="extrafijn">
+                <label class="type-option" data-gaas-card="extrafijn">
                   <input type="radio" name="typeGaas" value="extrafijn">
-                  <span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 7.4h16M4 10.8h16M4 14.2h16M4 17.6h16M7.4 4v16M10.8 4v16M14.2 4v16M17.6 4v16"/></svg></span>
+                  <span class="type-card-icon" aria-hidden="true"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 7.4h16M4 10.8h16M4 14.2h16M4 17.6h16M7.4 4v16M10.8 4v16M14.2 4v16M17.6 4v16"/></svg></span>
                   <span class="label">Extra fijn gaas</span>
                 </label>
               </div>
@@ -219,42 +218,42 @@
                 <div class="ral-swatch-grid" id="ralSwatchGrid">
                   <label class="ral-swatch is-checked" data-name="Wit">
                     <input type="radio" name="ralSwatch" value="RAL 9010" checked>
-                    <span class="ral-swatch-color" style="background:#F1ECE4;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-F1ECE4);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Wit<br>RAL 9010</span>
                   </label>
                   <label class="ral-swatch" data-name="Crème">
                     <input type="radio" name="ralSwatch" value="RAL 9001">
-                    <span class="ral-swatch-color" style="background:#E9E0CB;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-E9E0CB);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Crème<br>RAL 9001</span>
                   </label>
                   <label class="ral-swatch" data-name="Antraciet">
                     <input type="radio" name="ralSwatch" value="RAL 7016">
-                    <span class="ral-swatch-color" style="background:#383E42;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-383E42);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Antraciet<br>RAL 7016</span>
                   </label>
                   <label class="ral-swatch" data-name="Aluminium">
                     <input type="radio" name="ralSwatch" value="RAL 9006">
-                    <span class="ral-swatch-color" style="background:#A5A8A6;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-A5A8A6);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Aluminium<br>RAL 9006</span>
                   </label>
                   <label class="ral-swatch" data-name="Verkeerswit">
                     <input type="radio" name="ralSwatch" value="RAL 9016">
-                    <span class="ral-swatch-color" style="background:#F6F6F6;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-F6F6F6);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Verkeerswit<br>RAL 9016</span>
                   </label>
                   <label class="ral-swatch" data-name="Bruin">
                     <input type="radio" name="ralSwatch" value="RAL 8014">
-                    <span class="ral-swatch-color" style="background:#4A2E22;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-4A2E22);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Bruin<br>RAL 8014</span>
                   </label>
                   <label class="ral-swatch" data-name="Lichtgrijs">
                     <input type="radio" name="ralSwatch" value="RAL 7035">
-                    <span class="ral-swatch-color" style="background:#D7D7D7;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-D7D7D7);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Lichtgrijs<br>RAL 7035</span>
                   </label>
                   <label class="ral-swatch" data-name="Zwart">
                     <input type="radio" name="ralSwatch" value="RAL 9005">
-                    <span class="ral-swatch-color" style="background:#0A0A0A;" aria-hidden="true"></span>
+                    <span class="ral-swatch-color" style="background:var(--swatch-0A0A0A);" aria-hidden="true"></span>
                     <span class="ral-swatch-text">Zwart<br>RAL 9005</span>
                   </label>
                 </div>
@@ -306,14 +305,13 @@
           <div class="calc-summary-inner">
 
             <div id="calcResult">
-              <p class="eyebrow">Uw offerte</p>
-              <div class="calc-rating-row">
+              <p class="calc-summary-title">Uw offerte</p><div class="calc-rating-row">
                 <span class="stars" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
-                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
-                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
-                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
-                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
+                  <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg>
                 </span>
                 <span>4,7 · 500+ tevreden klanten</span>
               </div>
@@ -324,25 +322,25 @@
               <p class="calc-summary-note" id="calcSummaryNote">Wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave op basis van deze gegevens. Kiest u voor anti-pollen gaas? Dat is bij een offerteaanvraag via de website altijd gratis.</p>
 
               <ul class="calc-summary-list" id="calcSpecs">
-                <li><span>Type hor</span><span id="specType">—</span></li>
-                <li><span>Afmetingen</span><span id="specDim">—</span></li>
-                <li><span>Oppervlakte</span><span id="specArea">—</span></li>
+                <li><span>Type hor</span><span id="specType">-</span></li>
+                <li><span>Afmetingen</span><span id="specDim">-</span></li>
+                <li><span>Oppervlakte</span><span id="specArea">-</span></li>
                 <li id="specGaasRow"><span>Type gaas</span><span id="specGaas">Standaard</span></li>
-                <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">—</span><span id="specGaasPrice">—</span></li>
-                <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>—</span></li>
+                <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">-</span><span id="specGaasPrice">-</span></li>
+                <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>-</span></li>
               </ul>
 
               <div class="calc-delivery">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-                <span>Verwachte levering: <strong id="deliveryWindow">—</strong></span>
+                <span>Verwachte levering: <strong id="deliveryWindow">-</strong></span>
               </div>
 
               <button type="button" class="btn btn-gold" id="akkoordBtn" disabled>Akkoord, genereer mijn offerte</button>
 
               <ul class="calc-trust">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vrijblijvend, geen verplichtingen</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>PDF direct gedownload</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Offerte max. 10 dagen geldig</li>
+                <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vrijblijvend, geen verplichtingen</li>
+                <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>PDF direct gedownload</li>
+                <li><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Offerte max. 10 dagen geldig</li>
               </ul>
 
               <div class="calc-whatsapp-help">
@@ -352,10 +350,10 @@
             </div>
 
             <div class="calc-success" id="calcSuccess">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
               <h3>Uw aanvraag is verzonden</h3>
               <p>De PDF staat in uw downloads-map en wij hebben uw aanvraag ontvangen. Wij nemen binnen 24 uur contact met u op met een persoonlijke prijsopgave.</p>
-              <button type="button" class="btn btn-ghost" id="resetBtn" style="border-color:rgba(255,255,255,0.3);color:#fff;">Nieuwe berekening starten</button>
+              <button type="button" class="btn btn-ghost" id="resetBtn">Nieuwe berekening starten</button>
             </div>
 
           </div>
@@ -369,27 +367,26 @@
   <section class="bg-alt">
     <div class="container">
       <div class="section-head center reveal">
-        <p class="eyebrow" style="justify-content:center;">Zo werkt het</p>
         <h2>Van maat tot offerte in drie stappen</h2>
       </div>
       <div class="usp-grid reveal-stagger reveal">
         <article class="usp-card">
           <div class="usp-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-10 4 10M4.5 13.5h5M13 17l3-8 3 8M15 13.5h2.5"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-10 4 10M4.5 13.5h5M13 17l3-8 3 8M15 13.5h2.5"/></svg>
           </div>
           <h3>Vul uw afmetingen in</h3>
           <p>Meet de lengte en breedte van uw raam- of deurkozijn op en vul deze in centimeters in.</p>
         </article>
         <article class="usp-card">
           <div class="usp-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
           </div>
           <h3>Bekijk direct de prijs</h3>
           <p>De offerteprijs wordt automatisch berekend en meteen naast het formulier getoond.</p>
         </article>
         <article class="usp-card">
           <div class="usp-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><path d="M9 13h6M9 17h6"/></svg>
           </div>
           <h3>Ontvang uw PDF-offerte</h3>
           <p>Gaat u akkoord met de prijs? Dan wordt uw persoonlijke offerte direct als PDF gedownload.</p>
@@ -412,7 +409,7 @@
         <p>Horren op maat voor ramen en deuren, ontworpen en gemonteerd met oog voor comfort en vakmanschap. Actief door heel Nederland.</p>
       </div>
       <div class="footer-col">
-        <h4>Navigatie</h4>
+        <h2 class="footer-title">Navigatie</h2>
         <ul>
           <li><a href="index.html#home">Home</a></li>
           <li><a href="index.html#voordelen">Voordelen</a></li>
@@ -421,7 +418,7 @@
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Producten</h4>
+        <h2 class="footer-title">Producten</h2>
         <ul>
           <li><a href="raamhorren.html">Raamhorren</a></li>
           <li><a href="inzethorren.html">Inzethorren</a></li>
@@ -430,7 +427,7 @@
         </ul>
       </div>
       <div class="footer-col">
-        <h4><a href="regios.html">Regio's</a></h4>
+        <h2 class="footer-title"><a href="regios.html">Regio's</a></h2>
         <ul>
           <li><a href="horren-almere.html">Horren Almere</a></li>
           <li><a href="horren-bussum.html">Horren Bussum</a></li>
@@ -450,7 +447,7 @@
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
+        <h2 class="footer-title">Contact</h2>
         <ul>
           <li><a href="tel:+31657815202">+31 6 57 81 52 02</a></li>
           <li><a href="mailto:info@louaraamdecoratie.nl">info@louaraamdecoratie.nl</a></li>

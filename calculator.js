@@ -77,10 +77,10 @@
       + '      <div style="margin-bottom:1.8rem;" id="gaasSectionWrap">'
       + '        <div class="calc-step-label" style="margin-bottom:.9rem;"><span>Type gaas</span></div>'
       + '        <div class="type-card-grid" id="gaasCardGrid" style="grid-template-columns:1fr 1fr;margin-bottom:1.6rem;">'
-      + '          <label class="type-card is-checked" data-gaas-card="standaard"><input type="radio" name="typeGaas" value="standaard" checked><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/></svg></span><span class="label">Standaard gaas</span></label>'
-      + '          <label class="type-card" data-gaas-card="antipollen"><input type="radio" name="typeGaas" value="antipollen"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.5h16M4 14.5h16M9.5 4v16M14.5 4v16"/><circle cx="9.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/></svg></span><span class="label">Anti-pollen gaas</span></label>'
-      + '          <label class="type-card" data-gaas-card="huisdier"><input type="radio" name="typeGaas" value="huisdier"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 11.5h16M11.5 4v16"/></svg></span><span class="label">Huisdierengaas</span></label>'
-      + '          <label class="type-card" data-gaas-card="extrafijn"><input type="radio" name="typeGaas" value="extrafijn"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 7.4h16M4 10.8h16M4 14.2h16M4 17.6h16M7.4 4v16M10.8 4v16M14.2 4v16M17.6 4v16"/></svg></span><span class="label">Extra fijn gaas</span></label>'
+      + '          <label class="type-option is-checked" data-gaas-card="standaard"><input type="radio" name="typeGaas" value="standaard" checked><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9h16M4 14h16M9 4v16M14 4v16"/></svg></span><span class="label">Standaard gaas</span></label>'
+      + '          <label class="type-option" data-gaas-card="antipollen"><input type="radio" name="typeGaas" value="antipollen"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 9.5h16M4 14.5h16M9.5 4v16M14.5 4v16"/><circle cx="9.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="14.5" r=".7" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9.5" r=".7" fill="currentColor" stroke="none"/></svg></span><span class="label">Anti-pollen gaas</span></label>'
+      + '          <label class="type-option" data-gaas-card="huisdier"><input type="radio" name="typeGaas" value="huisdier"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 11.5h16M11.5 4v16"/></svg></span><span class="label">Huisdierengaas</span></label>'
+      + '          <label class="type-option" data-gaas-card="extrafijn"><input type="radio" name="typeGaas" value="extrafijn"><span class="type-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 7.4h16M4 10.8h16M4 14.2h16M4 17.6h16M7.4 4v16M10.8 4v16M14.2 4v16M17.6 4v16"/></svg></span><span class="label">Extra fijn gaas</span></label>'
       + '        </div>'
       + '        <p class="dim-hint" id="gaasDescription" style="margin-top:-1rem;margin-bottom:1.4rem;">Ons standaard fiberglas gaas, geschikt voor de meeste situaties.</p>'
       + '      </div>' : '')
@@ -127,7 +127,7 @@
     + '  <div class="calc-summary-inner">'
     + '    <div id="calcResult">'
     + '      <button type="button" class="calc-summary-back" id="summaryBackBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Vorige</button>'
-    + '      <p class="eyebrow">Uw offerte</p>'
+    + '      <p class="calc-summary-title">Uw offerte</p>'
     + '      <div class="calc-rating-row">'
     + '        <span class="stars" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg><svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.3L10 15l-5.6 3.1 1.4-6.3L1 8.5l6.4-.6z"/></svg></span>'
     + '        <span>4,7 · 500+ tevreden klanten</span>'
@@ -138,14 +138,14 @@
         : 'Inclusief materiaal, op maat productie en montage. Dit is een prijsindicatie: de definitieve prijs kan afwijken en wordt vastgesteld na een gratis meting aan huis.'
       ) + '</p>'
     + '      <ul class="calc-summary-list" id="calcSpecs">'
-    + '        <li><span>Type hor</span><span id="specType">' + (TYPE_LABELS[type] || '—') + '</span></li>'
-    + '        <li><span>Afmetingen</span><span id="specDim">—</span></li>'
-    + '        <li><span>Oppervlakte</span><span id="specArea">—</span></li>'
+    + '        <li><span>Type hor</span><span id="specType">' + (TYPE_LABELS[type] || '-') + '</span></li>'
+    + '        <li><span>Afmetingen</span><span id="specDim">-</span></li>'
+    + '        <li><span>Oppervlakte</span><span id="specArea">-</span></li>'
     + '        <li id="specGaasRow"' + (hasGaasChoice ? '' : ' style="display:none;"') + '><span>Type gaas</span><span id="specGaas">Standaard</span></li>'
-    + '        <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">—</span><span id="specGaasPrice">—</span></li>'
-    + '        <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>—</span></li>'
+    + '        <li id="specGaasPriceRow" style="display:none;"><span id="specGaasPriceLabel">-</span><span id="specGaasPrice">-</span></li>'
+    + '        <li id="specRalRow" style="display:none;"><span>RAL kleur</span><span>-</span></li>'
     + '      </ul>'
-    + '      <div class="calc-delivery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Verwachte levering: <strong id="deliveryWindow">—</strong></span></div>'
+    + '      <div class="calc-delivery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Verwachte levering: <strong id="deliveryWindow">-</strong></span></div>'
     + '      <button type="button" class="btn btn-gold" id="akkoordBtn" disabled>Akkoord, genereer mijn offerte</button>'
     + '      <ul class="calc-trust">'
     + '        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Vrijblijvend, geen verplichtingen</li>'
@@ -181,7 +181,7 @@
     var hasGaasChoice = !NO_GAAS_TYPES[type];
 
     var form = mount.querySelector('#calcForm');
-    var gaasCards = mount.querySelectorAll('#gaasCardGrid .type-card');
+    var gaasCards = mount.querySelectorAll('#gaasCardGrid .type-option');
     var gaasDescriptionEl = mount.querySelector('#gaasDescription');
     var lengteEl = mount.querySelector('#lengte');
     var breedteEl = mount.querySelector('#breedte');
@@ -353,7 +353,7 @@
       if(optRalEl.checked){
         var ral = getSelectedRal();
         var ralPrice = getRalPrice();
-        specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '—') + (onRequest ? '' : (ralPrice > 0 ? ' (+ ' + formatEUR(ralPrice) + ')' : ' (inbegrepen)'));
+        specRalRow.querySelector('span:last-child').textContent = (ral ? ral.name : '-') + (onRequest ? '' : (ralPrice > 0 ? ' (+ ' + formatEUR(ralPrice) + ')' : ' (inbegrepen)'));
       }
 
       if(dimsValid){
@@ -371,7 +371,7 @@
           calcPriceEl.textContent = formatEUR(total);
         }
         calcPriceEl.classList.remove('is-empty');
-        specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
+        specType.textContent = TYPE_LABELS[getSelectedType()] || '-';
         specDim.textContent = breedte.toLocaleString('nl-NL') + ' × ' + lengte.toLocaleString('nl-NL') + ' cm';
         specArea.textContent = areaM2.toLocaleString('nl-NL', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m²';
       } else {
@@ -379,9 +379,9 @@
         currentArea = null;
         calcPriceEl.textContent = 'Vul de afmetingen in';
         calcPriceEl.classList.add('is-empty');
-        specType.textContent = TYPE_LABELS[getSelectedType()] || '—';
-        specDim.textContent = '—';
-        specArea.textContent = '—';
+        specType.textContent = TYPE_LABELS[getSelectedType()] || '-';
+        specDim.textContent = '-';
+        specArea.textContent = '-';
       }
 
       updateAkkoordState();
